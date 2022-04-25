@@ -53,5 +53,5 @@ public class FuelEntity extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bike_id")
-    private BikeEntity bikeEntity;
+    private BikeEntity bike;
 }
