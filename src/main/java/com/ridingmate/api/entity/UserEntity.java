@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "JD_USER")
+@Table(name = "RMC_USER")
 @DynamicInsert
 @DynamicUpdate
 @Getter
@@ -20,6 +20,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity extends BaseTime {
+
+    //TODO : OAuth2 사용해서 어떤거 저장되는지 확인 해야함
 
     @Id
     @Column(name = "idx")
@@ -51,5 +53,8 @@ public class UserEntity extends BaseTime {
     @JsonIgnore
     @NotNull
     private String role;
+
+    //TODO : 하나의 유저는 여러개의 바이크를 가질 수 있다.
+    //TODO : 하나의 유저는 여러개의 중고거래 글을 쓸 수 있다.
 
 }
