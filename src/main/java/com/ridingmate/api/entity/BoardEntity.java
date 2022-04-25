@@ -7,6 +7,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -72,6 +74,9 @@ public class BoardEntity extends BaseTime{
     @Column(name = "price")
     private String price;
 
+    // 댓글
+    @OneToMany(mappedBy = "board")
+    private List<CommentEntity> comments = new ArrayList<>();
 
     //TODO : 썸네일 저장을 위한 location 저장 컬럼
     //        File에 대한 entity 필요할거같음 생성해서 연관관계 연결
