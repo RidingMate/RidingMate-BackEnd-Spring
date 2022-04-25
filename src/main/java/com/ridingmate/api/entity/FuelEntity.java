@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class FuelEntity extends BaseTime{
+public class FuelEntity extends BaseTime {
 
     /*
         내 바이크의 연비를 기록하는 Table정
@@ -50,4 +50,8 @@ public class FuelEntity extends BaseTime{
     //주유 가격
     @Column(name = "fuelAmount")
     private int fuelAmount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bike_id")
+    private BikeEntity bikeEntity;
 }
