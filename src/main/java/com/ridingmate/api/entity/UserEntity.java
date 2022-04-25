@@ -26,22 +26,27 @@ public class UserEntity extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idx;
 
+    //고유번호
     @Column
     @NotNull
     private String uuid;
 
+    //핸드폰 번호
     @Column(name = "phone_number")
     @NotNull
     private String phoneNumber;
 
+    //생일
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
+    //비밀번호
     @Column(name = "password")
     @JsonIgnore
     @NotNull
     private String password;
 
+    //권한
     @Column(name = "role")
     @JsonIgnore
     @NotNull
