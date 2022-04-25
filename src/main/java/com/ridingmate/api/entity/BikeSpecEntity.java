@@ -22,6 +22,8 @@ public class BikeSpecEntity {
         TODO : 어떤 정보 뽑아서 사용할 수 있는지 확인해야함
 
         이전에 활용했던 데이터 :
+            제조사
+            모델명
             가격
             배기 : cc로 통일
             출력
