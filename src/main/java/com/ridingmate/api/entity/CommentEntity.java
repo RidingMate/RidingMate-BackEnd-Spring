@@ -35,5 +35,5 @@ public class CommentEntity extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
-    private BoardEntity boardEntity;
+    private BoardEntity board;
 }
