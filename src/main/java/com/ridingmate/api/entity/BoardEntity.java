@@ -74,6 +74,7 @@ public class BoardEntity extends BaseTime{
 
 
     //TODO : 썸네일 저장을 위한 location 저장 컬럼
+    //        File에 대한 entity 필요할거같음 생성해서 연관관계 연결
     //TODO : 내용과 사진을 같이 저장할 BLOB와 같은 컬럼
     //TODO : Enum 상태를 저장할 컬럼
 
