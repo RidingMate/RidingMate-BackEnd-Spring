@@ -7,6 +7,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -54,4 +56,12 @@ public class BikeEntity extends BaseTime{
     //정비 횟수
     @Column(name = "count_maintenance")
     private int countMaintenance;
+
+    // 연비 기록
+    @OneToMany(mappedBy = "bike")
+    private List<FuelEntity> fuels = new ArrayList<>();
+
+    // 정비 기록
+    @OneToMany(mappedBy = "bike")
+    private List<MaintenanceEntity> maintenances = new ArrayList<>();
 }

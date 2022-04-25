@@ -41,7 +41,7 @@ public class MaintenanceEntity extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bike_id")
-    private BikeEntity bikeEntity;
+    private BikeEntity bike;
 
     // TODO : 사진 기록해야함 -> 멀티파트를 이용한 썸네일 저장
     // TODO : BLOB같은거 이용해서 내용에 사진도 들어갈 수 있게 저장
