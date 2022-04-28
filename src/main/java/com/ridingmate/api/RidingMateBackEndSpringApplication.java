@@ -1,6 +1,5 @@
 package com.ridingmate.api;
 
-import com.ridingmate.api.dataInsert.DataInsert;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

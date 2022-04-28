@@ -1,7 +1,13 @@
 package com.ridingmate.api.dataInsert;
 
+import com.ridingmate.api.entity.BikeCompanyEntity;
+import com.ridingmate.api.entity.BikeModelEntity;
 import com.ridingmate.api.entity.BikeSpecEntity;
+import com.ridingmate.api.entity.BikeYearEntity;
+import com.ridingmate.api.repository.BikeCompanyRepository;
+import com.ridingmate.api.repository.BikeModelRepository;
 import com.ridingmate.api.repository.BikeSpecRepository;
+import com.ridingmate.api.repository.BikeYearRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,12 +19,24 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
-public class DataInsert {
+public class DataInsertService {
 
     @Autowired
-    static BikeSpecRepository bikeSpecRepository;
+    private BikeSpecRepository bikeSpecRepository;
+
+    @Autowired
+    private BikeCompanyRepository bikeCompanyRepository;
+
+    @Autowired
+    private BikeModelRepository bikeModelRepository;
+
+    @Autowired
+    private BikeYearRepository bikeYearRepository;
 
     public void jsonParse(){
 
@@ -34,8 +52,7 @@ public class DataInsert {
                 JSONArray jsonArray = (JSONArray) obj;
 
                 if(jsonArray.size() > 0){
-//                    for(int i=0; i<jsonArray.size();i++){
-                    for(int i=0; i<1;i++){
+                    for(int i=0; i<jsonArray.size();i++){
                         JSONObject jsonObject = (JSONObject)  jsonArray.get(i);
 
                         String company = jsonObject.get("company").toString();
@@ -102,6 +119,58 @@ public class DataInsert {
 
                         System.out.println("index : " + i);
                         bikeSpecRepository.save(bikeSpecEntity);
+
+
+                        BikeCompanyEntity bikeCompanyEntity = null;
+                        BikeModelEntity bikeModelEntity = null;
+                        BikeYearEntity bikeYearEntity = null;
+
+
+                        //제조사 중복제거
+                        if(bikeCompanyRepository.existsByCompany(company)){
+                            bikeCompanyEntity = bikeCompanyRepository.findByCompany(company);
+                        }else{
+                            bikeCompanyEntity = BikeCompanyEntity.builder()
+                                    .company(company)
+                                    .build();
+                            bikeCompanyRepository.save(bikeCompanyEntity);
+                        }
+
+                        //연관관계 list 생성 안됐을시 생성
+                        if(bikeCompanyEntity.getBikeModelEntities() == null){
+                            bikeCompanyEntity.createBikeModelList();
+                        }
+
+                        //모델명 중복 제거
+                        bikeModelEntity = bikeCompanyEntity.getBikeModelEntities()
+                                .stream()
+                                .filter(m->m.getModel().toLowerCase(Locale.ROOT)
+                                        .equals(model.toLowerCase(Locale.ROOT)))
+                                .findAny()
+                                .orElse(null);
+                        if(bikeModelEntity == null){
+                            bikeModelEntity = BikeModelEntity.builder()
+                                    .model(model)
+                                    .build();
+                            bikeModelRepository.save(bikeModelEntity);
+
+                            bikeCompanyEntity.getBikeModelEntities().add(bikeModelEntity);
+                            bikeCompanyRepository.save(bikeCompanyEntity);
+                        }
+
+                        //년도 중복제거 -> 년도 엔티티 자체의 중복도 제거
+                        if(bikeYearRepository.existsByYear(year)){
+                           bikeYearEntity = bikeYearRepository.findByYear(year);
+                        }else{
+                            bikeYearEntity = BikeYearEntity.builder()
+                                    .year(year)
+                                    .build();
+                            bikeYearRepository.save(bikeYearEntity);
+                        }
+                        if(bikeModelEntity.getBikeYearEntity() == null){
+                            bikeModelEntity.setBikeYearEntity(bikeYearEntity);
+                            bikeModelRepository.save(bikeModelEntity);
+                        }
                     }
                 }
             } catch (FileNotFoundException e) {
@@ -114,6 +183,8 @@ public class DataInsert {
                 e.printStackTrace();
             }
         }
+
+        System.out.println("data insert finish");
 
     }
 

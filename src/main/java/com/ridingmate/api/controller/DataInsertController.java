@@ -1,6 +1,6 @@
 package com.ridingmate.api.controller;
 
-import com.ridingmate.api.dataInsert.DataInsert;
+import com.ridingmate.api.dataInsert.DataInsertService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 public class DataInsertController {
 
     @Autowired
-    private DataInsert dataInsert;
+    private DataInsertService dataInsert;
     
     @GetMapping("/insert")
     @ApiOperation("데이터 삽입")
-    public void adminLogin() {
+    public void dataInsert() {
         dataInsert.jsonParse();
     }
 }

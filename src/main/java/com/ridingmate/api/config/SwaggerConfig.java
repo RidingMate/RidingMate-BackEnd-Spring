@@ -26,7 +26,7 @@ public class SwaggerConfig {
                 .useDefaultResponseMessages(false)
                 .groupName(groupName)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller.user"))
+                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller"))
                 .paths(PathSelectors.ant("/v1/**"))
                 .build()
                 .apiInfo(apiInfo());
@@ -39,7 +39,7 @@ public class SwaggerConfig {
                 .useDefaultResponseMessages(false)
                 .groupName(groupName)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller.data"))
+                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller"))
                 .paths(PathSelectors.ant("/v1/data/**"))
                 .build()
                 .apiInfo(apiInfo());

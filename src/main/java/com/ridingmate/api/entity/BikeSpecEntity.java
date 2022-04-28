@@ -154,7 +154,7 @@ public class BikeSpecEntity {
     @Column(name = "front_suspension")
     private String frontSuspension;
 
-    @Column(name = "rear_suspension")
+    @Column(name = "rear_suspension", columnDefinition = "LONGTEXT")
     private String rearSuspension;
 
     @Column(name = "front_brakes")
@@ -169,7 +169,7 @@ public class BikeSpecEntity {
     @Column(name = "engine_type")
     private String engineType;
 
-    @Column(name = "fuel_system")
+    @Column(name = "fuel_system", columnDefinition = "LONGTEXT")
     private String fuelSystem;
 
     @Column(name = "cooling_system")

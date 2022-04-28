@@ -8,5 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BikeSpecRepository extends JpaRepository<BikeSpecEntity, Long> {
 
-
 }
