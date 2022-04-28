@@ -15,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-public class CommentEntity extends BaseTime{
+public class CommentEntity extends BaseTime {
 
     /*
         중고거래 댓글을 저장할 테이블
@@ -33,6 +33,7 @@ public class CommentEntity extends BaseTime{
     @Column(name = "hit")
     private String content;
 
-
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private BoardEntity board;
 }
