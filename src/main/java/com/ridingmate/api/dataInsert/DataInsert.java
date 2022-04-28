@@ -1,19 +1,27 @@
 package com.ridingmate.api.dataInsert;
 
 import com.ridingmate.api.entity.BikeSpecEntity;
+import com.ridingmate.api.repository.BikeSpecRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 
+@Service
 public class DataInsert {
 
-    public static void jsonParse(){
+    @Autowired
+    static BikeSpecRepository bikeSpecRepository;
+
+    public void jsonParse(){
+
         JSONParser parser = new JSONParser();
 
         Reader reader;
@@ -26,8 +34,8 @@ public class DataInsert {
                 JSONArray jsonArray = (JSONArray) obj;
 
                 if(jsonArray.size() > 0){
-                    for(int i=0; i<jsonArray.size();i++){
-//                    for(int i=0; i<10;i++){
+//                    for(int i=0; i<jsonArray.size();i++){
+                    for(int i=0; i<1;i++){
                         JSONObject jsonObject = (JSONObject)  jsonArray.get(i);
 
                         String company = jsonObject.get("company").toString();
@@ -93,6 +101,7 @@ public class DataInsert {
                                 .build();
 
                         System.out.println("index : " + i);
+                        bikeSpecRepository.save(bikeSpecEntity);
                     }
                 }
             } catch (FileNotFoundException e) {

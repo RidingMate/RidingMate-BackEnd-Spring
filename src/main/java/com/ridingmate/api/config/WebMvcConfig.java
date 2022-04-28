@@ -21,16 +21,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*",
-                        "http://joopda.com.s3-website.ap-northeast-2.amazonaws.com",
-                        "http://www.joopda.com",
-                        "https://www.joopda.com",
-                        "https://joopda.com",
-                        "http://localhost:3000",
-                        "http://192.168.0.106:3000",
-                        "http://joopda-web-dev.s3-website.ap-northeast-2.amazonaws.com/",
-                        "http://172.30.1.6:3000",
-                        "http://admin.joopda.com")
+                .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(false)

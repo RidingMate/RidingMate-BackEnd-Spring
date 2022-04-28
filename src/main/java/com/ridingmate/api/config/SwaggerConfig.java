@@ -26,8 +26,21 @@ public class SwaggerConfig {
                 .useDefaultResponseMessages(false)
                 .groupName(groupName)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.v1.controller.user"))
+                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller.user"))
                 .paths(PathSelectors.ant("/v1/**"))
+                .build()
+                .apiInfo(apiInfo());
+    }
+
+    @Bean
+    public Docket v1DataApi() {
+        groupName = "v1_data";
+        return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
+                .groupName(groupName)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller.data"))
+                .paths(PathSelectors.ant("/v1/data/**"))
                 .build()
                 .apiInfo(apiInfo());
     }

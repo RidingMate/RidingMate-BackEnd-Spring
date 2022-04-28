@@ -9,7 +9,6 @@ public class RidingMateBackEndSpringApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(RidingMateBackEndSpringApplication.class, args);
-        DataInsert.jsonParse();
     }
 
 }
