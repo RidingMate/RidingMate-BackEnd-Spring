@@ -1,12 +1,14 @@
 package com.ridingmate.api.entity;
 
 import com.ridingmate.api.entity.value.SocialType;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
 @DiscriminatorValue("SOCIAL")
 public class SocialUserEntity extends UserEntity {
 
