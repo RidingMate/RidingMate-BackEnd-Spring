@@ -14,6 +14,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -38,6 +39,7 @@ public class DataInsertService {
     @Autowired
     private BikeYearRepository bikeYearRepository;
 
+    @Transactional
     public void jsonParse(){
 
         JSONParser parser = new JSONParser();
@@ -52,7 +54,7 @@ public class DataInsertService {
                 JSONArray jsonArray = (JSONArray) obj;
 
                 if(jsonArray.size() > 0){
-                    for(int i=0; i<jsonArray.size();i++){
+                    for(int i=0; i< jsonArray.size();i++){
                         JSONObject jsonObject = (JSONObject)  jsonArray.get(i);
 
                         String company = jsonObject.get("company").toString();
@@ -121,56 +123,80 @@ public class DataInsertService {
                         bikeSpecRepository.save(bikeSpecEntity);
 
 
-                        BikeCompanyEntity bikeCompanyEntity = null;
-                        BikeModelEntity bikeModelEntity = null;
-                        BikeYearEntity bikeYearEntity = null;
-
-
-                        //제조사 중복제거
-                        if(bikeCompanyRepository.existsByCompany(company)){
-                            bikeCompanyEntity = bikeCompanyRepository.findByCompany(company);
-                        }else{
-                            bikeCompanyEntity = BikeCompanyEntity.builder()
-                                    .company(company)
-                                    .build();
-                            bikeCompanyRepository.save(bikeCompanyEntity);
+                        /**
+                         * 리팩토링
+                         * List -> Set 변경하여 중복 로직 제거
+                         * add 로직 엔티티 내부로 옮김
+                         */
+                        if (!bikeCompanyRepository.existsByCompany(company)) {
+                            BikeCompanyEntity bikeCompany = BikeCompanyEntity.createBikeCompany(company);
+                            bikeCompanyRepository.save(bikeCompany);
                         }
 
-                        //연관관계 list 생성 안됐을시 생성
-                        if(bikeCompanyEntity.getBikeModelEntities() == null){
-                            bikeCompanyEntity.createBikeModelList();
+                        if (!bikeYearRepository.existsByYear(year)) {
+                            BikeYearEntity bikeYear = BikeYearEntity.createBikeYear(year);
+                            bikeYearRepository.save(bikeYear);
                         }
 
-                        //모델명 중복 제거
-                        bikeModelEntity = bikeCompanyEntity.getBikeModelEntities()
-                                .stream()
-                                .filter(m->m.getModel().toLowerCase(Locale.ROOT)
-                                        .equals(model.toLowerCase(Locale.ROOT)))
-                                .findAny()
-                                .orElse(null);
-                        if(bikeModelEntity == null){
-                            bikeModelEntity = BikeModelEntity.builder()
-                                    .model(model)
-                                    .build();
-                            bikeModelRepository.save(bikeModelEntity);
-
-                            bikeCompanyEntity.getBikeModelEntities().add(bikeModelEntity);
-                            bikeCompanyRepository.save(bikeCompanyEntity);
+                        BikeModelEntity bikeModel = BikeModelEntity.createBikeModel(model, bikeYearRepository.findByYear(year), bikeCompanyRepository.findByCompany(company));
+                        if (!bikeModelRepository.existsByModelAndBikeYearEntityAndBikeCompany(model, bikeModel.getBikeYearEntity(), bikeModel.getBikeCompany())) {
+                            bikeModelRepository.save(bikeModel);
                         }
 
-                        //년도 중복제거 -> 년도 엔티티 자체의 중복도 제거
-                        if(bikeYearRepository.existsByYear(year)){
-                           bikeYearEntity = bikeYearRepository.findByYear(year);
-                        }else{
-                            bikeYearEntity = BikeYearEntity.builder()
-                                    .year(year)
-                                    .build();
-                            bikeYearRepository.save(bikeYearEntity);
-                        }
-                        if(bikeModelEntity.getBikeYearEntity() == null){
-                            bikeModelEntity.setBikeYearEntity(bikeYearEntity);
-                            bikeModelRepository.save(bikeModelEntity);
-                        }
+
+//                        BikeCompanyEntity bikeCompanyEntity = null;
+//                        BikeModelEntity bikeModelEntity = null;
+//                        BikeYearEntity bikeYearEntity = null;
+//
+//
+//                        //제조사 중복제거
+//                        if(bikeCompanyRepository.existsByCompany(company)){
+//                            bikeCompanyEntity = bikeCompanyRepository.findByCompany(company);
+//                        }else{
+//                            bikeCompanyEntity = BikeCompanyEntity.builder()
+//                                    .company(company)
+//                                    .build();
+//                            bikeCompanyRepository.save(bikeCompanyEntity);
+//                        }
+//
+//                        //연관관계 list 생성 안됐을시 생성
+//                        if(bikeCompanyEntity.getBikeModelEntities() == null){
+//                            bikeCompanyEntity.createBikeModelList();
+//                        }
+//
+//                        //모델명 중복 제거
+//                        bikeModelEntity = bikeCompanyEntity.getBikeModelEntities()
+//                                .stream()
+//                                .filter(m->m.getModel().toLowerCase(Locale.ROOT)
+//                                        .equals(model.toLowerCase(Locale.ROOT)))
+//                                .findAny()
+//                                .orElse(null);
+//                        if(bikeModelEntity == null){
+//                            bikeModelEntity = BikeModelEntity.builder()
+//                                    .model(model)
+//                                    .build();
+//                            bikeModelRepository.save(bikeModelEntity);
+//
+//                            bikeCompanyEntity.getBikeModelEntities().add(bikeModelEntity);
+//                            bikeCompanyRepository.save(bikeCompanyEntity);
+//                        }
+//
+//
+//                        //년도 중복제거 -> 년도 엔티티 자체의 중복도 제거
+//                        if(bikeYearRepository.existsByYear(year)){
+//                           bikeYearEntity = bikeYearRepository.findByYear(year);
+//                        }else{
+//                            bikeYearEntity = BikeYearEntity.builder()
+//                                    .year(year)
+//                                    .build();
+//                            bikeYearRepository.save(bikeYearEntity);
+//                        }
+//                        if(bikeModelEntity.getBikeYearEntity() == null){
+//                            bikeModelEntity.setBikeYearEntity(bikeYearEntity);
+//                            bikeModelRepository.save(bikeModelEntity);
+//                        }
+
+
                     }
                 }
             } catch (FileNotFoundException e) {
