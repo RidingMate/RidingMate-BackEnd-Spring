@@ -1,6 +1,7 @@
 package com.ridingmate.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ridingmate.api.entity.value.UserRole;
 import com.sun.istack.NotNull;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DiscriminatorValue("NORMAL")
 public class NormalUserEntity extends UserEntity {
 
     /**
@@ -39,5 +41,11 @@ public class NormalUserEntity extends UserEntity {
     //생일
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
+
+    public NormalUserEntity(String userId, String password, String nickname, UserRole role) {
+        this.userId = userId;
+        this.password = password;
+        createUserEntity(nickname, role);
+    }
 
 }
