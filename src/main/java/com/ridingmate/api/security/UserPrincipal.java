@@ -1,5 +1,6 @@
 package com.ridingmate.api.security;
 
+import com.ridingmate.api.entity.NormalUserEntity;
 import com.ridingmate.api.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
@@ -74,13 +75,13 @@ public class UserPrincipal implements UserDetails {
         return true;
     }
 
-    public static UserPrincipal create(UserEntity user) {
+    public static UserPrincipal create(NormalUserEntity user) {
         return new UserPrincipal(
                 user.getIdx(),
                 user.getPhoneNumber(),
                 user.getPassword(),
                 user.getUuid(),
-                user.getRole()
+                user.getRole().toString()
         );
     }
 }
