@@ -35,6 +35,8 @@ public abstract class UserEntity extends BaseTime {
     //TODO : 하나의 유저는 여러개의 중고거래 글을 쓸 수 있다.
     //TODO : 하나의 유저는 여러개의 댓글을 달 수 있다.
 
+    //TODO : 이용약관 체크 있어야할듯
+
 
     // 비즈니스 로직
     public void createUserEntity(String nickname, UserRole role) {

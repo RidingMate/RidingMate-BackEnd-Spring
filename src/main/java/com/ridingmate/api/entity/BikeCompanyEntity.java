@@ -1,5 +1,6 @@
 package com.ridingmate.api.entity;
 
+import com.ridingmate.api.payload.BikeCompanyDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -41,6 +42,13 @@ public class BikeCompanyEntity {
                 .bikeModelSet(new HashSet<>())
                 .build();
         return bikeCompany;
+    }
+
+    public BikeCompanyDto getBikeCompanyDto(){
+        return BikeCompanyDto.builder()
+                .idx(idx)
+                .company(company)
+                .build();
     }
 
 }
