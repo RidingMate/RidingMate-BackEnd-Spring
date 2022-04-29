@@ -7,6 +7,10 @@ import com.ridingmate.api.payload.NormalJoinRequest;
 import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +20,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
 
     // 일반 회원가입
     @Transactional
@@ -51,8 +56,16 @@ public class UserService {
     @Transactional
     public AuthResponse normalLogin(NormalJoinRequest request) {
         // TODO : 일반유저 조회
+        NormalUserEntity normalUser = userRepository.findByUserId(request.getUserId()).orElseThrow(() -> new NullPointerException("유저를 찾지 못하였습니다."));
 
-        return new AuthResponse("success");
+        // TODO : 토큰 반환
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(normalUser.getUserId(), normalUser.getPassword());
+
+        Authentication authenticate = authenticationManager.authenticate(token);
+        SecurityContextHolder.getContext().setAuthentication(authenticate);
+        String jwtToken = jwtTokenProvider.generateToken(authenticate);
+
+        return new AuthResponse(jwtToken, "success");
     }
 
     // 소셜 로그인

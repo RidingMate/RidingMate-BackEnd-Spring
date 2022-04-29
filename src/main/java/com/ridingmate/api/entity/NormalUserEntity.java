@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@DiscriminatorValue("NORMAL")
 public class NormalUserEntity extends UserEntity {
 
     /**
