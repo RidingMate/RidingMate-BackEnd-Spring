@@ -128,22 +128,27 @@ public class DataInsertService {
                          * List -> Set 변경하여 중복 로직 제거
                          * add 로직 엔티티 내부로 옮김
                          */
+                        BikeCompanyEntity bikeCompany = null;
                         if (!bikeCompanyRepository.existsByCompany(company)) {
-                            BikeCompanyEntity bikeCompany = BikeCompanyEntity.createBikeCompany(company);
+                            bikeCompany = BikeCompanyEntity.createBikeCompany(company);
                             bikeCompanyRepository.save(bikeCompany);
+                        }else{
+                            bikeCompany = bikeCompanyRepository.findByCompany(company);
                         }
 
-                        if (!bikeYearRepository.existsByYear(year)) {
-                            BikeYearEntity bikeYear = BikeYearEntity.createBikeYear(year);
+                        BikeModelEntity bikemodel = null;
+                        if(!bikeModelRepository.existsByModelAndBikeCompany(model, bikeCompany)){
+                            bikemodel = BikeModelEntity.createBikeModel(model, bikeCompany);
+                            bikeModelRepository.save(bikemodel);
+                        }else{
+                            bikemodel = bikeModelRepository.findByModelAndBikeCompany(model, bikeCompany);
+                        }
+
+                        BikeYearEntity bikeYear = null;
+                        if(!bikeYearRepository.existsByYearAndBikeModel(year, bikemodel)){
+                            bikeYear = BikeYearEntity.createBikeYear(year, bikemodel);
                             bikeYearRepository.save(bikeYear);
                         }
-
-                        BikeModelEntity bikeModel = BikeModelEntity.createBikeModel(model, bikeYearRepository.findByYear(year), bikeCompanyRepository.findByCompany(company));
-                        if (!bikeModelRepository.existsByModelAndBikeYearEntityAndBikeCompany(model, bikeModel.getBikeYearEntity(), bikeModel.getBikeCompany())) {
-                            bikeModelRepository.save(bikeModel);
-                        }
-
-
                     }
                 }
             } catch (FileNotFoundException e) {

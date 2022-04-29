@@ -32,7 +32,7 @@ public class BikeService {
     }
 
     //바이크 연식 검색
-    public void searchYear(String model){
-
+    public void searchYear(String company, String model){
+        BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(company);
     }
 }

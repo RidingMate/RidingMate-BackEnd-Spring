@@ -11,7 +11,9 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -32,21 +34,19 @@ public class BikeModelEntity {
     private String model;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bike_year_id")
-    private BikeYearEntity bikeYearEntity;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bike_company_id")
     private BikeCompanyEntity bikeCompany;
 
+    @OneToMany(mappedBy = "bikeModel")
+    private Set<BikeYearEntity> bikeYearSet = new HashSet<>();
 
-    public static BikeModelEntity createBikeModel(String model, BikeYearEntity bikeYear, BikeCompanyEntity bikeCompany) {
+
+    public static BikeModelEntity createBikeModel(String model, BikeCompanyEntity bikeCompany) {
         BikeModelEntity bikeModel = BikeModelEntity.builder()
                 .model(model)
-                .bikeYearEntity(bikeYear)
                 .bikeCompany(bikeCompany)
+                .bikeYearSet(new HashSet<>())
                 .build();
-        bikeYear.addBikeModel(bikeModel);
         bikeCompany.addBikeModel(bikeModel);
         return bikeModel;
     }

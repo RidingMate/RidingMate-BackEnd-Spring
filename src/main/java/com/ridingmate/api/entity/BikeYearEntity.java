@@ -31,17 +31,15 @@ public class BikeYearEntity {
     @Column(name = "year")
     private int year;
 
-    @OneToMany(mappedBy = "bikeYearEntity")
-    private Set<BikeModelEntity> bikeModelSet = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bike_model_id")
+    private BikeModelEntity bikeModel;
 
-    public void addBikeModel(BikeModelEntity bikeModel) {
-        bikeModelSet.add(bikeModel);
-    }
 
-    public static BikeYearEntity createBikeYear(int year) {
+    public static BikeYearEntity createBikeYear(int year, BikeModelEntity bikeModelEntity) {
         BikeYearEntity bikeYear = BikeYearEntity.builder()
                 .year(year)
-                .bikeModelSet(new HashSet<>())
+                .bikeModel(bikeModelEntity)
                 .build();
         return bikeYear;
     }

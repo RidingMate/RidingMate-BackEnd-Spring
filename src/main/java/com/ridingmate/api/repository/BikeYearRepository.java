@@ -11,4 +11,6 @@ public interface BikeYearRepository extends JpaRepository<BikeYearEntity, Long> 
     boolean existsByYear(int year);
 
     BikeYearEntity findByYear(int year);
+
+    boolean existsByYearAndBikeModel(int year, BikeModelEntity bikeModelEntity);
 }
