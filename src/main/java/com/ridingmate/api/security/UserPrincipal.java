@@ -1,7 +1,6 @@
 package com.ridingmate.api.security;
 
 import com.ridingmate.api.entity.NormalUserEntity;
-import com.ridingmate.api.entity.UserEntity;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,24 +15,24 @@ import java.util.Collection;
 public class UserPrincipal implements UserDetails {
 
     private long idx;
-    private String phoneNumber;
+    private String userId;
     private String password;
     private String username;
     private String uuid;
     private String authority;
     private boolean enabled;
 
-    public UserPrincipal(long idx, String phoneNumber, String password, String uuid, String authority) {
+    public UserPrincipal(long idx, String userId, String password, String uuid, String authority) {
         this.idx = idx;
-        this.phoneNumber = phoneNumber;
+        this.userId = userId;
         this.password = password;
         this.uuid = uuid;
         this.authority = authority;
     }
 
-    public UserPrincipal(long idx, String phoneNumber, String password, String authority) {
+    public UserPrincipal(long idx, String userId, String password, String authority) {
         this.idx = idx;
-        this.phoneNumber = phoneNumber;
+        this.userId = userId;
         this.password = password;
         this.authority = authority;
     }
@@ -52,7 +51,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return phoneNumber;
+        return userId;
     }
 
     @Override
@@ -78,9 +77,9 @@ public class UserPrincipal implements UserDetails {
     public static UserPrincipal create(NormalUserEntity user) {
         return new UserPrincipal(
                 user.getIdx(),
-                user.getPhoneNumber(),
+                user.getUserId(),
                 user.getPassword(),
-                user.getUuid(),
+                user.getUserUuid(),
                 user.getRole().toString()
         );
     }

@@ -10,11 +10,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    /**
+     * 일반 로그인시 사용
+     */
+
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String phoneNumber) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+
 //        // 유저계정
 //        if(userRepository.existsByPhoneNumber(phoneNumber)) {
 //            UserEntity user = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() ->

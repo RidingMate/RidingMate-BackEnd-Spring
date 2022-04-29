@@ -25,19 +25,10 @@ public class NormalUserEntity extends UserEntity {
      * 아이디, 비밀번호로 로그인하는 유저
      */
 
-
-    // TODO : 인증 로직 완성후 제거 -> UserEntity에서 공통으로 관리
-    @Column(name = "uuid")
-    private String uuid;
-
-    //핸드폰 번호
-    @Column(name = "phone_number")
+    //아이디
+    @Column(name = "user_id")
     @NotNull
-    private String phoneNumber;
-
-    //생일
-    @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
+    private String userId;
 
     //비밀번호
     @Column(name = "password")
@@ -45,5 +36,8 @@ public class NormalUserEntity extends UserEntity {
     @NotNull
     private String password;
 
+    //생일
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
 }
