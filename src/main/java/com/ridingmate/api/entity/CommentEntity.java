@@ -30,7 +30,7 @@ public class CommentEntity extends BaseTime {
     private Long idx;
 
     //댓글 내용
-    @Column(name = "hit")
+    @Column(name = "content")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
