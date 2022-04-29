@@ -2,6 +2,7 @@ package com.ridingmate.api.controller;
 
 import com.ridingmate.api.payload.AuthResponse;
 import com.ridingmate.api.payload.NormalJoinRequest;
+import com.ridingmate.api.payload.NormalLoginRequest;
 import com.ridingmate.api.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,15 @@ public class UserController {
 
     @PostMapping("/normal/join")
     @ApiOperation("일반유저(아이디, 패스워드) 회원가입")
-    public AuthResponse normalJoin() {
-        return userService.normalJoin();
+    public ResponseEntity<AuthResponse> normalJoin(
+            @Valid @RequestBody NormalJoinRequest request,
+            BindingResult result
+    ) {
+        if (result.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new AuthResponse(result.getFieldErrors().get(0).getDefaultMessage()));
+        }
+        return ResponseEntity.ok(userService.normalJoin(request));
     }
 
     @PostMapping("/social/join")
@@ -37,7 +45,7 @@ public class UserController {
     @PostMapping("/normal/login")
     @ApiOperation("일반유저(아이디, 패스워드) 로그인")
     public ResponseEntity normalLogin(
-            @Valid @RequestBody NormalJoinRequest request,
+            @Valid @RequestBody NormalLoginRequest request,
             BindingResult result
     ) {
         if (result.hasErrors()) {
