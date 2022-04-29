@@ -12,4 +12,5 @@ public interface BikeModelRepository extends JpaRepository<BikeModelEntity, Long
 
     boolean existsByModelAndBikeYearEntityAndBikeCompany(String model, BikeYearEntity bikeYear, BikeCompanyEntity bikeCompany);
 
+    BikeModelEntity findByIdxAndModel(long idx, String model);
 }
