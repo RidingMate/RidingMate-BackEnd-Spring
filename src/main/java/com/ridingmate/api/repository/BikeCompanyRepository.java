@@ -13,4 +13,5 @@ public interface BikeCompanyRepository extends JpaRepository<BikeCompanyEntity, 
 
     BikeCompanyEntity findByCompany(String company);
 
+    BikeCompanyEntity findByIdxAndCompany(long idx, String company);
 }
