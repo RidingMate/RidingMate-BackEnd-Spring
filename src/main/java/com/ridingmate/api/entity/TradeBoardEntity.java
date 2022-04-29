@@ -1,10 +1,9 @@
 package com.ridingmate.api.entity;
 
+import com.ridingmate.api.entity.value.TradeStatus;
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -46,6 +45,9 @@ public class TradeBoardEntity extends BoardEntity {
 
     // TODO : 상태 컬럼 추가
     // TODO : 상태는 Enum으로 변경해야함 판매중, 예약중, 거래완료 -> 패키지 위치 논의
+    @Enumerated(EnumType.STRING)
+    @Column(name = "trade_status")
+    private TradeStatus status;
 
     // TODO : 내 바이크를 올릴경우 내 바이크와 연관관계 필요
 
