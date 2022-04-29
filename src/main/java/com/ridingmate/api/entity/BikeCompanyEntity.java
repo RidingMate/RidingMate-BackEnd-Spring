@@ -28,16 +28,8 @@ public class BikeCompanyEntity {
     @Column(name = "company")
     private String company;
 
-//    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "bike_company_idx")
-//    private List<BikeModelEntity> bikeModelEntities = new ArrayList<>();
-
     @OneToMany(mappedBy = "bikeCompany")
     private Set<BikeModelEntity> bikeModelSet = new HashSet<>();
-
-//    public void createBikeModelList(){
-//        bikeModelEntities = new ArrayList<>();
-//    }
 
     public void addBikeModel(BikeModelEntity bikeModel) {
         bikeModelSet.add(bikeModel);

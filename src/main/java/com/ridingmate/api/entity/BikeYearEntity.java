@@ -31,9 +31,6 @@ public class BikeYearEntity {
     @Column(name = "year")
     private int year;
 
-//    @OneToMany(mappedBy = "bikeYearEntity")
-//    List<BikeModelEntity> bikeModelEntities = new ArrayList<>();
-
     @OneToMany(mappedBy = "bikeYearEntity")
     private Set<BikeModelEntity> bikeModelSet = new HashSet<>();
 

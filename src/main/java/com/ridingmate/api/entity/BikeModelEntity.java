@@ -37,9 +37,6 @@ public class BikeModelEntity {
     @JoinColumn(name = "bike_company_id")
     private BikeCompanyEntity bikeCompany;
 
-//    public void setBikeYearEntity(BikeYearEntity bikeYearEntity){
-//        this.bikeYearEntity = bikeYearEntity;
-//    }
 
     public static BikeModelEntity createBikeModel(String model, BikeYearEntity bikeYear, BikeCompanyEntity bikeCompany) {
         BikeModelEntity bikeModel = BikeModelEntity.builder()
