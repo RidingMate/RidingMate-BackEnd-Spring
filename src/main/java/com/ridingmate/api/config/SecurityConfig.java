@@ -1,5 +1,6 @@
 package com.ridingmate.api.config;
 
+import com.ridingmate.api.security.CustomOAuth2UserService;
 import com.ridingmate.api.security.CustomUserDetailsService;
 import com.ridingmate.api.security.JwtAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
+
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -67,7 +71,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
-                .and()
-                .httpBasic();
+                .and();
+
+        http.httpBasic();
     }
 }
