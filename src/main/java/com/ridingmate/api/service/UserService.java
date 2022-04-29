@@ -3,6 +3,7 @@ package com.ridingmate.api.service;
 import com.ridingmate.api.entity.NormalUserEntity;
 import com.ridingmate.api.entity.SocialUserEntity;
 import com.ridingmate.api.payload.AuthResponse;
+import com.ridingmate.api.payload.NormalJoinRequest;
 import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class UserService {
 
         // TODO : 토큰 발급
 
-        return new AuthResponse();
+        return new AuthResponse("success");
     }
 
     // 소셜 회원가입
@@ -43,15 +44,15 @@ public class UserService {
 
         // TODO : 토큰 발급
 
-        return new AuthResponse();
+        return new AuthResponse("success");
     }
 
     // 일반 로그인
     @Transactional
-    public AuthResponse normalLogin() {
+    public AuthResponse normalLogin(NormalJoinRequest request) {
         // TODO : 일반유저 조회
 
-        return new AuthResponse();
+        return new AuthResponse("success");
     }
 
     // 소셜 로그인
@@ -59,6 +60,6 @@ public class UserService {
     public AuthResponse socialLogin() {
         // TODO : 소셜유저 조회
 
-        return new AuthResponse();
+        return new AuthResponse("success");
     }
 }

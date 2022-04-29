@@ -1,4 +1,11 @@
 package com.ridingmate.api.payload;
 
-public class AuthResponse {
+import lombok.Getter;
+
+@Getter
+public class AuthResponse extends ResponseDto {
+
+    public AuthResponse(String message) {
+        setMessage(message);
+    }
 }
