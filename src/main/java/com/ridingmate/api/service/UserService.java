@@ -2,10 +2,12 @@ package com.ridingmate.api.service;
 
 import com.ridingmate.api.entity.NormalUserEntity;
 import com.ridingmate.api.entity.SocialUserEntity;
+import com.ridingmate.api.payload.AuthResponse;
 import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +17,8 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     // 일반 회원가입
-    public void normalJoin() {
+    @Transactional
+    public AuthResponse normalJoin() {
 
         // TODO : 중복 체크
 
@@ -24,10 +27,13 @@ public class UserService {
         userRepository.save(normalUser);
 
         // TODO : 토큰 발급
+
+        return new AuthResponse();
     }
 
     // 소셜 회원가입
-    public void socialJoin() {
+    @Transactional
+    public AuthResponse socialJoin() {
 
         // TODO : 중복 체크
 
@@ -36,15 +42,23 @@ public class UserService {
         userRepository.save(socialUser);
 
         // TODO : 토큰 발급
+
+        return new AuthResponse();
     }
 
     // 일반 로그인
-    public void normalLogin() {
+    @Transactional
+    public AuthResponse normalLogin() {
         // TODO : 일반유저 조회
+
+        return new AuthResponse();
     }
 
     // 소셜 로그인
-    public void socialLogin() {
+    @Transactional
+    public AuthResponse socialLogin() {
         // TODO : 소셜유저 조회
+
+        return new AuthResponse();
     }
 }
