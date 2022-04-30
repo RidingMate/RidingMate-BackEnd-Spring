@@ -1,5 +1,5 @@
 package com.ridingmate.api.entity.value;
 
 public enum UserRole {
-    USER, ADMIN
+    ROLE_USER, ROLE_ADMIN
 }
