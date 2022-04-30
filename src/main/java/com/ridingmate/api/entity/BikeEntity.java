@@ -34,8 +34,8 @@ public class BikeEntity extends BaseTime{
     private String company;
 
     //모델명
-    @Column(name = "model_name")
-    private String modelName;
+    @Column(name = "model")
+    private String model;
 
     //년식
     @Column(name = "year")
@@ -64,4 +64,15 @@ public class BikeEntity extends BaseTime{
     // 정비 기록
     @OneToMany(mappedBy = "bike")
     private List<MaintenanceEntity> maintenances = new ArrayList<>();
+
+    public static BikeEntity createBike(String company, String modelName, int year, int mileage){
+        return BikeEntity.builder()
+                .company(company)
+                .model(modelName)
+                .year(year)
+                .mileage(mileage)
+                .fuels(new ArrayList<>())
+                .maintenances(new ArrayList<>())
+                .build();
+    }
 }
