@@ -1,14 +1,12 @@
 package com.ridingmate.api.entity;
 
-import com.ridingmate.api.payload.BikeCompanyDto;
+import com.ridingmate.api.payload.BikeSearchDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -44,10 +42,9 @@ public class BikeCompanyEntity {
         return bikeCompany;
     }
 
-    public BikeCompanyDto getBikeCompanyDto(){
-        return BikeCompanyDto.builder()
-                .idx(idx)
-                .company(company)
+    public BikeSearchDto getBikeCompanyDto(){
+        return BikeSearchDto.builder()
+                .content(company)
                 .build();
     }
 }

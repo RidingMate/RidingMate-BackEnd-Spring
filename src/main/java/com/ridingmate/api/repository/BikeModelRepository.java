@@ -6,11 +6,13 @@ import com.ridingmate.api.entity.BikeYearEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public interface BikeModelRepository extends JpaRepository<BikeModelEntity, Long> {
 
     boolean existsByModelAndBikeCompany(String model, BikeCompanyEntity bikeCompanyEntity);
 
-    BikeModelEntity findByModelAndBikeCompany(String model, BikeCompanyEntity bikeCompany);
+    Optional<BikeModelEntity> findByModelAndBikeCompany(String model, BikeCompanyEntity bikeCompany);
 }

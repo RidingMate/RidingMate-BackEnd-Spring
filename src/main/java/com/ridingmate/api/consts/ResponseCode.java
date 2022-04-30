@@ -21,7 +21,10 @@ public enum ResponseCode {
     ARRAY_OUT_OF_RANGE(1001, "배열 인덱스가 배열에 없어요"),
     DONT_PARSE_NUMBER(1002, "해당 문자열은 숫자로 바꿀 수 없어요"),
     DONT_CAST_CLASS(1003, "해당 클래스로 변환할 수 없어요"),
-    INDEX_OUT_OF_BOUND(1004, "리스트에 해당 인덱스가 없어요");
+    INDEX_OUT_OF_BOUND(1004, "리스트에 해당 인덱스가 없어요"),
+
+
+    NOT_FOUND_COMPANY(2000, "제조사를 찾을 수 없습니다.");
 
 
 

@@ -1,5 +1,6 @@
 package com.ridingmate.api.entity;
 
+import com.ridingmate.api.payload.BikeSearchDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,5 +43,11 @@ public class BikeYearEntity {
                 .bikeModel(bikeModelEntity)
                 .build();
         return bikeYear;
+    }
+
+    public BikeSearchDto getBikeYearDto(){
+        return BikeSearchDto.builder()
+                .content(year+"")
+                .build();
     }
 }

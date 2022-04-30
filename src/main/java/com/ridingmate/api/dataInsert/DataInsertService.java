@@ -133,7 +133,7 @@ public class DataInsertService {
                             bikeCompany = BikeCompanyEntity.createBikeCompany(company);
                             bikeCompanyRepository.save(bikeCompany);
                         }else{
-                            bikeCompany = bikeCompanyRepository.findByCompany(company);
+                            bikeCompany = bikeCompanyRepository.findByCompany(company).orElse(null);
                         }
 
                         BikeModelEntity bikemodel = null;
@@ -141,7 +141,7 @@ public class DataInsertService {
                             bikemodel = BikeModelEntity.createBikeModel(model, bikeCompany);
                             bikeModelRepository.save(bikemodel);
                         }else{
-                            bikemodel = bikeModelRepository.findByModelAndBikeCompany(model, bikeCompany);
+                            bikemodel = bikeModelRepository.findByModelAndBikeCompany(model, bikeCompany).orElse(null);
                         }
 
                         BikeYearEntity bikeYear = null;
