@@ -65,10 +65,15 @@ public class BikeEntity extends BaseTime{
     @OneToMany(mappedBy = "bike")
     private List<MaintenanceEntity> maintenances = new ArrayList<>();
 
-    public static BikeEntity createBike(String company, String modelName, int year, int mileage){
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
+    public static BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage){
         return BikeEntity.builder()
+                .user(userEntity)
                 .company(company)
-                .model(modelName)
+                .model(model)
                 .year(year)
                 .mileage(mileage)
                 .fuels(new ArrayList<>())

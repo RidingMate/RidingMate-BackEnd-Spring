@@ -1,5 +1,6 @@
 package com.ridingmate.api.payload;
 
+import com.ridingmate.api.consts.ResponseCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,5 +8,5 @@ import lombok.Setter;
 @Getter
 public abstract class ResponseDto {
 
-    private String message;
+    public String message;
 }

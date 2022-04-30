@@ -23,8 +23,14 @@ public enum ResponseCode {
     DONT_CAST_CLASS(1003, "해당 클래스로 변환할 수 없어요"),
     INDEX_OUT_OF_BOUND(1004, "리스트에 해당 인덱스가 없어요"),
 
+    // 인증 관련 에러
+    NOT_FOUND_USER(2000, "유저를 찾지 못하였습니다."),
 
-    NOT_FOUND_COMPANY(2000, "제조사를 찾을 수 없습니다.");
+
+    NOT_FOUND_COMPANY(3000, "제조사를 찾을 수 없습니다."),
+    NOT_FOUND_MODEL(3001, "제조사를 찾을 수 없습니다."),
+    NOT_FOUND_YEAR(3002, "연식을 찾을 수 없습니다."),
+    ;
 
 
 
