@@ -3,11 +3,17 @@ package com.ridingmate.api.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ridingmate.api.entity.value.UserRole;
 import com.sun.istack.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 

@@ -1,7 +1,10 @@
 package com.ridingmate.api.entity;
 
 import com.ridingmate.api.payload.BikeSearchDto;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
