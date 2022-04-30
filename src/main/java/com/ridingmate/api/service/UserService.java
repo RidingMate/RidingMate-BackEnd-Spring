@@ -36,7 +36,7 @@ public class UserService {
                 request.getUserId(),
                 passwordEncoder.encode(request.getPassword()),
                 request.getNickname(),
-                UserRole.USER);
+                UserRole.ROLE_USER);
         userRepository.save(normalUser);
 
         return new AuthResponse(getNormalUserToken(normalUser.getUserId(), request.getPassword()), "success");
