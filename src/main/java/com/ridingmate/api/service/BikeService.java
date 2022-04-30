@@ -1,10 +1,8 @@
 package com.ridingmate.api.service;
 
-import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BikeCompanyEntity;
 import com.ridingmate.api.entity.BikeModelEntity;
 import com.ridingmate.api.entity.BikeYearEntity;
-import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.BikeSearchDto;
 import com.ridingmate.api.repository.BikeCompanyRepository;
 import com.ridingmate.api.repository.BikeModelRepository;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service

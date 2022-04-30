@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,6 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
-    // 일반 회원가입
     @Transactional
     public AuthResponse normalJoin(NormalJoinRequest request) {
         if (userRepository.findByUserId(request.getUserId()).isPresent()) {
@@ -44,7 +42,6 @@ public class UserService {
         return new AuthResponse(getNormalUserToken(normalUser.getUserId(), request.getPassword()), "success");
     }
 
-    // 소셜 회원가입
     @Transactional
     public AuthResponse socialJoin() {
 
@@ -59,7 +56,6 @@ public class UserService {
         return new AuthResponse("success");
     }
 
-    // 일반 로그인
     @Transactional
     public AuthResponse normalLogin(NormalLoginRequest request) {
         NormalUserEntity normalUser = userRepository.findByUserId(request.getUserId()).orElseThrow(()
@@ -68,7 +64,6 @@ public class UserService {
                 normalUser.getUserId(), request.getPassword()), "success");
     }
 
-    // 소셜 로그인
     @Transactional
     public AuthResponse socialLogin() {
         // TODO : 소셜유저 조회
