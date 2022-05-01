@@ -2,12 +2,14 @@ package com.ridingmate.api.entity;
 
 import com.ridingmate.api.entity.value.TradeStatus;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @DiscriminatorValue("TRADE")
+@NoArgsConstructor
 public class TradeBoardEntity extends BoardEntity {
 
     /**
@@ -52,4 +54,9 @@ public class TradeBoardEntity extends BoardEntity {
     // TODO : 내 바이크를 올릴경우 내 바이크와 연관관계 필요
 
     // TODO : 직거래를 위한 지역에 대한 연관관계도 필요할듯
+
+    public TradeBoardEntity(String title, String price) {
+        this.price = price;
+        createBoardEntity(title);
+    }
 }

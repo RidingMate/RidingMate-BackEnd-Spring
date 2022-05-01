@@ -48,4 +48,7 @@ public abstract class BoardEntity extends BaseTime {
     //TODO : 내용과 사진을 같이 저장할 BLOB와 같은 컬럼
 
 
+    public void createBoardEntity(String title) {
+        this.title = title;
+    }
 }
