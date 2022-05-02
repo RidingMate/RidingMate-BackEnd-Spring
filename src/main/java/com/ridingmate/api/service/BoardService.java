@@ -12,7 +12,7 @@ public interface BoardService {
 
     void deleteBoardContent(Long boardId);
 
-    Page<BoardEntity> getBoardList(PageRequest page);
+    Page getBoardList(PageRequest page);
 
     BoardEntity getBoardContent(Long boardId);
 

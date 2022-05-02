@@ -3,6 +3,7 @@ package com.ridingmate.api.service;
 import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.repository.BoardRepository;
+import com.ridingmate.api.repository.NoticeBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class NoticeBoardService implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final NoticeBoardRepository noticeBoardRepository;
 
     @Transactional
     public void insertBoardContent(BoardEntity board) {
@@ -24,8 +26,8 @@ public class NoticeBoardService implements BoardService {
     public void updateBoardContent(BoardEntity board) {
     }
 
-    public Page<BoardEntity> getBoardList(PageRequest page) {
-        return boardRepository.findAll(page);
+    public Page<NoticeBoardEntity> getBoardList(PageRequest page) {
+        return noticeBoardRepository.findAll(page);
     }
 
     @Transactional

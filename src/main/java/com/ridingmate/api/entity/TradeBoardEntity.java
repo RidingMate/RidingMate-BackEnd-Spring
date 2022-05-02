@@ -23,11 +23,11 @@ public class TradeBoardEntity extends BoardEntity {
 
     //모델명
     @Column(name = "model_name")
-    private String model_name;
+    private String modelName;
 
     //연비
     @Column(name = "fuel_efficiency")
-    private double fuel_efficiency;
+    private double fuelEfficiency;
 
     //배기량
     @Column(name = "cc")
