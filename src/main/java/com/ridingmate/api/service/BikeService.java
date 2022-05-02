@@ -3,6 +3,7 @@ package com.ridingmate.api.service;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.*;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.BikeInsertRequest;
 import com.ridingmate.api.payload.BikeSearchDto;
 import com.ridingmate.api.repository.BikeCompanyRepository;
 import com.ridingmate.api.repository.BikeModelRepository;
@@ -66,16 +67,24 @@ public class BikeService {
                 .collect(Collectors.toList());
     }
 
-//    public ApiResponse insertBike(String company, String model, int year, int mileage){
-//        UserEntity user = authService.getUserEntityByAuthentication();
-//        BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(company).orElseThrow(()->
-//                new CustomException(ResponseCode.NOT_FOUND_COMPANY));
-//        BikeModelEntity bikeModelEntity = bikeModelRepository.findByModelAndBikeCompany(model, bikeCompanyEntity).orElseThrow(()->
-//                new CustomException(ResponseCode.NOT_FOUND_MODEL));
-//        BikeYearEntity bikeYearEntity = bikeYearRepository.findByYearAndBikeModel(year, bikeModelEntity).orElseThrow(()->
-//                new CustomException(ResponseCode.NOT_FOUND_YEAR));
-//        BikeEntity bikeEntity = BikeEntity.createBike(user, company, model, year, mileage);
-//        bikeRepository.save(bikeEntity);
-//        return new ApiResponse(ResponseCode.SUCCESS);
-//    }
+    //TODO : Multipart 추가해야함
+    public void insertBike(BikeInsertRequest request){
+        UserEntity user = authService.getUserEntityByAuthentication();
+        BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(request.getCompany()).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_COMPANY));
+        BikeModelEntity bikeModelEntity = bikeModelRepository.findByModelAndBikeCompany(request.getModel(), bikeCompanyEntity).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_MODEL));
+        BikeYearEntity bikeYearEntity = bikeYearRepository.findByYearAndBikeModel(request.getYear(), bikeModelEntity).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_YEAR));
+
+        BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName());
+        bikeRepository.save(bikeEntity);
+    }
+
+
+
+    //TODO : 내 바이크 리스트 - 대표바이크 컬럼 없음
+    //TODO : 내 바이크 수정
+    //TODO : 대표 바이크 등록
+    //TODO : 바이크 추가, 정보수정 요청
 }

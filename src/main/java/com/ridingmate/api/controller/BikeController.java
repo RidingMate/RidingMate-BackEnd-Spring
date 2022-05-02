@@ -1,6 +1,7 @@
 package com.ridingmate.api.controller;
 
 import com.ridingmate.api.entity.value.UserRole;
+import com.ridingmate.api.payload.BikeInsertRequest;
 import com.ridingmate.api.payload.BikeSearchDto;
 import com.ridingmate.api.service.BikeService;
 import io.swagger.annotations.*;
@@ -72,5 +73,21 @@ public class BikeController {
         return bikeService.searchYear(company, model);
     }
 
+    @PostMapping("/insert")
+    @ApiOperation(value = "바이크 등록")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 500, message = "")
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void searchYear(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestBody BikeInsertRequest bikeInsertRequest
+            ){
+        bikeService.insertBike(bikeInsertRequest);
+    }
 
 }

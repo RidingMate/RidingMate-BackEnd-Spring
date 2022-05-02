@@ -57,6 +57,10 @@ public class BikeEntity extends BaseTime{
     @Column(name = "count_maintenance")
     private int countMaintenance;
 
+    //바이크 별명
+    @Column(name = "bike_nickname")
+    private String bikeNickname;
+
     // 연비 기록
     @OneToMany(mappedBy = "bike")
     private List<FuelEntity> fuels = new ArrayList<>();
@@ -69,13 +73,24 @@ public class BikeEntity extends BaseTime{
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public static BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage){
+    public static BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage, String bikeNickname){
+
+        //바이크 별명을 입력하지 않았을 경우
+        String nickname = null;
+        if(bikeNickname.equals("") || bikeNickname == null){
+            bikeNickname = model;
+        }else{
+            bikeNickname = bikeNickname;
+        }
+
+
         return BikeEntity.builder()
                 .user(userEntity)
                 .company(company)
                 .model(model)
                 .year(year)
                 .mileage(mileage)
+                .bikeNickname(bikeNickname)
                 .fuels(new ArrayList<>())
                 .maintenances(new ArrayList<>())
                 .build();
