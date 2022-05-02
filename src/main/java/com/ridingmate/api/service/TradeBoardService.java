@@ -1,7 +1,9 @@
 package com.ridingmate.api.service;
 
 import com.ridingmate.api.entity.BoardEntity;
+import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.repository.BoardRepository;
+import com.ridingmate.api.repository.TradeBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TradeBoardService implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final TradeBoardRepository tradeBoardRepository;
 
     @Transactional
     public void insertBoardContent(BoardEntity board) {
@@ -23,8 +26,8 @@ public class TradeBoardService implements BoardService {
     public void updateBoardContent(BoardEntity board) {
     }
 
-    public Page<BoardEntity> getBoardList(PageRequest page) {
-        return boardRepository.findAll(page);
+    public Page<TradeBoardEntity> getBoardList(PageRequest page) {
+        return tradeBoardRepository.findAll(page);
     }
 
     @Transactional
