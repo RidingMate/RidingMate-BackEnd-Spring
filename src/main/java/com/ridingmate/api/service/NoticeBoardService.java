@@ -28,13 +28,17 @@ public class NoticeBoardService implements BoardService {
         return boardRepository.findAll(page);
     }
 
-    public BoardEntity getBoardContent(Long boardId) {
-        return boardRepository.findById(boardId).orElseThrow(() ->
+    @Transactional
+    public NoticeBoardEntity getBoardContent(Long boardId) {
+        BoardEntity board = boardRepository.findById(boardId).orElseThrow(() ->
                 new NullPointerException("id와 일치하는 게시글이 존재하지 않습니다."));
+        board.increaseHitCount();
+        return (NoticeBoardEntity) board;
     }
 
     @Transactional
     public void deleteBoardContent(Long boardId) {
         boardRepository.deleteById(boardId);
     }
+
 }

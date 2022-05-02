@@ -1,8 +1,6 @@
 package com.ridingmate.api.service;
 
 import com.ridingmate.api.entity.BoardEntity;
-import com.ridingmate.api.entity.NoticeBoardEntity;
-import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,9 +27,12 @@ public class TradeBoardService implements BoardService {
         return boardRepository.findAll(page);
     }
 
+    @Transactional
     public BoardEntity getBoardContent(Long boardId) {
-        return boardRepository.findById(boardId).orElseThrow(() ->
+        BoardEntity board = boardRepository.findById(boardId).orElseThrow(() ->
                 new NullPointerException("id와 일치하는 게시글이 존재하지 않습니다."));
+        board.increaseHitCount();
+        return board;
     }
 
     @Transactional
