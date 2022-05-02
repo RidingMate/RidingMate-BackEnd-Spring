@@ -5,6 +5,7 @@ import com.ridingmate.api.entity.*;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.BikeInsertRequest;
 import com.ridingmate.api.payload.BikeSearchDto;
+import com.ridingmate.api.payload.BikeUpdateRequest;
 import com.ridingmate.api.repository.BikeCompanyRepository;
 import com.ridingmate.api.repository.BikeModelRepository;
 import com.ridingmate.api.repository.BikeRepository;
@@ -79,6 +80,12 @@ public class BikeService {
 
         BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName());
         bikeRepository.save(bikeEntity);
+    }
+
+    //TODO : Multipart 추가해야함
+    public void updateBike(BikeUpdateRequest request){
+        UserEntity user = authService.getUserEntityByAuthentication();
+
     }
 
 

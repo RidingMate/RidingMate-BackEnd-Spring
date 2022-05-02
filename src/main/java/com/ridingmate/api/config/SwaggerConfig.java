@@ -27,7 +27,7 @@ public class SwaggerConfig {
                 .groupName(groupName)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller"))
-                .paths(PathSelectors.ant("/v1/**"))
+                .paths(PathSelectors.ant("/v1/user/**"))
                 .build()
                 .apiInfo(apiInfo());
     }
