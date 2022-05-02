@@ -55,4 +55,15 @@ public abstract class BoardEntity extends BaseTime {
     public void updateBoardEntity(String title) {
         this.title = title;
     }
+
+    // 조회수 증가
+    public void increaseHitCount() {
+        this.hit = hit + 1;
+    }
+
+    // 댓글 추가
+    public void addComment(CommentEntity comment) {
+        comments.add(comment);
+        comment.setBoard(this);
+    }
 }
