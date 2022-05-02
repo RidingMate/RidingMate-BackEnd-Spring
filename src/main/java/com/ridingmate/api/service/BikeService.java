@@ -26,19 +26,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BikeService {
 
-    @Autowired
     private final BikeCompanyRepository bikeCompanyRepository;
-
-    @Autowired
     private final BikeModelRepository bikeModelRepository;
-
-    @Autowired
     private final BikeYearRepository bikeYearRepository;
-
-    @Autowired
     private final AuthService authService;
-
-    @Autowired
     private final BikeRepository bikeRepository;
 
     //바이크 제조사 검색
@@ -109,6 +100,7 @@ public class BikeService {
     public void updateBikeRole(int idx){
         UserEntity user = authService.getUserEntityByAuthentication();
 
+        //이미 대표로 설정된 바이크 있으면 수정
         bikeRepository.findByUserAndBikeRole(user, BikeRole.REPRESENTATIVE).forEach(data -> {
             data.changeBikeRole(BikeRole.NORMAL);
         });
