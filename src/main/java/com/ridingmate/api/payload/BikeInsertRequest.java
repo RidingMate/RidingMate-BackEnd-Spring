@@ -1,23 +1,27 @@
 package com.ridingmate.api.payload;
 
-import lombok.Data;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
-import javax.validation.constraints.NotEmpty;
 
 @Getter
 public class BikeInsertRequest {
 
-    @NotEmpty(message = "제조사는 필수입니다.")
+    @ApiModelProperty(value = "제조사 명", required = true)
     private String company;
 
-    @NotEmpty(message = "모델명은 필수 입니다.")
+    @ApiModelProperty(value = "모델 명", required = true)
     private String model;
 
-    @NotEmpty(message = "연식은 필수입니다.")
+    @ApiModelProperty(value = "연식", required = true)
     private int year;
 
+    @ApiModelProperty(value = "대표 바이크 체크 - representative(대표 바이크), normal(대표 바이크 x)", required = true)
+    private String bikeRole;
+
+    @ApiModelProperty(value = "바이크 닉네임")
     private String bikeNickName;
 
+    @ApiModelProperty(value = "현재 주행거리")
     private int mileage;
 }

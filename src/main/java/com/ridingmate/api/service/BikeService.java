@@ -2,6 +2,7 @@ package com.ridingmate.api.service;
 
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.*;
+import com.ridingmate.api.entity.value.BikeRole;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.BikeInsertRequest;
 import com.ridingmate.api.payload.BikeSearchDto;
@@ -14,9 +15,11 @@ import com.ridingmate.api.service.common.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,6 +49,7 @@ public class BikeService {
                 .collect(Collectors.toList());
     }
 
+    //바이크 모델 검색
     public List<BikeSearchDto> searchModel(String company){
         BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(company).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_COMPANY));
@@ -56,6 +60,7 @@ public class BikeService {
                 .collect(Collectors.toList());
     }
 
+    //바이크 연식 검색
     public List<BikeSearchDto> searchYear(String company, String model){
         BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(company).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_COMPANY));
@@ -69,6 +74,8 @@ public class BikeService {
     }
 
     //TODO : Multipart 추가해야함
+    //바이크 등록
+    @Transactional
     public void insertBike(BikeInsertRequest request){
         UserEntity user = authService.getUserEntityByAuthentication();
         BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(request.getCompany()).orElseThrow(()->
@@ -78,20 +85,60 @@ public class BikeService {
         BikeYearEntity bikeYearEntity = bikeYearRepository.findByYearAndBikeModel(request.getYear(), bikeModelEntity).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_YEAR));
 
-        BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName());
+        Enum<BikeRole> bikeRoleEnum = checkBikeRole(request.getBikeRole(), user);
+
+
+        BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum);
         bikeRepository.save(bikeEntity);
     }
 
     //TODO : Multipart 추가해야함
+    //내 바이크 수정
+    @Transactional
     public void updateBike(BikeUpdateRequest request){
         UserEntity user = authService.getUserEntityByAuthentication();
+        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(request.getIdx(), user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+        Enum<BikeRole> bikeRoleEnum = checkBikeRole(request.getBikeRole(), user);
+        bikeEntity.updateBike(request, (BikeRole) bikeRoleEnum);
+        bikeRepository.save(bikeEntity);
+    }
 
+    //바이크 권한 변경
+    @Transactional
+    public void updateBikeRole(int idx){
+        UserEntity user = authService.getUserEntityByAuthentication();
+
+        bikeRepository.findByUserAndBikeRole(user, BikeRole.REPRESENTATIVE).forEach(data -> {
+            data.changeBikeRole(BikeRole.NORMAL);
+        });
+
+        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(idx, user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+
+        bikeEntity.changeBikeRole(BikeRole.REPRESENTATIVE);
+
+        bikeRepository.save(bikeEntity);
     }
 
 
+    //바이크 권한 관련
+    public Enum<BikeRole> checkBikeRole(String bikeRole, UserEntity user) {
+        Enum<BikeRole> bikeRoleEnum = null;
+        //이미 대표로 등록된 바이크가 있다면 normal로 변경
+        if (bikeRole.toUpperCase(Locale.ROOT).equals(BikeRole.REPRESENTATIVE.toString().toUpperCase(Locale.ROOT))) {
+            bikeRoleEnum = BikeRole.REPRESENTATIVE;
+            bikeRepository.findByUserAndBikeRole(user, BikeRole.REPRESENTATIVE).forEach(data -> {
+                data.changeBikeRole(BikeRole.NORMAL);
+            });
+        } else {
+            bikeRoleEnum = BikeRole.NORMAL;
+        }
+
+        return bikeRoleEnum;
+    }
+
 
     //TODO : 내 바이크 리스트 - 대표바이크 컬럼 없음
-    //TODO : 내 바이크 수정
-    //TODO : 대표 바이크 등록
     //TODO : 바이크 추가, 정보수정 요청
 }
