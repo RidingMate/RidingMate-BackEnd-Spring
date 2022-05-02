@@ -51,4 +51,8 @@ public abstract class BoardEntity extends BaseTime {
     public void createBoardEntity(String title) {
         this.title = title;
     }
+
+    public void updateBoardEntity(String title) {
+        this.title = title;
+    }
 }

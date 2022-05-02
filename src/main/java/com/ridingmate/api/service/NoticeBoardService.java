@@ -22,19 +22,19 @@ public class NoticeBoardService implements BoardService {
 
     @Transactional
     public void updateBoardContent(BoardEntity board) {
-        boardRepository.save(board);
     }
 
     public Page<BoardEntity> getBoardList(PageRequest page) {
-        return null;
+        return boardRepository.findAll(page);
     }
 
     public BoardEntity getBoardContent(Long boardId) {
-        return new NoticeBoardEntity();
+        return boardRepository.findById(boardId).orElseThrow(() ->
+                new NullPointerException("id와 일치하는 게시글이 존재하지 않습니다."));
     }
 
     @Transactional
     public void deleteBoardContent(Long boardId) {
-
+        boardRepository.deleteById(boardId);
     }
 }
