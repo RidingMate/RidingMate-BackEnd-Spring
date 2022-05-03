@@ -13,13 +13,11 @@ import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.BikeYearRepository;
 import com.ridingmate.api.service.common.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -83,7 +81,7 @@ public class BikeService {
     }
 
     //TODO : Multipart 추가해야함
-    //내 바이크 수정
+    //바이크 수정
     @Transactional
     public void updateBike(BikeUpdateRequest request){
         UserEntity user = authService.getUserEntityByAuthentication();
