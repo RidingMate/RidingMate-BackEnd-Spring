@@ -72,11 +72,13 @@ public class BoardController {
     }
 
     @GetMapping("/notice/{boardId}")
+    @ApiOperation("공지사항 상세 조회")
     public NoticeBoardContentDto getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
         return NoticeBoardContentDto.convertEntityToDto(noticeBoardService.getBoardContent(boardId));
     }
 
     @GetMapping("/trade/{boardId}")
+    @ApiOperation("거래글 상세 조회")
     public TradeBoardContentDto getTradeBoardContent(@PathVariable("boardId") Long boardId) {
         return TradeBoardContentDto.convertEntityToDto(tradeBoardService.getBoardContent(boardId));
     }
