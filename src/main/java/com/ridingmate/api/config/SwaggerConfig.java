@@ -20,14 +20,14 @@ public class SwaggerConfig {
     private String groupName;
 
     @Bean
-    public Docket v1UserApi() {
-        groupName = "v1_user";
+    public Docket v1Api() {
+        groupName = "v1";
         return new Docket(DocumentationType.SWAGGER_2)
                 .useDefaultResponseMessages(false)
                 .groupName(groupName)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller"))
-                .paths(PathSelectors.ant("/v1/user/**"))
+                .paths(PathSelectors.ant("/v1/**"))
                 .build()
                 .apiInfo(apiInfo());
     }

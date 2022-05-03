@@ -1,5 +1,8 @@
 package com.ridingmate.api.entity;
 
+import com.ridingmate.api.entity.value.BikeRole;
+import com.ridingmate.api.entity.value.UserRole;
+import com.ridingmate.api.payload.BikeUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -61,6 +64,9 @@ public class BikeEntity extends BaseTime{
     @Column(name = "bike_nickname")
     private String bikeNickname;
 
+    @Enumerated(EnumType.STRING)
+    private BikeRole bikeRole;
+
     // 연비 기록
     @OneToMany(mappedBy = "bike")
     private List<FuelEntity> fuels = new ArrayList<>();
@@ -73,7 +79,9 @@ public class BikeEntity extends BaseTime{
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public static BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage, String bikeNickname){
+
+    //바이크 등록
+    public static BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage, String bikeNickname, BikeRole bikeRole){
 
         //바이크 별명을 입력하지 않았을 경우
         String nickname = null;
@@ -82,7 +90,6 @@ public class BikeEntity extends BaseTime{
         }else{
             nickname = bikeNickname;
         }
-
 
         return BikeEntity.builder()
                 .user(userEntity)
@@ -93,6 +100,30 @@ public class BikeEntity extends BaseTime{
                 .bikeNickname(nickname)
                 .fuels(new ArrayList<>())
                 .maintenances(new ArrayList<>())
+                .bikeRole(bikeRole)
                 .build();
     }
+
+    //바이크 업데이트
+    public void updateBike(BikeUpdateRequest request, BikeRole bikeRole){
+        this.company = request.getCompany();
+        this.model = request.getModel();
+        this.year = request.getYear();
+        this.mileage = request.getMileage();
+        this.bikeNickname = request.getBikeNickName();
+        this.bikeRole = bikeRole;
+    }
+
+    //바이크 권한 변경
+    public void changeBikeRole(BikeRole bikeRole){
+        this.bikeRole = bikeRole;
+    }
+
+    public boolean checkBikeRole(){
+        if(bikeRole == BikeRole.REPRESENTATIVE) return true;
+        return false;
+    }
+
+
+
 }

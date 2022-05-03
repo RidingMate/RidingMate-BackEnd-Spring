@@ -49,5 +49,5 @@ class BoardServiceTest {
 //        List<BoardEntity> findAll = boardRepository.findAll();
 //        Assertions.assertThat(findAll.get(0).getTitle()).isEqualTo("거래글 새글");
 //    }
-
+//
 }
