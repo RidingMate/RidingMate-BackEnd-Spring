@@ -59,7 +59,17 @@ public class BoardController {
     public String insertTradeBoard(
             @RequestBody TradeBoardRequest request
     ) {
-        TradeBoardEntity tradeBoard = new TradeBoardEntity(request.getTitle(), request.getPrice());
+        // TODO : 내 바이크 조건처리 필요
+        // TODO : 작성자 필요
+        TradeBoardEntity tradeBoard = new TradeBoardEntity(
+                request.getTitle(),
+                request.getCompany(),
+                request.getModelName(),
+                request.getFuelEfficiency(),
+                request.getCc(),
+                request.getYear(),
+                request.getMileage(),
+                request.getPrice());
         tradeBoardService.insertBoardContent(tradeBoard);
         return "success";
     }
