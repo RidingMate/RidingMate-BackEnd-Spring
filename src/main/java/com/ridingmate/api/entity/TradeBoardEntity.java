@@ -45,8 +45,6 @@ public class TradeBoardEntity extends BoardEntity {
     @Column(name = "price")
     private String price;
 
-    // TODO : 상태 컬럼 추가
-    // TODO : 상태는 Enum으로 변경해야함 판매중, 예약중, 거래완료 -> 패키지 위치 논의
     @Enumerated(EnumType.STRING)
     @Column(name = "trade_status")
     private TradeStatus status;
@@ -55,8 +53,24 @@ public class TradeBoardEntity extends BoardEntity {
 
     // TODO : 직거래를 위한 지역에 대한 연관관계도 필요할듯
 
-    public TradeBoardEntity(String title, String price) {
+    public TradeBoardEntity(String title,
+                            String company,
+                            String modelName,
+                            double fuelEfficiency,
+                            String cc,
+                            String year,
+                            String mileage,
+                            String price
+                            ) {
+
+        this.company = company;
+        this.modelName = modelName;
+        this.fuelEfficiency = fuelEfficiency;
+        this.cc = cc;
+        this.year = year;
+        this.mileage = mileage;
         this.price = price;
+        this.status = TradeStatus.FOR_SALE;
         createBoardEntity(title);
     }
 }
