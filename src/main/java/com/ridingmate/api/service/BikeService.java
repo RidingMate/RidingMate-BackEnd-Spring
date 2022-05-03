@@ -13,6 +13,7 @@ import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.BikeYearRepository;
 import com.ridingmate.api.service.common.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,5 +114,10 @@ public class BikeService {
 
 
     //TODO : 내 바이크 리스트 - 대표바이크 컬럼 없음
+    public List<BikeEntity> getBikeList(){
+        UserEntity user = authService.getUserEntityByAuthentication();
+        return bikeRepository.findByUserOrderByBikeRole(user);
+    }
+
     //TODO : 바이크 추가, 정보수정 요청
 }

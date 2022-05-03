@@ -5,6 +5,7 @@ import com.ridingmate.api.entity.value.UserRole;
 import com.ridingmate.api.payload.BikeUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -20,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@Getter
 public class BikeEntity extends BaseTime{
 
     /*

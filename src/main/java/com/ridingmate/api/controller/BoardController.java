@@ -27,7 +27,7 @@ public class BoardController {
     ) {
         Sort sort = Sort.by("createAt").descending();
         PageRequest page = PageRequest.of(pageNum - 1, 10, sort);
-        return noticeBoardService.getBoardList(page).map(NoticeBoardDto::convertEntityToDto);
+        return noticeBoardService.getBoardList(page).map(NoticeBoardDto:: convertEntityToDto);
     }
 
     @GetMapping("/trade/list")
