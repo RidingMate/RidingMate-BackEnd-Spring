@@ -2,10 +2,7 @@ package com.ridingmate.api.controller;
 
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
-import com.ridingmate.api.payload.NoticeBoardDto;
-import com.ridingmate.api.payload.NoticeBoardRequest;
-import com.ridingmate.api.payload.TradeBoardDto;
-import com.ridingmate.api.payload.TradeBoardRequest;
+import com.ridingmate.api.payload.*;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
 import io.swagger.annotations.ApiOperation;
@@ -72,5 +69,17 @@ public class BoardController {
                 request.getPrice());
         tradeBoardService.insertBoardContent(tradeBoard);
         return "success";
+    }
+
+    @GetMapping("/notice/{boardId}")
+    @ApiOperation("공지사항 상세 조회")
+    public NoticeBoardContentDto getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
+        return NoticeBoardContentDto.convertEntityToDto(noticeBoardService.getBoardContent(boardId));
+    }
+
+    @GetMapping("/trade/{boardId}")
+    @ApiOperation("거래글 상세 조회")
+    public TradeBoardContentDto getTradeBoardContent(@PathVariable("boardId") Long boardId) {
+        return TradeBoardContentDto.convertEntityToDto(tradeBoardService.getBoardContent(boardId));
     }
 }
