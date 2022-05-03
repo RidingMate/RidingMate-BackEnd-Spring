@@ -119,6 +119,11 @@ public class BikeEntity extends BaseTime{
         this.bikeRole = bikeRole;
     }
 
+    public boolean checkBikeRole(){
+        if(bikeRole == BikeRole.REPRESENTATIVE) return true;
+        return false;
+    }
+
 
 
 }

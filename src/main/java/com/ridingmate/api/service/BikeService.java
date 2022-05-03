@@ -76,8 +76,7 @@ public class BikeService {
         BikeYearEntity bikeYearEntity = bikeYearRepository.findByYearAndBikeModel(request.getYear(), bikeModelEntity).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_YEAR));
 
-        Enum<BikeRole> bikeRoleEnum = checkBikeRole(request.getBikeRole(), user);
-
+        Enum<BikeRole> bikeRoleEnum = BikeRole.checkBikeRole(request.getBikeRole(), user);
 
         BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum);
         bikeRepository.save(bikeEntity);
@@ -90,7 +89,7 @@ public class BikeService {
         UserEntity user = authService.getUserEntityByAuthentication();
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(request.getIdx(), user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
-        Enum<BikeRole> bikeRoleEnum = checkBikeRole(request.getBikeRole(), user);
+        Enum<BikeRole> bikeRoleEnum = BikeRole.checkBikeRole(request.getBikeRole(), user);
         bikeEntity.updateBike(request, (BikeRole) bikeRoleEnum);
         bikeRepository.save(bikeEntity);
     }
@@ -113,22 +112,6 @@ public class BikeService {
         bikeRepository.save(bikeEntity);
     }
 
-
-    //바이크 권한 관련
-    public Enum<BikeRole> checkBikeRole(String bikeRole, UserEntity user) {
-        Enum<BikeRole> bikeRoleEnum = null;
-        //이미 대표로 등록된 바이크가 있다면 normal로 변경
-        if (bikeRole.toUpperCase(Locale.ROOT).equals(BikeRole.REPRESENTATIVE.toString().toUpperCase(Locale.ROOT))) {
-            bikeRoleEnum = BikeRole.REPRESENTATIVE;
-            bikeRepository.findByUserAndBikeRole(user, BikeRole.REPRESENTATIVE).forEach(data -> {
-                data.changeBikeRole(BikeRole.NORMAL);
-            });
-        } else {
-            bikeRoleEnum = BikeRole.NORMAL;
-        }
-
-        return bikeRoleEnum;
-    }
 
 
     //TODO : 내 바이크 리스트 - 대표바이크 컬럼 없음
