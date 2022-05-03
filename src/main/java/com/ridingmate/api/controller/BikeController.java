@@ -3,6 +3,7 @@ package com.ridingmate.api.controller;
 import com.ridingmate.api.entity.value.UserRole;
 import com.ridingmate.api.payload.BikeInsertRequest;
 import com.ridingmate.api.payload.BikeSearchDto;
+import com.ridingmate.api.payload.BikeUpdateRequest;
 import com.ridingmate.api.service.BikeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +25,6 @@ public class BikeController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
-    @ApiResponses({
-            @ApiResponse(code = 200, message = ""),
-            @ApiResponse(code = 500, message = "")
-    })
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<BikeSearchDto> searchCompany(
             @RequestHeader(value = "Authorization") String token
@@ -40,10 +37,6 @@ public class BikeController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
             @ApiImplicitParam(name = "company", value = "company name", defaultValue = "null", dataType = "String", required = true),
-    })
-    @ApiResponses({
-            @ApiResponse(code = 200, message = ""),
-            @ApiResponse(code = 500, message = "")
     })
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<BikeSearchDto> searchModel(
@@ -60,10 +53,6 @@ public class BikeController {
             @ApiImplicitParam(name = "company", value = "company name", defaultValue = "null", dataType = "String", required = true),
             @ApiImplicitParam(name = "model", value = "model name", defaultValue = "null", dataType = "String", required = true),
     })
-    @ApiResponses({
-            @ApiResponse(code = 200, message = ""),
-            @ApiResponse(code = 500, message = "")
-    })
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<BikeSearchDto> searchYear(
             @RequestHeader(value = "Authorization") String token,
@@ -73,21 +62,44 @@ public class BikeController {
         return bikeService.searchYear(company, model);
     }
 
-    @PostMapping("/insert")
+    @PutMapping("/insert")
     @ApiOperation(value = "바이크 등록")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
-    @ApiResponses({
-            @ApiResponse(code = 200, message = ""),
-            @ApiResponse(code = 500, message = "")
-    })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void searchYear(
+    public void insertBike(
             @RequestHeader(value = "Authorization") String token,
             @RequestBody BikeInsertRequest bikeInsertRequest
             ){
         bikeService.insertBike(bikeInsertRequest);
+    }
+
+    @PutMapping("/update")
+    @ApiOperation(value = "바이크 수정")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void updateBike(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestBody BikeUpdateRequest request
+            ){
+        bikeService.updateBike(request);
+    }
+
+    @GetMapping("/role")
+    @ApiOperation(value = "대표 바이크 변경")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+            @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "int", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void updateBikeRole(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestParam(value = "bike_idx") int idx
+    ){
+        bikeService.updateBikeRole(idx);
     }
 
 }
