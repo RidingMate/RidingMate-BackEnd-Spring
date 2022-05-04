@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 public abstract class ResponseDto {
 
-    public String message;
+    public ResponseCode response;
 }

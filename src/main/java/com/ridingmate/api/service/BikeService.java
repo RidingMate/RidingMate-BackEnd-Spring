@@ -4,6 +4,7 @@ import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.*;
 import com.ridingmate.api.entity.value.BikeRole;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.ApiResponse;
 import com.ridingmate.api.payload.BikeInsertRequest;
 import com.ridingmate.api.payload.BikeSearchDto;
 import com.ridingmate.api.payload.BikeUpdateRequest;
@@ -13,6 +14,7 @@ import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.BikeYearRepository;
 import com.ridingmate.api.service.common.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -65,7 +67,7 @@ public class BikeService {
     //TODO : Multipart 추가해야함
     //바이크 등록
     @Transactional
-    public void insertBike(BikeInsertRequest request){
+    public ResponseEntity<ApiResponse> insertBike(BikeInsertRequest request){
         UserEntity user = authService.getUserEntityByAuthentication();
         BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(request.getCompany()).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_COMPANY));
@@ -78,6 +80,8 @@ public class BikeService {
 
         BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum);
         bikeRepository.save(bikeEntity);
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
     //TODO : Multipart 추가해야함

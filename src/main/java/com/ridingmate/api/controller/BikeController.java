@@ -1,12 +1,14 @@
 package com.ridingmate.api.controller;
 
 import com.ridingmate.api.entity.value.UserRole;
+import com.ridingmate.api.payload.ApiResponse;
 import com.ridingmate.api.payload.BikeInsertRequest;
 import com.ridingmate.api.payload.BikeSearchDto;
 import com.ridingmate.api.payload.BikeUpdateRequest;
 import com.ridingmate.api.service.BikeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,11 +70,11 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void insertBike(
+    public ResponseEntity<ApiResponse> insertBike(
             @RequestHeader(value = "Authorization") String token,
             @RequestBody BikeInsertRequest bikeInsertRequest
             ){
-        bikeService.insertBike(bikeInsertRequest);
+        return bikeService.insertBike(bikeInsertRequest);
     }
 
     @PutMapping("/update")

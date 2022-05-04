@@ -1,7 +1,6 @@
 package com.ridingmate.api.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ridingmate.api.payload.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;

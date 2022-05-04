@@ -30,8 +30,8 @@ public class UserController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AuthResponse(result.getFieldErrors().get(0).getDefaultMessage()));
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(new AuthResponse(result.getFieldErrors().get(0).getDefaultMessage()));
         }
         return ResponseEntity.ok(userService.normalJoin(request));
     }
@@ -49,8 +49,8 @@ public class UserController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AuthResponse(result.getFieldErrors().get(0).getDefaultMessage()));
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body(new AuthResponse(result.getFieldErrors().get(0).getDefaultMessage()));
         }
         return ResponseEntity.ok(userService.normalLogin(request));
     }

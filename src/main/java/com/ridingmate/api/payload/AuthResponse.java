@@ -1,5 +1,6 @@
 package com.ridingmate.api.payload;
 
+import com.ridingmate.api.consts.ResponseCode;
 import lombok.Getter;
 
 @Getter
@@ -7,12 +8,12 @@ public class AuthResponse extends ResponseDto {
 
     private String accessToken;
 
-    public AuthResponse(String message) {
-        setMessage(message);
+    public AuthResponse(ResponseCode response) {
+        this.response = response;
     }
 
-    public AuthResponse(String accessToken, String message) {
+    public AuthResponse(String accessToken, ResponseCode response) {
         this.accessToken = accessToken;
-        setMessage(message);
+        this.response = response;
     }
 }
