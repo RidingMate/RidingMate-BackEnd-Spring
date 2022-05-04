@@ -1,6 +1,6 @@
 package com.ridingmate.api.entity;
 
-import com.ridingmate.api.payload.BikeSearchDto;
+import com.ridingmate.api.payload.user.dto.BikeSearchDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

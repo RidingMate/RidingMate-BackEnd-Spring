@@ -1,12 +1,11 @@
 package com.ridingmate.api.controller;
 
-import com.ridingmate.api.payload.AuthResponse;
-import com.ridingmate.api.payload.NormalJoinRequest;
-import com.ridingmate.api.payload.NormalLoginRequest;
+import com.ridingmate.api.payload.common.AuthResponse;
+import com.ridingmate.api.payload.user.request.NormalJoinRequest;
+import com.ridingmate.api.payload.user.request.NormalLoginRequest;
 import com.ridingmate.api.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;

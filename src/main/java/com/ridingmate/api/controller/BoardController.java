@@ -2,7 +2,12 @@ package com.ridingmate.api.controller;
 
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
-import com.ridingmate.api.payload.*;
+import com.ridingmate.api.payload.user.dto.NoticeBoardContentDto;
+import com.ridingmate.api.payload.user.dto.NoticeBoardDto;
+import com.ridingmate.api.payload.user.dto.TradeBoardContentDto;
+import com.ridingmate.api.payload.user.dto.TradeBoardDto;
+import com.ridingmate.api.payload.user.request.NoticeBoardRequest;
+import com.ridingmate.api.payload.user.request.TradeBoardRequest;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
 import io.swagger.annotations.ApiOperation;

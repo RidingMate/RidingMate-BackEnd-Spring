@@ -1,10 +1,9 @@
 package com.ridingmate.api.controller;
 
-import com.ridingmate.api.entity.value.UserRole;
-import com.ridingmate.api.payload.ApiResponse;
-import com.ridingmate.api.payload.BikeInsertRequest;
-import com.ridingmate.api.payload.BikeSearchDto;
-import com.ridingmate.api.payload.BikeUpdateRequest;
+import com.ridingmate.api.payload.common.ApiResponse;
+import com.ridingmate.api.payload.user.request.BikeInsertRequest;
+import com.ridingmate.api.payload.user.dto.BikeSearchDto;
+import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
 import com.ridingmate.api.service.BikeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -64,7 +63,7 @@ public class BikeController {
         return bikeService.searchYear(company, model);
     }
 
-    @PutMapping("/insert")
+    @PostMapping
     @ApiOperation(value = "바이크 등록")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
@@ -77,7 +76,7 @@ public class BikeController {
         return bikeService.insertBike(bikeInsertRequest);
     }
 
-    @PutMapping("/update")
+    @PutMapping
     @ApiOperation(value = "바이크 수정")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),

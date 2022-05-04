@@ -1,7 +1,7 @@
 package com.ridingmate.api.exception.handler;
 
 import com.ridingmate.api.exception.CustomException;
-import com.ridingmate.api.payload.ApiResponse;
+import com.ridingmate.api.payload.common.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
