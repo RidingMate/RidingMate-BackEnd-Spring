@@ -1,6 +1,7 @@
 package com.ridingmate.api.controller;
 
 import com.ridingmate.api.payload.common.AuthResponse;
+import com.ridingmate.api.payload.common.ParameterErrorResponse;
 import com.ridingmate.api.payload.user.request.NormalJoinRequest;
 import com.ridingmate.api.payload.user.request.NormalLoginRequest;
 import com.ridingmate.api.service.UserService;
@@ -48,6 +49,8 @@ public class UserController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body(new ParameterErrorResponse(400, result.getFieldErrors().get(0).getDefaultMessage()));
+
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 //                    .body(new AuthResponse(result.getFieldErrors().get(0).getDefaultMessage()));
         }
