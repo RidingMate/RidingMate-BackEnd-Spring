@@ -53,6 +53,10 @@ public class TradeBoardEntity extends BoardEntity {
 
     // TODO : 직거래를 위한 지역에 대한 연관관계도 필요할듯
 
+    // TODO : 썸네일 컬럼 추가
+    // TODO : 썸네일 저장을 위한 location 저장 컬럼
+    // File에 대한 entity 필요할거같음 생성해서 연관관계 연결
+
     public TradeBoardEntity(String title,
                             String company,
                             String modelName,
