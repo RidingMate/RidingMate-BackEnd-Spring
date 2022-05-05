@@ -27,8 +27,10 @@ spring:
       matching-strategy: ant_path_matcher
 
 
+
+
 ---
-# ???
+# local
 spring:
   config:
     activate:
@@ -46,6 +48,12 @@ spring:
       enabled: true
     livereload:
       enabled: true
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket : ridingmate-test
 
 server:
   port: 8080
