@@ -26,7 +26,12 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-
+cloud:
+  aws:
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true
 
 
 ---
@@ -50,10 +55,10 @@ spring:
       enabled: true
 cloud:
   aws:
-    region:
-      static: ap-northeast-2
     s3:
       bucket : ridingmate-test
+    region:
+      static: ap-northeast-2
 
 server:
   port: 8080
