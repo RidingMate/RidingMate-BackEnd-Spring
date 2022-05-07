@@ -1,17 +1,8 @@
 package com.ridingmate.api.service;
 
-import com.ridingmate.api.entity.BoardEntity;
-import com.ridingmate.api.payload.NoticeBoardInsertRequest;
-import com.ridingmate.api.payload.TradeBoardInsertRequest;
-import com.ridingmate.api.repository.BoardRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @SpringBootTest
 @Transactional

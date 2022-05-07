@@ -1,11 +1,12 @@
 package com.ridingmate.api.service;
 
+import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.NormalUserEntity;
 import com.ridingmate.api.entity.SocialUserEntity;
 import com.ridingmate.api.entity.value.UserRole;
-import com.ridingmate.api.payload.AuthResponse;
-import com.ridingmate.api.payload.NormalJoinRequest;
-import com.ridingmate.api.payload.NormalLoginRequest;
+import com.ridingmate.api.payload.common.AuthResponse;
+import com.ridingmate.api.payload.user.request.NormalJoinRequest;
+import com.ridingmate.api.payload.user.request.NormalLoginRequest;
 import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class UserService {
                 UserRole.ROLE_USER);
         userRepository.save(normalUser);
 
-        return new AuthResponse(getNormalUserToken(normalUser.getUserId(), request.getPassword()), "success");
+        return new AuthResponse(getNormalUserToken(normalUser.getUserId(), request.getPassword()), ResponseCode.SUCCESS);
     }
 
     @Transactional
@@ -53,7 +54,7 @@ public class UserService {
 
         // TODO : 토큰 발급
 
-        return new AuthResponse("success");
+        return new AuthResponse(ResponseCode.SUCCESS);
     }
 
     @Transactional
@@ -61,14 +62,14 @@ public class UserService {
         NormalUserEntity normalUser = userRepository.findByUserId(request.getUserId()).orElseThrow(()
                 -> new NullPointerException("유저를 찾지 못하였습니다."));
         return new AuthResponse(getNormalUserToken(
-                normalUser.getUserId(), request.getPassword()), "success");
+                normalUser.getUserId(), request.getPassword()), ResponseCode.SUCCESS);
     }
 
     @Transactional
     public AuthResponse socialLogin() {
         // TODO : 소셜유저 조회
 
-        return new AuthResponse("success");
+        return new AuthResponse(ResponseCode.SUCCESS);
     }
 
     private String getNormalUserToken(String userId, String password) {

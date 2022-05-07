@@ -1,4 +1,4 @@
-package com.ridingmate.api.payload;
+package com.ridingmate.api.payload.common;
 
 import com.ridingmate.api.consts.ResponseCode;
 import lombok.Getter;
@@ -8,5 +8,5 @@ import lombok.Setter;
 @Getter
 public abstract class ResponseDto {
 
-    public String message;
+    public ResponseCode response;
 }

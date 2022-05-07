@@ -1,12 +1,12 @@
 package com.ridingmate.api.controller;
 
-import com.ridingmate.api.payload.AuthResponse;
-import com.ridingmate.api.payload.NormalJoinRequest;
-import com.ridingmate.api.payload.NormalLoginRequest;
+import com.ridingmate.api.payload.common.AuthResponse;
+import com.ridingmate.api.payload.common.ParameterErrorResponse;
+import com.ridingmate.api.payload.user.request.NormalJoinRequest;
+import com.ridingmate.api.payload.user.request.NormalLoginRequest;
 import com.ridingmate.api.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,13 +25,12 @@ public class UserController {
 
     @PostMapping("/normal/join")
     @ApiOperation("일반유저(아이디, 패스워드) 회원가입")
-    public ResponseEntity<AuthResponse> normalJoin(
+    public ResponseEntity normalJoin(
             @Valid @RequestBody NormalJoinRequest request,
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AuthResponse(result.getFieldErrors().get(0).getDefaultMessage()));
+            return ResponseEntity.badRequest().body(new ParameterErrorResponse(400, result.getFieldErrors().get(0).getDefaultMessage()));
         }
         return ResponseEntity.ok(userService.normalJoin(request));
     }
@@ -49,8 +48,7 @@ public class UserController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new AuthResponse(result.getFieldErrors().get(0).getDefaultMessage()));
+            return ResponseEntity.badRequest().body(new ParameterErrorResponse(400, result.getFieldErrors().get(0).getDefaultMessage()));
         }
         return ResponseEntity.ok(userService.normalLogin(request));
     }

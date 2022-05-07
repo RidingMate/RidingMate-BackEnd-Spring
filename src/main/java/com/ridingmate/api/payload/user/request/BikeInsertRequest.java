@@ -1,4 +1,4 @@
-package com.ridingmate.api.payload;
+package com.ridingmate.api.payload.user.request;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;

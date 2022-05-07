@@ -28,7 +28,7 @@ public abstract class BoardEntity extends BaseTime {
     private String title;
 
     // TODO : 내용 컬럼 추가
-    // TODO : 썸네일 컬럼 추가
+    // TODO : 내용과 사진을 같이 저장할 BLOB와 같은 컬럼
 
     //조회수
     @Column(name = "hit")
@@ -42,11 +42,6 @@ public abstract class BoardEntity extends BaseTime {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity user;
-
-    //TODO : 썸네일 저장을 위한 location 저장 컬럼
-    //        File에 대한 entity 필요할거같음 생성해서 연관관계 연결
-    //TODO : 내용과 사진을 같이 저장할 BLOB와 같은 컬럼
-
 
     public void createBoardEntity(String title) {
         this.title = title;

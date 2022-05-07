@@ -1,7 +1,6 @@
-package com.ridingmate.api.payload;
+package com.ridingmate.api.payload.user.dto;
 
 import com.ridingmate.api.entity.BoardEntity;
-import com.ridingmate.api.entity.NoticeBoardEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

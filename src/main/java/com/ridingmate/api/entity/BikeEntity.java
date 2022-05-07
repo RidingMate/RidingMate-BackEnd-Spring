@@ -1,8 +1,7 @@
 package com.ridingmate.api.entity;
 
 import com.ridingmate.api.entity.value.BikeRole;
-import com.ridingmate.api.entity.value.UserRole;
-import com.ridingmate.api.payload.BikeUpdateRequest;
+import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,20 +1,17 @@
 package com.ridingmate.api.controller;
 
-import com.ridingmate.api.entity.BikeEntity;
-import com.ridingmate.api.entity.value.UserRole;
-import com.ridingmate.api.payload.BikeDto;
-import com.ridingmate.api.payload.BikeInsertRequest;
-import com.ridingmate.api.payload.BikeSearchDto;
-import com.ridingmate.api.payload.BikeUpdateRequest;
+import com.ridingmate.api.payload.common.ApiResponse;
+import com.ridingmate.api.payload.user.request.BikeInsertRequest;
+import com.ridingmate.api.payload.user.dto.BikeSearchDto;
+import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
 import com.ridingmate.api.service.BikeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,20 +63,20 @@ public class BikeController {
         return bikeService.searchYear(company, model);
     }
 
-    @PutMapping("/insert")
+    @PostMapping
     @ApiOperation(value = "바이크 등록")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void insertBike(
+    public ResponseEntity<ApiResponse> insertBike(
             @RequestHeader(value = "Authorization") String token,
             @RequestBody BikeInsertRequest bikeInsertRequest
             ){
-        bikeService.insertBike(bikeInsertRequest);
+        return bikeService.insertBike(bikeInsertRequest);
     }
 
-    @PutMapping("/update")
+    @PutMapping
     @ApiOperation(value = "바이크 수정")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
@@ -104,22 +101,6 @@ public class BikeController {
             @RequestParam(value = "bike_idx") int idx
     ){
         bikeService.updateBikeRole(idx);
-    }
-
-    @GetMapping("/list")
-    @ApiOperation(value = "내 바이크 리스트 조회")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
-    })
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public List<BikeDto> getBikeList(
-            @RequestHeader(value = "Authorization") String token
-    ){
-        List<BikeEntity> bikeList = bikeService.getBikeList();
-        return bikeList.stream()
-                .map(BikeDto::convertEntityToDto)
-                .collect(Collectors.toList());
-
     }
 
 }
