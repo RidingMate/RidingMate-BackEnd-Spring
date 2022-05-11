@@ -6,6 +6,7 @@ import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
+import com.ridingmate.api.service.common.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,14 +19,17 @@ public class TradeBoardService implements BoardService {
 
     private final BoardRepository boardRepository;
     private final TradeBoardRepository tradeBoardRepository;
+    private final AwsS3Service s3Service;
 
     @Transactional
     public void insertBoardContent(BoardEntity board) {
+        // TODO : 파일 등록 로직 추가
         boardRepository.save(board);
     }
 
     @Transactional
     public void updateBoardContent(BoardEntity board) {
+        // TODO : 파일 관련 처리 추가
     }
 
     public Page<TradeBoardEntity> getBoardList(PageRequest page) {
@@ -42,6 +46,7 @@ public class TradeBoardService implements BoardService {
 
     @Transactional
     public void deleteBoardContent(Long boardId) {
+        // TODO : 파일 삭제 로직 추가
         boardRepository.deleteById(boardId);
     }
 
