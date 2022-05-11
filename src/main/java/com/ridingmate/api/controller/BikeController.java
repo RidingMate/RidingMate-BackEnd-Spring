@@ -1,5 +1,6 @@
 package com.ridingmate.api.controller;
 
+import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.dto.BikeSearchDto;
@@ -102,5 +103,33 @@ public class BikeController {
     ){
         bikeService.updateBikeRole(idx);
     }
+
+    // TODO: 내 바이크 리스트 불러오기
+    @GetMapping("/myBike/list")
+    @ApiOperation(value = "내 바이크 리스트 조회")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<BikeDto> getMyBikeList(
+            @RequestHeader(value = "Authorization") String token
+    ){
+        return bikeService.getMyBikeList();
+    }
+
+    // TODO: 내 바이크 하나 불러오기
+    @GetMapping("/myBike/{bikeId}")
+    @ApiOperation(value = "내 바이크 상세 조회")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public BikeDto getMyBike(
+            @RequestHeader(value = "Authorization") String token,
+            @PathVariable("bikeId") Long idx
+    ){
+        return bikeService.getMyBike(idx);
+    }
+
 
 }

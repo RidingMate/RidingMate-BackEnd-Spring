@@ -21,4 +21,5 @@ public interface BikeRepository extends JpaRepository<BikeEntity, Long> {
 
     List<BikeEntity> findByUserOrderByBikeRole(UserEntity userEntity);
 
+    List<BikeEntity> findByUser(UserEntity user);
 }

@@ -4,6 +4,7 @@ import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.*;
 import com.ridingmate.api.entity.value.BikeRole;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.dto.BikeSearchDto;
@@ -117,5 +118,25 @@ public class BikeService {
 
 
     //TODO : 내 바이크 리스트 - 대표바이크 컬럼 없음
+    @Transactional
+    public List<BikeDto> getMyBikeList(){
+        UserEntity user = authService.getUserEntityByAuthentication();
+
+        List<BikeEntity> myBikeList = bikeRepository.findByUser(user);
+
+        return myBikeList
+                .stream()
+                .map(BikeDto::convertEntityToDto)
+                .collect(Collectors.toList());
+    }
+
+    // TODO: 내바이크
+    public BikeDto getMyBike(Long bikeId){
+        UserEntity user = authService.getUserEntityByAuthentication();
+        BikeEntity bike = bikeRepository.findByIdxAndUser(bikeId, user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+        return BikeDto.convertEntityToDto(bike);
+    }
+
     //TODO : 바이크 추가, 정보수정 요청
 }
