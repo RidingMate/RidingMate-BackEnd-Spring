@@ -1,4 +1,4 @@
-package com.ridingmate.api.controller;
+package com.ridingmate.api.controller.user;
 
 import com.ridingmate.api.payload.common.AuthResponse;
 import com.ridingmate.api.payload.common.ParameterErrorResponse;

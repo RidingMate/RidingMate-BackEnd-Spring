@@ -1,4 +1,4 @@
-package com.ridingmate.api.controller;
+package com.ridingmate.api.controller.user;
 
 import com.ridingmate.api.dataInsert.DataInsertService;
 import io.swagger.annotations.ApiOperation;
