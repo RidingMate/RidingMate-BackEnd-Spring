@@ -1,5 +1,6 @@
 package com.ridingmate.api.payload.user.request;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 import javax.validation.constraints.NotEmpty;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 public class TradeBoardRequest {
 
     @NotEmpty(message = "제목은 필수입니다.")
+    @ApiModelProperty(value = "거래글 제목", required = true)
     private String title;
 
     private String price;
