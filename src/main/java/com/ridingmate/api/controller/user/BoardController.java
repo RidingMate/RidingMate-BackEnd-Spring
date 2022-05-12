@@ -68,7 +68,7 @@ public class BoardController {
     ) {
         Sort sort = Sort.by("createAt").descending();
         PageRequest page = PageRequest.of(pageNum - 1, 3, sort);
-        return noticeBoardService.getBoardList(page).map(NoticeBoardDto::convertEntityToDto);
+        return noticeBoardService.getBoardList(page).map(noticeBoard -> new NoticeBoardDto(noticeBoard));
     }
 
     @GetMapping("/trade/list")
@@ -78,7 +78,7 @@ public class BoardController {
     ) {
         Sort sort = Sort.by("createAt").descending();
         PageRequest page = PageRequest.of(pageNum - 1, 10, sort);
-        return tradeBoardService.getBoardList(page).map(TradeBoardDto::convertEntityToDto);
+        return tradeBoardService.getBoardList(page).map(tradeBoard -> new TradeBoardDto(tradeBoard));
     }
 
 
@@ -129,12 +129,12 @@ public class BoardController {
     @GetMapping("/notice/{boardId}")
     @ApiOperation("공지사항 상세 조회")
     public ResponseEntity<NoticeBoardContentDto> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(NoticeBoardContentDto.convertEntityToDto(noticeBoardService.getBoardContent(boardId)));
+        return ResponseEntity.ok(new NoticeBoardContentDto(noticeBoardService.getBoardContent(boardId)));
     }
 
     @GetMapping("/trade/{boardId}")
     @ApiOperation("거래글 상세 조회")
     public ResponseEntity<TradeBoardContentDto> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(TradeBoardContentDto.convertEntityToDto(tradeBoardService.getBoardContent(boardId)));
+        return ResponseEntity.ok(new TradeBoardContentDto(tradeBoardService.getBoardContent(boardId)));
     }
 }
