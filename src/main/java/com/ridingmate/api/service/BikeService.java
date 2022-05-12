@@ -8,6 +8,7 @@ import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.dto.BikeSearchDto;
 import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
+import com.ridingmate.api.payload.user.response.MyBikeListResponse;
 import com.ridingmate.api.repository.BikeCompanyRepository;
 import com.ridingmate.api.repository.BikeModelRepository;
 import com.ridingmate.api.repository.BikeRepository;
@@ -117,5 +118,12 @@ public class BikeService {
 
 
     //TODO : 내 바이크 리스트 - 대표바이크 컬럼 없음
+    public List<MyBikeListResponse> bikeList(){
+        UserEntity user = authService.getUserEntityByAuthentication();
+        List<BikeEntity> bikeEntities = bikeRepository.findByUserOrderByBikeRole(user);
+        return bikeEntities.stream().map(bikeEntity ->
+                new MyBikeListResponse().convertEntityToResponse(bikeEntity))
+                .collect(Collectors.toList());
+    }
     //TODO : 바이크 추가, 정보수정 요청
 }
