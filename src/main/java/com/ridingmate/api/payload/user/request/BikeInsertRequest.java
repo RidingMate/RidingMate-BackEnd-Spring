@@ -3,6 +3,8 @@ package com.ridingmate.api.payload.user.request;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 
 @Getter
 public class BikeInsertRequest {
@@ -24,4 +26,7 @@ public class BikeInsertRequest {
 
     @ApiModelProperty(value = "현재 주행거리")
     private int mileage;
+
+    @ApiModelProperty(value = "구입 날짜")
+    private LocalDate dateOfPurchase;
 }

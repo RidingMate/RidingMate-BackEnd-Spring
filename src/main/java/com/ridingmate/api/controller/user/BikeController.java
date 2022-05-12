@@ -4,6 +4,7 @@ import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.dto.BikeSearchDto;
 import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
+import com.ridingmate.api.payload.user.response.MyBikeListResponse;
 import com.ridingmate.api.service.BikeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,18 @@ import java.util.List;
 /*
     바이크 등록 컨트롤러
 
+    <완료>
     -제조사 검색
     -모델명 검색
     -년식 검색
-    -바이크 등록(바이크 별칭, 누적 주행거리, 구매일자, 이미지 1, 대표바이크 설정)
-    -정보 추가 요청 -> 어드민으로 데이터 넘겨서 직접입력 해서 다시 검색에 사용할 수 있도록
     -대표 바이크 변경
+
+    <미완성>
+    -바이크 등록(바이크 별칭, 누적 주행거리, 구매일자, 이미지 1, 대표바이크 설정)
+
+
+    <진행 전>
+    -정보 추가 요청 -> 어드민으로 데이터 넘겨서 직접입력 해서 다시 검색에 사용할 수 있도록
     -내 바이크 리스트 (리스트당 이미지, 누적주행거리, 평균연비, 구입일자, 주유기록카운트, 정비기록 카운트, 바이크 별칭, 대표바이크 유무)
     -바이크 디테일(별칭, 제조가, 모델명, 누적 주행거리, 평균연비, 주유기록카운트(월 단위로 필터링), 주유기록 리스트 받아서 표출)
 */
@@ -35,7 +42,7 @@ public class BikeController {
 
 
     @GetMapping("/search/company")
-    @ApiOperation(value = "바이크 등록 - 제조사 검색")
+    @ApiOperation(value = "제조사 검색")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
@@ -47,7 +54,7 @@ public class BikeController {
     }
 
     @GetMapping("/search/model")
-    @ApiOperation(value = "바이크 등록 - 모델 검색")
+    @ApiOperation(value = "모델 검색")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
             @ApiImplicitParam(name = "company", value = "company name", defaultValue = "null", dataType = "String", required = true),
@@ -61,7 +68,7 @@ public class BikeController {
     }
 
     @GetMapping("/search/year")
-    @ApiOperation(value = "바이크 등록 - 연식 검색")
+    @ApiOperation(value = "연식 검색")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
             @ApiImplicitParam(name = "company", value = "company name", defaultValue = "null", dataType = "String", required = true),
@@ -114,6 +121,18 @@ public class BikeController {
             @RequestParam(value = "bike_idx") int idx
     ){
         bikeService.updateBikeRole(idx);
+    }
+
+    @GetMapping("/list")
+    @ApiOperation(value = "내 바이크 리스트")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<MyBikeListResponse> myBikeList(
+            @RequestHeader(value = "Authorization") String token
+    ){
+        return bikeService.bikeList();
     }
 
 }
