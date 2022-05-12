@@ -67,7 +67,7 @@ public class BoardController {
             @RequestParam(value = "pageNum") @Min(value = 1) int pageNum
     ) {
         Sort sort = Sort.by("createAt").descending();
-        PageRequest page = PageRequest.of(pageNum - 1, 10, sort);
+        PageRequest page = PageRequest.of(pageNum - 1, 3, sort);
         return noticeBoardService.getBoardList(page).map(NoticeBoardDto::convertEntityToDto);
     }
 
