@@ -35,7 +35,7 @@ public class BikeController {
 
 
     @GetMapping("/search/company")
-    @ApiOperation(value = "바이크 등록 - 제조사 검색")
+    @ApiOperation(value = "제조사 검색")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
@@ -47,7 +47,7 @@ public class BikeController {
     }
 
     @GetMapping("/search/model")
-    @ApiOperation(value = "바이크 등록 - 모델 검색")
+    @ApiOperation(value = "모델 검색")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
             @ApiImplicitParam(name = "company", value = "company name", defaultValue = "null", dataType = "String", required = true),
@@ -61,7 +61,7 @@ public class BikeController {
     }
 
     @GetMapping("/search/year")
-    @ApiOperation(value = "바이크 등록 - 연식 검색")
+    @ApiOperation(value = "연식 검색")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
             @ApiImplicitParam(name = "company", value = "company name", defaultValue = "null", dataType = "String", required = true),

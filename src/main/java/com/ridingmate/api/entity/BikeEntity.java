@@ -5,10 +5,13 @@ import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,8 +66,15 @@ public class BikeEntity extends BaseTime{
     @Column(name = "bike_nickname")
     private String bikeNickname;
 
+    //대표 바이크 여부
     @Enumerated(EnumType.STRING)
     private BikeRole bikeRole;
+
+    //구입날짜
+    @CreationTimestamp
+    @Column(name = "date_of_purchase")
+    private LocalDate dateOfPurchase;
+
 
     // 연비 기록
     @OneToMany(mappedBy = "bike")
@@ -80,7 +90,7 @@ public class BikeEntity extends BaseTime{
 
 
     //바이크 등록
-    public static BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage, String bikeNickname, BikeRole bikeRole){
+    public static BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage, String bikeNickname, BikeRole bikeRole, LocalDate dateOfPurchase){
 
         //바이크 별명을 입력하지 않았을 경우
         String nickname = null;
