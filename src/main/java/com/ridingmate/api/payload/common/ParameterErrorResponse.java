@@ -3,8 +3,6 @@ package com.ridingmate.api.payload.common;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
 @Getter
 public class ParameterErrorResponse {
 
