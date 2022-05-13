@@ -5,7 +5,6 @@ import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.exception.ParameterException;
 import com.ridingmate.api.payload.common.ApiResponse;
-import com.ridingmate.api.payload.common.ParameterErrorResponse;
 import com.ridingmate.api.payload.user.dto.NoticeBoardContentDto;
 import com.ridingmate.api.payload.user.dto.NoticeBoardDto;
 import com.ridingmate.api.payload.user.dto.TradeBoardContentDto;
@@ -85,7 +84,6 @@ public class BoardController {
             throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
         }
 
-        System.out.println(search);
         Sort sort = Sort.by("createAt").descending();
         PageRequest page = PageRequest.of(pageNum - 1, 10, sort);
         return tradeBoardService.getBoardList(page).map(tradeBoard -> new TradeBoardDto(tradeBoard));
