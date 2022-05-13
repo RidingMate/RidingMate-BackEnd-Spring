@@ -1,7 +1,9 @@
 package com.ridingmate.api.exception.handler;
 
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.exception.ParameterException;
 import com.ridingmate.api.payload.common.ApiResponse;
+import com.ridingmate.api.payload.common.ParameterErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,8 +16,13 @@ public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ApiResponse> customException(CustomException e){
+    public ResponseEntity<ApiResponse> customException(CustomException e) {
         return ResponseEntity.badRequest().body(new ApiResponse(e.getErrorCode()));
+    }
+
+    @ExceptionHandler(ParameterException.class)
+    public ResponseEntity<ParameterErrorResponse> parameterException(ParameterException e) {
+        return ResponseEntity.badRequest().body(new ParameterErrorResponse(400, e.getMessage()));
     }
 
 //    @ExceptionHandler(NullPointerException.class)
