@@ -3,6 +3,7 @@ package com.ridingmate.api.controller.user;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
+import com.ridingmate.api.exception.ParameterException;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.common.ParameterErrorResponse;
 import com.ridingmate.api.payload.user.dto.NoticeBoardContentDto;
@@ -11,6 +12,7 @@ import com.ridingmate.api.payload.user.dto.TradeBoardContentDto;
 import com.ridingmate.api.payload.user.dto.TradeBoardDto;
 import com.ridingmate.api.payload.user.request.NoticeBoardRequest;
 import com.ridingmate.api.payload.user.request.TradeBoardRequest;
+import com.ridingmate.api.payload.user.request.TradeSearchRequest;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
 import io.swagger.annotations.ApiOperation;
@@ -74,8 +76,16 @@ public class BoardController {
     @GetMapping("/trade/list")
     @ApiOperation("거래글 리스트 조회")
     public Page<TradeBoardDto> getTradeBoardList(
-            @RequestParam(value = "pageNum") @Min(value = 1) int pageNum
+            @RequestParam(value = "pageNum") @Min(value = 1) int pageNum,
+            @ModelAttribute @Valid TradeSearchRequest search,
+            BindingResult result
     ) {
+
+        if (result.hasErrors()) {
+            throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
+        }
+
+        System.out.println(search);
         Sort sort = Sort.by("createAt").descending();
         PageRequest page = PageRequest.of(pageNum - 1, 10, sort);
         return tradeBoardService.getBoardList(page).map(tradeBoard -> new TradeBoardDto(tradeBoard));
