@@ -99,9 +99,7 @@ public class BoardController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(new ParameterErrorResponse(
-                    400,
-                    result.getFieldErrors().get(0).getDefaultMessage()));
+            throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
         }
         NoticeBoardEntity noticeBoard = new NoticeBoardEntity(request.getTitle());
         noticeBoardService.insertBoardContent(noticeBoard);
@@ -116,9 +114,7 @@ public class BoardController {
     ) {
 
         if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(new ParameterErrorResponse(
-                    400,
-                    result.getFieldErrors().get(0).getDefaultMessage()));
+            throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
         }
 
         // TODO : 내 바이크 조건처리 필요
