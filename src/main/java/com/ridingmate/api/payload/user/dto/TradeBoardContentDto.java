@@ -11,7 +11,7 @@ public class TradeBoardContentDto {
     private String company;
     private String mileage;
     private String cc;
-    private String year;
+    private int year;
     private String price;
 
     public TradeBoardContentDto(TradeBoardEntity tradeBoard) {
