@@ -22,7 +22,7 @@ public class TradeBoardRequest {
 
     private String cc;
 
-    private String year;
+    private int year;
 
     private String mileage;
 }
