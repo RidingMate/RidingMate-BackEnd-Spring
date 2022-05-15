@@ -74,7 +74,17 @@ public class TradeBoardEntity extends BoardEntity {
         this.year = year;
         this.mileage = mileage;
         this.price = price;
-        this.status = TradeStatus.FOR_SALE;
+        status = TradeStatus.FOR_SALE;
         createBoardEntity(title);
+    }
+
+    // 예약중 상태
+    public void setReservedStatus() {
+        status = TradeStatus.RESERVED;
+    }
+
+    // 판매완료 상태
+    public void setCompletedStatus() {
+        status = TradeStatus.COMPLETED;
     }
 }
