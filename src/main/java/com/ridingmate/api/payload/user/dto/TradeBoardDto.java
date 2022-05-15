@@ -11,9 +11,9 @@ public class TradeBoardDto {
     private String modelName;
     private String company;
     private int mileage;
-    private String cc;
+    private int cc;
     private int year;
-    private String price;
+    private int price;
 
     public TradeBoardDto(TradeBoardEntity tradeBoard) {
         id = tradeBoard.getIdx();

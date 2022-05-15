@@ -10,9 +10,9 @@ public class TradeBoardContentDto {
     private String modelName;
     private String company;
     private int mileage;
-    private String cc;
+    private int cc;
     private int year;
-    private String price;
+    private int price;
 
     public TradeBoardContentDto(TradeBoardEntity tradeBoard) {
         title = tradeBoard.getTitle();
