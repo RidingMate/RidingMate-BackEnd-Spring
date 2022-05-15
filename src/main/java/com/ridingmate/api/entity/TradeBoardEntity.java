@@ -39,7 +39,7 @@ public class TradeBoardEntity extends BoardEntity {
 
     //주행거리
     @Column(name = "mileage")
-    private String mileage;
+    private int mileage;
 
     //가격
     @Column(name = "price")
@@ -63,7 +63,7 @@ public class TradeBoardEntity extends BoardEntity {
                             double fuelEfficiency,
                             String cc,
                             int year,
-                            String mileage,
+                            int mileage,
                             String price
                             ) {
 
