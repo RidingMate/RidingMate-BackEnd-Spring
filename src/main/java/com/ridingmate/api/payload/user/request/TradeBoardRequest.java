@@ -12,7 +12,7 @@ public class TradeBoardRequest {
     @ApiModelProperty(value = "거래글 제목", required = true)
     private String title;
 
-    private String price;
+    private int price;
 
     private String company;
 
@@ -20,7 +20,7 @@ public class TradeBoardRequest {
 
     private double fuelEfficiency;
 
-    private String cc;
+    private int cc;
 
     private int year;
 

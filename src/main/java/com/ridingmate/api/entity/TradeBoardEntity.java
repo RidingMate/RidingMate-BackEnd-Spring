@@ -31,7 +31,7 @@ public class TradeBoardEntity extends BoardEntity {
 
     //배기량
     @Column(name = "cc")
-    private String cc;
+    private int cc;
 
     //연식
     @Column(name = "year")
@@ -43,7 +43,7 @@ public class TradeBoardEntity extends BoardEntity {
 
     //가격
     @Column(name = "price")
-    private String price;
+    private int price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "trade_status")
@@ -61,10 +61,10 @@ public class TradeBoardEntity extends BoardEntity {
                             String company,
                             String modelName,
                             double fuelEfficiency,
-                            String cc,
+                            int cc,
                             int year,
                             int mileage,
-                            String price
+                            int price
                             ) {
 
         this.company = company;
