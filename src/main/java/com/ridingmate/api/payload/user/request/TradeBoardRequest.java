@@ -24,5 +24,5 @@ public class TradeBoardRequest {
 
     private int year;
 
-    private String mileage;
+    private int mileage;
 }

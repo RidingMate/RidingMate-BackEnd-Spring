@@ -9,7 +9,7 @@ public class TradeBoardContentDto {
     private String title;
     private String modelName;
     private String company;
-    private String mileage;
+    private int mileage;
     private String cc;
     private int year;
     private String price;
