@@ -100,7 +100,7 @@ public class BikeService {
 
     //바이크 권한 변경
     @Transactional
-    public ResponseEntity<ApiResponse> updateBikeRole(int idx){
+    public ResponseEntity<ApiResponse> updateBikeRole(long idx){
         UserEntity user = authService.getUserEntityByAuthentication();
 
         //이미 대표로 설정된 바이크 있으면 수정
@@ -140,6 +140,7 @@ public class BikeService {
     }
 
     //바이크 추가요청
+    @Transactional
     public ResponseEntity<ApiResponse> addBikeRequest(AddBikeRequest addBikeRequest){
         UserEntity user = authService.getUserEntityByAuthentication();
         AddBikeEntity addBikeEntity = new AddBikeEntity().convertRequestToEntity(addBikeRequest, user);

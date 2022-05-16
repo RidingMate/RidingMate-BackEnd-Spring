@@ -15,6 +15,8 @@ import java.time.LocalDate;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class MyBikeResponse {
 
+    @ApiModelProperty(value = "idx")
+    private long idx;
     @ApiModelProperty(value = "누적 주행거리")
     private int milage;
     @ApiModelProperty(value = "평균 연비")
@@ -32,6 +34,7 @@ public class MyBikeResponse {
 
     public MyBikeResponse convertEntityToResponse(BikeEntity bikeEntity){
         return MyBikeResponse.builder()
+                .idx(bikeEntity.getIdx())
                 .milage(bikeEntity.getMileage())
                 .fuelEfficiency(bikeEntity.getFuelEfficiency())
                 .dateOfPurchase(bikeEntity.getDateOfPurchase())

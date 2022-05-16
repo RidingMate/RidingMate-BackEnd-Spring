@@ -12,7 +12,7 @@ import javax.persistence.*;
 
 @Entity
 @Builder
-@Table(name = "RMC_BIKE_SPEC")
+@Table(name = "RMC_ADD_BIKE")
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert
