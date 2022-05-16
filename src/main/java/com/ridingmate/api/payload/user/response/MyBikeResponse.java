@@ -6,7 +6,6 @@ import com.ridingmate.api.entity.value.BikeRole;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 @Setter
@@ -14,8 +13,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class MyBikeListResponse {
+public class MyBikeResponse {
 
+    @ApiModelProperty(value = "idx")
+    private long idx;
     @ApiModelProperty(value = "누적 주행거리")
     private int milage;
     @ApiModelProperty(value = "평균 연비")
@@ -31,8 +32,9 @@ public class MyBikeListResponse {
     @ApiModelProperty(value = "대표 바이크 유무")
     private BikeRole bikeRole;
 
-    public MyBikeListResponse convertEntityToResponse(BikeEntity bikeEntity){
-        return MyBikeListResponse.builder()
+    public MyBikeResponse convertEntityToResponse(BikeEntity bikeEntity){
+        return MyBikeResponse.builder()
+                .idx(bikeEntity.getIdx())
                 .milage(bikeEntity.getMileage())
                 .fuelEfficiency(bikeEntity.getFuelEfficiency())
                 .dateOfPurchase(bikeEntity.getDateOfPurchase())
