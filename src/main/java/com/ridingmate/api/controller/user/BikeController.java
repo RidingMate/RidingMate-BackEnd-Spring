@@ -5,7 +5,7 @@ import com.ridingmate.api.payload.user.request.AddBikeRequest;
 import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.dto.BikeSearchDto;
 import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
-import com.ridingmate.api.payload.user.response.MyBikeListResponse;
+import com.ridingmate.api.payload.user.response.MyBikeResponse;
 import com.ridingmate.api.service.BikeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -130,14 +130,28 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<MyBikeListResponse> myBikeList(
+    public List<MyBikeResponse> myBikeList(
             @RequestHeader(value = "Authorization") String token
     ){
         return bikeService.bikeList();
     }
 
+    @GetMapping("/detail")
+    @ApiOperation(value = "내 바이크 디테일")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+            @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "int", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public MyBikeResponse bikeDetail(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestParam(value = "bike_idx") int idx
+    ){
+        return bikeService.bikeDetail(idx);
+    }
+
     @PutMapping("/add")
-    @ApiOperation(value = "바이크 수정")
+    @ApiOperation(value = "바이크 추가 요청")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })

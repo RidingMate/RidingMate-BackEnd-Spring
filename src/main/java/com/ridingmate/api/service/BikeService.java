@@ -9,7 +9,7 @@ import com.ridingmate.api.payload.user.request.AddBikeRequest;
 import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.dto.BikeSearchDto;
 import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
-import com.ridingmate.api.payload.user.response.MyBikeListResponse;
+import com.ridingmate.api.payload.user.response.MyBikeResponse;
 import com.ridingmate.api.repository.*;
 import com.ridingmate.api.service.common.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -120,16 +120,26 @@ public class BikeService {
 
 
 
-    //TODO : 내 바이크 리스트 - 대표바이크 컬럼 없음
-    public List<MyBikeListResponse> bikeList(){
+    //내 바이크 리스트 - 대표바이크 컬럼 없음
+    public List<MyBikeResponse> bikeList(){
         UserEntity user = authService.getUserEntityByAuthentication();
         List<BikeEntity> bikeEntities = bikeRepository.findByUserOrderByBikeRole(user);
         return bikeEntities.stream().map(bikeEntity ->
-                new MyBikeListResponse().convertEntityToResponse(bikeEntity))
+                new MyBikeResponse().convertEntityToResponse(bikeEntity))
                 .collect(Collectors.toList());
     }
 
-    //TODO : 바이크 추가요청
+    //TODO : Multipart 추가해야함
+    //바이크 디테일
+    public MyBikeResponse bikeDetail(long bikeIdx){
+        UserEntity user = authService.getUserEntityByAuthentication();
+        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+
+        return new MyBikeResponse().convertEntityToResponse(bikeEntity);
+    }
+
+    //바이크 추가요청
     public ResponseEntity<ApiResponse> addBikeRequest(AddBikeRequest addBikeRequest){
         UserEntity user = authService.getUserEntityByAuthentication();
         AddBikeEntity addBikeEntity = new AddBikeEntity().convertRequestToEntity(addBikeRequest, user);
