@@ -31,19 +31,19 @@ public class TradeBoardEntity extends BoardEntity {
 
     //배기량
     @Column(name = "cc")
-    private String cc;
+    private int cc;
 
     //연식
     @Column(name = "year")
-    private String year;
+    private int year;
 
     //주행거리
     @Column(name = "mileage")
-    private String mileage;
+    private int mileage;
 
     //가격
     @Column(name = "price")
-    private String price;
+    private int price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "trade_status")
@@ -57,15 +57,16 @@ public class TradeBoardEntity extends BoardEntity {
     // TODO : 썸네일 저장을 위한 location 저장 컬럼
     // File에 대한 entity 필요할거같음 생성해서 연관관계 연결
 
+    // 작성자 없는 생성자
     public TradeBoardEntity(String title,
                             String company,
                             String modelName,
                             double fuelEfficiency,
-                            String cc,
-                            String year,
-                            String mileage,
-                            String price
-                            ) {
+                            int cc,
+                            int year,
+                            int mileage,
+                            int price
+    ) {
 
         this.company = company;
         this.modelName = modelName;
@@ -74,7 +75,40 @@ public class TradeBoardEntity extends BoardEntity {
         this.year = year;
         this.mileage = mileage;
         this.price = price;
-        this.status = TradeStatus.FOR_SALE;
+        status = TradeStatus.FOR_SALE;
         createBoardEntity(title);
+    }
+
+    // 작성자 있는 생성자
+    public TradeBoardEntity(String title,
+                            String company,
+                            String modelName,
+                            double fuelEfficiency,
+                            int cc,
+                            int year,
+                            int mileage,
+                            int price,
+                            UserEntity user
+    ) {
+
+        this.company = company;
+        this.modelName = modelName;
+        this.fuelEfficiency = fuelEfficiency;
+        this.cc = cc;
+        this.year = year;
+        this.mileage = mileage;
+        this.price = price;
+        status = TradeStatus.FOR_SALE;
+        createBoardEntity(title, user);
+    }
+
+    // 예약중 상태
+    public void setReservedStatus() {
+        status = TradeStatus.RESERVED;
+    }
+
+    // 판매완료 상태
+    public void setCompletedStatus() {
+        status = TradeStatus.COMPLETED;
     }
 }

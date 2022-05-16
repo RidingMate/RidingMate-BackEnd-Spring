@@ -4,6 +4,7 @@ import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.user.request.TradeSearchRequest;
 import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
 import com.ridingmate.api.service.common.AwsS3Service;
@@ -34,6 +35,10 @@ public class TradeBoardService implements BoardService {
 
     public Page<TradeBoardEntity> getBoardList(PageRequest page) {
         return tradeBoardRepository.findAll(page);
+    }
+
+    public Page<TradeBoardEntity> getBoardSearchList(PageRequest page, TradeSearchRequest request) {
+        return null;
     }
 
     @Transactional

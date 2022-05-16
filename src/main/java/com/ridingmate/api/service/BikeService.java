@@ -4,7 +4,6 @@ import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.*;
 import com.ridingmate.api.entity.value.BikeRole;
 import com.ridingmate.api.exception.CustomException;
-import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.dto.BikeSearchDto;
@@ -32,6 +31,7 @@ public class BikeService {
     private final BikeYearRepository bikeYearRepository;
     private final AuthService authService;
     private final BikeRepository bikeRepository;
+    private final AddBikeRepository addBikeRepository;
 
     //바이크 제조사 검색
     public List<BikeSearchDto> searchCompany(){
@@ -79,7 +79,7 @@ public class BikeService {
 
         Enum<BikeRole> bikeRoleEnum = BikeRole.checkBikeRole(request.getBikeRole(), user);
 
-        BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum);
+        BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum, request.getDateOfPurchase());
         bikeRepository.save(bikeEntity);
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
@@ -88,18 +88,20 @@ public class BikeService {
     //TODO : Multipart 추가해야함
     //바이크 수정
     @Transactional
-    public void updateBike(BikeUpdateRequest request){
+    public ResponseEntity<ApiResponse> updateBike(BikeUpdateRequest request){
         UserEntity user = authService.getUserEntityByAuthentication();
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(request.getIdx(), user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
         Enum<BikeRole> bikeRoleEnum = BikeRole.checkBikeRole(request.getBikeRole(), user);
         bikeEntity.updateBike(request, (BikeRole) bikeRoleEnum);
         bikeRepository.save(bikeEntity);
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
     //바이크 권한 변경
     @Transactional
-    public void updateBikeRole(int idx){
+    public ResponseEntity<ApiResponse> updateBikeRole(long idx){
         UserEntity user = authService.getUserEntityByAuthentication();
 
         //이미 대표로 설정된 바이크 있으면 수정
@@ -113,30 +115,39 @@ public class BikeService {
         bikeEntity.changeBikeRole(BikeRole.REPRESENTATIVE);
 
         bikeRepository.save(bikeEntity);
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 
 
-    //TODO : 내 바이크 리스트 - 대표바이크 컬럼 없음
-    @Transactional
-    public List<BikeDto> getMyBikeList(){
+    //내 바이크 리스트 - 대표바이크 컬럼 없음
+    public List<MyBikeResponse> bikeList(){
         UserEntity user = authService.getUserEntityByAuthentication();
-
-        List<BikeEntity> myBikeList = bikeRepository.findByUser(user);
-
-        return myBikeList
-                .stream()
-                .map(BikeDto::convertEntityToDto)
+        List<BikeEntity> bikeEntities = bikeRepository.findByUserOrderByBikeRole(user);
+        return bikeEntities.stream().map(bikeEntity ->
+                new MyBikeResponse().convertEntityToResponse(bikeEntity))
                 .collect(Collectors.toList());
     }
 
-    // TODO: 내바이크
-    public BikeDto getMyBike(Long bikeId){
+    //TODO : Multipart 추가해야함
+    //바이크 디테일
+    public MyBikeResponse bikeDetail(long bikeIdx){
         UserEntity user = authService.getUserEntityByAuthentication();
-        BikeEntity bike = bikeRepository.findByIdxAndUser(bikeId, user).orElseThrow(()->
+        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
-        return BikeDto.convertEntityToDto(bike);
+
+        return new MyBikeResponse().convertEntityToResponse(bikeEntity);
     }
 
-    //TODO : 바이크 추가, 정보수정 요청
+    //바이크 추가요청
+    @Transactional
+    public ResponseEntity<ApiResponse> addBikeRequest(AddBikeRequest addBikeRequest){
+        UserEntity user = authService.getUserEntityByAuthentication();
+        AddBikeEntity addBikeEntity = new AddBikeEntity().convertRequestToEntity(addBikeRequest, user);
+        addBikeRepository.save(addBikeEntity);
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+    }
+
 }
