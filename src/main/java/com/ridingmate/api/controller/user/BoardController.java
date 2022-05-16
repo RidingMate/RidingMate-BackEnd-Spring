@@ -3,6 +3,7 @@ package com.ridingmate.api.controller.user;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
+import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.ParameterException;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.dto.NoticeBoardContentDto;
@@ -14,6 +15,8 @@ import com.ridingmate.api.payload.user.request.TradeBoardRequest;
 import com.ridingmate.api.payload.user.request.TradeSearchRequest;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
+import com.ridingmate.api.service.common.AuthService;
+
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -61,6 +64,7 @@ public class BoardController {
 
     private final NoticeBoardService noticeBoardService;
     private final TradeBoardService tradeBoardService;
+    private final AuthService authService;
 
     @GetMapping("/notice/list")
     @ApiOperation("공지사항 리스트 조회")
@@ -107,6 +111,7 @@ public class BoardController {
     @PostMapping("/trade")
     @ApiOperation("거래글 등록")
     public ResponseEntity insertTradeBoard(
+            @RequestHeader(value = "Authorization") String token,
             @RequestBody @Valid TradeBoardRequest request,
             BindingResult result
     ) {
@@ -116,7 +121,8 @@ public class BoardController {
         }
 
         // TODO : 내 바이크 조건처리 필요
-        // TODO : 작성자 필요
+        UserEntity userEntity = authService.getUserEntityByAuthentication();
+
         TradeBoardEntity tradeBoard = new TradeBoardEntity(
                 request.getTitle(),
                 request.getCompany(),
@@ -125,7 +131,8 @@ public class BoardController {
                 request.getCc(),
                 request.getYear(),
                 request.getMileage(),
-                request.getPrice());
+                request.getPrice(),
+                userEntity);
         tradeBoardService.insertBoardContent(tradeBoard);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
