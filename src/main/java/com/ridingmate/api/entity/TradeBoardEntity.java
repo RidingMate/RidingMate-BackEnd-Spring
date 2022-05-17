@@ -1,5 +1,7 @@
 package com.ridingmate.api.entity;
 
+import java.time.LocalDate;
+
 import com.ridingmate.api.entity.value.TradeStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,9 +43,21 @@ public class TradeBoardEntity extends BoardEntity {
     @Column(name = "mileage")
     private int mileage;
 
+    // 구매 일자
+    @Column(name = "date_of_purchase")
+    private LocalDate dateOfPurchase;
+
     //가격
     @Column(name = "price")
     private int price;
+
+    // 연락처
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    // 구매자에게 주유/정비정보 공개
+    @Column(name = "is_open_to_buyer")
+    private char isOpenToBuyer;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "trade_status")
