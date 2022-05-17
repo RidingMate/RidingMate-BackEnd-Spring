@@ -27,8 +27,9 @@ public abstract class BoardEntity extends BaseTime {
     @Column(name = "title")
     private String title;
 
-    // TODO : 내용 컬럼 추가
-    // TODO : 내용과 사진을 같이 저장할 BLOB와 같은 컬럼
+    // 내용
+    @Column(name = "content")
+    private String content;
 
     //조회수
     @Column(name = "hit")
