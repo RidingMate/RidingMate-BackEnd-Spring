@@ -64,6 +64,9 @@ public class TradeBoardEntity extends BoardEntity {
     private TradeStatus status;
 
     // TODO : 내 바이크를 올릴경우 내 바이크와 연관관계 필요
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "my_bike_idx")
+    private BikeEntity myBike;
 
     // TODO : 직거래를 위한 지역에 대한 연관관계도 필요할듯
 
@@ -114,6 +117,12 @@ public class TradeBoardEntity extends BoardEntity {
         this.price = price;
         status = TradeStatus.FOR_SALE;
         createBoardEntity(title, user);
+    }
+
+    // 작성자, 내바이크 생성자
+    public TradeBoardEntity(String title, String content, UserEntity user, BikeEntity bike) {
+        myBike = bike;
+        createBoardEntity(title, content, user);
     }
 
     // 예약중 상태
