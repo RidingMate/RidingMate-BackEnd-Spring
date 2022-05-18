@@ -1,7 +1,9 @@
 package com.ridingmate.api.entity;
 
 import com.ridingmate.api.entity.value.BikeRole;
+import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
 import com.ridingmate.api.payload.user.request.MaintenanceInsertRequest;
+import com.ridingmate.api.payload.user.request.MaintenanceUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -79,6 +81,15 @@ public class MaintenanceEntity extends BaseTime {
                 .amount(request.getAmount())
                 .content(request.getContent())
                 .build();
+    }
+
+    public void updateMaintenance(MaintenanceUpdateRequest request){
+        this.title = request.getTitle();
+        this.area = request.getArea();
+        this.dateOfMaintenance = request.getDateOfMaintenance();
+        this.location = request.getLocation();
+        this.amount = request.getAmount();
+
     }
 
 }

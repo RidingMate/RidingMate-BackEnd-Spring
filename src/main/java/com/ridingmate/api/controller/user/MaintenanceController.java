@@ -2,6 +2,7 @@ package com.ridingmate.api.controller.user;
 
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.request.MaintenanceInsertRequest;
+import com.ridingmate.api.payload.user.request.MaintenanceUpdateRequest;
 import com.ridingmate.api.payload.user.response.MaintenanceResponse;
 import com.ridingmate.api.service.MaintenanceService;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +38,25 @@ public class MaintenanceController {
         return maintenanceService.getMaintenanceList(bike_id);
     }
 
+    // TODO: 정비기록 하나 보이기
+    @GetMapping("/{bike_id}/{maintenance_id}")
+    public MaintenanceResponse getMaintenanceDetail(
+            @PathVariable("bike_id") Long bike_id,
+            @PathVariable("maintenance_id") Long maintenance_id
+    ){
+        return maintenanceService.getMaintenanceDetail(bike_id,maintenance_id);
+    }
+
     @PostMapping("/insert")
     public ResponseEntity<ApiResponse> insertMaintenance(@RequestBody MaintenanceInsertRequest request){
         return maintenanceService.insertMaintenance(request);
     }
 
     //TODO: 수정
+    @PostMapping("/update")
+    public ResponseEntity<ApiResponse> updateMaintenance(@RequestBody MaintenanceUpdateRequest request){
+
+        return maintenanceService.updateMaintenance(request);
+    }
 
 }
