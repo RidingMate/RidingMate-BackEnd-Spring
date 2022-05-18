@@ -17,14 +17,12 @@ public class LocationService {
     private final LocationRepository locationRepository;
 
     // 도, 광역시 리스트 조회
-    public List<String> getLocationList() {
-        List<LocationEntity> locationList = locationRepository.findByLocationCodeEndsWith("00000000");
-        return locationList.stream().map(LocationEntity::getName).collect(Collectors.toList());
+    public List<LocationEntity> getLocationList() {
+        return locationRepository.findByLocationCodeEndsWith("00000000");
     }
 
     // 시군구 리스트 조회
-    public List<String> getSubLocationList(String upperLocationCode) {
-        List<LocationEntity> locationList = locationRepository.findByUpperLocationCode(upperLocationCode);
-        return locationList.stream().map(LocationEntity::getName).collect(Collectors.toList());
+    public List<LocationEntity> getSubLocationList(String upperLocationCode) {
+        return locationRepository.findByUpperLocationCode(upperLocationCode);
     }
 }
