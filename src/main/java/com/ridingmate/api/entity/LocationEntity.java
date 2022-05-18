@@ -37,7 +37,6 @@ public class LocationEntity {
     public LocationEntity(String locationCode, String name) {
         this.locationCode = locationCode;
         this.name = name;
-        upperLocationCode = locationCode;
     }
 
     // 시군구 저장
