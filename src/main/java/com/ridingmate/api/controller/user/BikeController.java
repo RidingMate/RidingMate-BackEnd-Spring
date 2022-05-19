@@ -119,7 +119,7 @@ public class BikeController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public void updateBikeRole(
             @RequestHeader(value = "Authorization") String token,
-            @PathVariable("boardId") Long bike_idx
+            @PathVariable("bike_idx") Long bike_idx
     ){
         bikeService.updateBikeRole(bike_idx);
     }
@@ -145,7 +145,7 @@ public class BikeController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public MyBikeResponse bikeDetail(
             @RequestHeader(value = "Authorization") String token,
-            @PathVariable("boardId") Long bike_idx
+            @PathVariable("bike_idx") Long bike_idx
     ){
         return bikeService.bikeDetail(bike_idx);
     }
