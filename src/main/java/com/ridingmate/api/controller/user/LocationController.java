@@ -31,13 +31,4 @@ public class LocationController {
                               .collect(Collectors.toList());
     }
 
-    @GetMapping("/list/sub")
-    @ApiOperation("시군구 조회")
-    public List<LocationDto> getSubLocationList(@RequestParam String upperLocationCode) {
-        return locationService.getSubLocationList(upperLocationCode)
-                              .stream()
-                              .map(location -> new LocationDto(location.getLocationCode(),
-                                                               location.getName()))
-                              .collect(Collectors.toList());
-    }
 }
