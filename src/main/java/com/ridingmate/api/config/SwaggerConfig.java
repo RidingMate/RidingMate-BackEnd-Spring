@@ -32,18 +32,18 @@ public class SwaggerConfig {
                 .apiInfo(apiInfo());
     }
 
-    @Bean
-    public Docket v1DataApi() {
-        groupName = "v1_data";
-        return new Docket(DocumentationType.SWAGGER_2)
-                .useDefaultResponseMessages(false)
-                .groupName(groupName)
-                .select()
-                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller"))
-                .paths(PathSelectors.ant("/v1/data/**"))
-                .build()
-                .apiInfo(apiInfo());
-    }
+//    @Bean
+//    public Docket v1DataApi() {
+//        groupName = "v1_data";
+//        return new Docket(DocumentationType.SWAGGER_2)
+//                .useDefaultResponseMessages(false)
+//                .groupName(groupName)
+//                .select()
+//                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller"))
+//                .paths(PathSelectors.ant("/v1/data/**"))
+//                .build()
+//                .apiInfo(apiInfo());
+//    }
 
     @Bean
     public Docket v1BikeApi() {
