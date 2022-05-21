@@ -123,6 +123,8 @@ public class BoardController {
         // TODO : 내 바이크 조건처리 필요
         UserEntity userEntity = authService.getUserEntityByAuthentication();
 
+        // TODO : 거래 지역 추가 필요
+
         TradeBoardEntity tradeBoard = new TradeBoardEntity(
                 request.getTitle(),
                 request.getCompany(),
