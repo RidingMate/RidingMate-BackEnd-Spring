@@ -57,7 +57,7 @@ public class TradeBoardEntity extends BoardEntity {
 
     // 구매자에게 주유/정비정보 공개
     @Column(name = "is_open_to_buyer")
-    private char isOpenToBuyer;
+    private Character isOpenToBuyer;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "trade_status")
