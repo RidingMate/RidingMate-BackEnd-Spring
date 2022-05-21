@@ -12,5 +12,7 @@ public interface LocationRepository extends JpaRepository<LocationEntity, String
 
     List<LocationEntity> findByUpperLocationCode(String upperLocationCode);
 
-    List<LocationEntity> findByLocationCodeEndsWith(String locationCode);
+    List<LocationEntity> findByLocationCodeEndsWithOrderByLocationCode(String locationCode);
+
+    List<LocationEntity> findAllByOrderByLocationCode();
 }

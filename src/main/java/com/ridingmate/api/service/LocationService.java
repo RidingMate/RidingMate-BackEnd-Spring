@@ -18,7 +18,8 @@ public class LocationService {
 
     // 도, 광역시 리스트 조회
     public List<LocationEntity> getLocationList() {
-        return locationRepository.findByLocationCodeEndsWith("00000000");
+        // 하위지역 사용하게되면 변경필요
+        return locationRepository.findAllByOrderByLocationCode();
     }
 
     // 시군구 리스트 조회
