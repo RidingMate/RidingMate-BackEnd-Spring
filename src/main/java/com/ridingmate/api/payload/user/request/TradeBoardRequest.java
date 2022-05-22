@@ -12,17 +12,27 @@ public class TradeBoardRequest {
     @ApiModelProperty(value = "거래글 제목", required = true)
     private String title;
 
+    @ApiModelProperty(value = "가격")
     private int price;
 
+    @ApiModelProperty(value = "업체명")
     private String company;
 
+    @ApiModelProperty(value = "모델명")
     private String modelName;
 
+    @ApiModelProperty(value = "연비")
     private double fuelEfficiency;
 
+    @ApiModelProperty(value = "cc")
     private int cc;
 
+    @ApiModelProperty(value = "연식")
     private int year;
 
+    @ApiModelProperty(value = "주행거리")
     private int mileage;
+
+    @ApiModelProperty(value = "지역 코드")
+    private String locationCode;
 }
