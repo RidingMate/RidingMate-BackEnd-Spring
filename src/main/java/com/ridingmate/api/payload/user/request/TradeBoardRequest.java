@@ -35,4 +35,11 @@ public class TradeBoardRequest {
 
     @ApiModelProperty(value = "지역 코드")
     private String locationCode;
+    
+    @ApiModelProperty(value = "구매 일자 연도")
+    private int purchaseYear;
+
+    @ApiModelProperty(value = "구매 일자 월")
+    private int purchaseMonth;
+    
 }
