@@ -1,6 +1,7 @@
 package com.ridingmate.api.controller.user;
 
 import com.ridingmate.api.consts.ResponseCode;
+import com.ridingmate.api.entity.LocationEntity;
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
@@ -13,6 +14,7 @@ import com.ridingmate.api.payload.user.dto.TradeBoardDto;
 import com.ridingmate.api.payload.user.request.NoticeBoardRequest;
 import com.ridingmate.api.payload.user.request.TradeBoardRequest;
 import com.ridingmate.api.payload.user.request.TradeSearchRequest;
+import com.ridingmate.api.service.LocationService;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
 import com.ridingmate.api.service.common.AuthService;
@@ -65,6 +67,7 @@ public class BoardController {
     private final NoticeBoardService noticeBoardService;
     private final TradeBoardService tradeBoardService;
     private final AuthService authService;
+    private final LocationService locationService;
 
     @GetMapping("/notice/list")
     @ApiOperation("공지사항 리스트 조회")
@@ -123,7 +126,11 @@ public class BoardController {
         // TODO : 내 바이크 조건처리 필요
         UserEntity userEntity = authService.getUserEntityByAuthentication();
 
-        // TODO : 거래 지역 추가 필요
+        // 거래 지역
+        LocationEntity location = null;
+        if (request.getLocationCode() != null) {
+            location = locationService.getLocation(request.getLocationCode());
+        }
 
         TradeBoardEntity tradeBoard = new TradeBoardEntity(
                 request.getTitle(),
@@ -134,7 +141,8 @@ public class BoardController {
                 request.getYear(),
                 request.getMileage(),
                 request.getPrice(),
-                userEntity);
+                userEntity,
+                location);
         tradeBoardService.insertBoardContent(tradeBoard);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
