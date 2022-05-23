@@ -170,8 +170,8 @@ public class TradeBoardEntity extends BoardEntity {
                             int year,
                             int mileage,
                             int price,
-                            int purchaseYear,
-                            int purchaseMonth,
+                            Integer purchaseYear,
+                            Integer purchaseMonth,
                             UserEntity user,
                             LocationEntity location
     ) {
@@ -184,7 +184,9 @@ public class TradeBoardEntity extends BoardEntity {
         this.mileage = mileage;
         this.price = price;
         this.location = location;
-        dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        if (purchaseYear != null && purchaseMonth != null) {
+            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        }
         status = TradeStatus.FOR_SALE;
         createBoardEntity(title, user);
     }

@@ -141,6 +141,8 @@ public class BoardController {
                 request.getYear(),
                 request.getMileage(),
                 request.getPrice(),
+                request.getPurchaseYear(),
+                request.getPurchaseMonth(),
                 userEntity,
                 location);
         tradeBoardService.insertBoardContent(tradeBoard);
