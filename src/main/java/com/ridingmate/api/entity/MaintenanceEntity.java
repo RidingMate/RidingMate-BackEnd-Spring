@@ -37,19 +37,19 @@ public class MaintenanceEntity extends BaseTime {
     private Long idx;
 
     // 제목
-    @Column(name="title")
+    @Column(name="title", nullable = false)
     private String title;
 
     // 서비스센터 /기관명
-    @Column(name = "area")
+    @Column(name = "area", nullable = false)
     private String area;
 
     // 정비 날짜
-    @Column(name = "dateOfMaintenance")
+    @Column(name = "dateOfMaintenance", nullable = false)
     private LocalDate dateOfMaintenance;
 
     //정비 위치
-    @Column(name = "location")
+    @Column(name = "location", nullable = false)
     private String location;
 
     // 정비 위치 리스트?
@@ -57,7 +57,7 @@ public class MaintenanceEntity extends BaseTime {
 //    private List<> location = new ArrayList<>();
 
     //정비 가격
-    @Column(name = "amount")
+    @Column(name = "amount", nullable = false)
     private String amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
