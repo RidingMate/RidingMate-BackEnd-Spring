@@ -41,5 +41,8 @@ public class TradeBoardRequest {
 
     @ApiModelProperty(value = "구매 일자 월")
     private Integer purchaseMonth;
+
+    @ApiModelProperty(value = "상세 내용")
+    private String content;
     
 }

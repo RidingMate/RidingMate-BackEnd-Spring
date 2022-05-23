@@ -134,6 +134,7 @@ public class BoardController {
 
         TradeBoardEntity tradeBoard = new TradeBoardEntity(
                 request.getTitle(),
+                request.getContent(),
                 request.getCompany(),
                 request.getModelName(),
                 request.getFuelEfficiency(),
