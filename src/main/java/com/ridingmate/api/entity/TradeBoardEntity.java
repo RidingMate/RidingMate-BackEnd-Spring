@@ -170,8 +170,8 @@ public class TradeBoardEntity extends BoardEntity {
                             int year,
                             int mileage,
                             int price,
-                            int purchaseYear,
-                            int purchaseMonth,
+                            Integer purchaseYear,
+                            Integer purchaseMonth,
                             UserEntity user,
                             LocationEntity location
     ) {
@@ -184,9 +184,42 @@ public class TradeBoardEntity extends BoardEntity {
         this.mileage = mileage;
         this.price = price;
         this.location = location;
-        dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        if (purchaseYear != null && purchaseMonth != null) {
+            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        }
         status = TradeStatus.FOR_SALE;
         createBoardEntity(title, user);
+    }
+
+    // 작성자 + 내용 + 지역 + 구매일자 생성자
+    public TradeBoardEntity(String title,
+                            String content,
+                            String company,
+                            String modelName,
+                            double fuelEfficiency,
+                            int cc,
+                            int year,
+                            int mileage,
+                            int price,
+                            Integer purchaseYear,
+                            Integer purchaseMonth,
+                            UserEntity user,
+                            LocationEntity location
+    ) {
+
+        this.company = company;
+        this.modelName = modelName;
+        this.fuelEfficiency = fuelEfficiency;
+        this.cc = cc;
+        this.year = year;
+        this.mileage = mileage;
+        this.price = price;
+        this.location = location;
+        if (purchaseYear != null && purchaseMonth != null) {
+            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        }
+        status = TradeStatus.FOR_SALE;
+        createBoardEntity(title, content, user);
     }
 
     // 예약중 상태

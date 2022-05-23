@@ -134,6 +134,7 @@ public class BoardController {
 
         TradeBoardEntity tradeBoard = new TradeBoardEntity(
                 request.getTitle(),
+                request.getContent(),
                 request.getCompany(),
                 request.getModelName(),
                 request.getFuelEfficiency(),
@@ -141,6 +142,8 @@ public class BoardController {
                 request.getYear(),
                 request.getMileage(),
                 request.getPrice(),
+                request.getPurchaseYear(),
+                request.getPurchaseMonth(),
                 userEntity,
                 location);
         tradeBoardService.insertBoardContent(tradeBoard);
