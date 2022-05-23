@@ -39,7 +39,7 @@ public class MaintenanceController {
     }
 
     // TODO: 정비기록 하나 보이기
-    @GetMapping("/{bike_id}/{maintenance_id}")
+    @GetMapping("/{bike_id}/detail/{maintenance_id}")
     public MaintenanceResponse getMaintenanceDetail(
             @PathVariable("bike_id") Long bike_id,
             @PathVariable("maintenance_id") Long maintenance_id
@@ -47,16 +47,21 @@ public class MaintenanceController {
         return maintenanceService.getMaintenanceDetail(bike_id,maintenance_id);
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<ApiResponse> insertMaintenance(@RequestBody MaintenanceInsertRequest request){
-        return maintenanceService.insertMaintenance(request);
+    @PostMapping("/{bike_id}/insert")
+    public ResponseEntity<ApiResponse> insertMaintenance(
+            @PathVariable("bike_id") Long bike_id,
+            @RequestBody MaintenanceInsertRequest request){
+        return maintenanceService.insertMaintenance(bike_id, request);
     }
 
     //TODO: 수정
-    @PostMapping("/update")
-    public ResponseEntity<ApiResponse> updateMaintenance(@RequestBody MaintenanceUpdateRequest request){
+    @PutMapping("/{bike_id}/update/{maintenance_id}")
+    public ResponseEntity<ApiResponse> updateMaintenance(
+            @PathVariable("bike_id") Long bike_id,
+            @PathVariable("maintenance_id") Long maintenance_id,
+            @RequestBody MaintenanceUpdateRequest request){
 
-        return maintenanceService.updateMaintenance(request);
+        return maintenanceService.updateMaintenance(bike_id, maintenance_id, request);
     }
 
 }
