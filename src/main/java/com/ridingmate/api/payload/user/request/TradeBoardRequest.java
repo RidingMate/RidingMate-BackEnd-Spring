@@ -44,5 +44,11 @@ public class TradeBoardRequest {
 
     @ApiModelProperty(value = "상세 내용")
     private String content;
+
+    @ApiModelProperty(value = "연락처")
+    private String phoneNumber;
+
+    @ApiModelProperty(value = "구매자에게 주유/정비 정보 공개하기 Y/N")
+    private char isOpenToBuyer;
     
 }

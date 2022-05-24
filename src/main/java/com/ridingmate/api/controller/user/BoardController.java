@@ -142,6 +142,8 @@ public class BoardController {
                 request.getYear(),
                 request.getMileage(),
                 request.getPrice(),
+                request.getPhoneNumber(),
+                request.getIsOpenToBuyer(),
                 request.getPurchaseYear(),
                 request.getPurchaseMonth(),
                 userEntity,

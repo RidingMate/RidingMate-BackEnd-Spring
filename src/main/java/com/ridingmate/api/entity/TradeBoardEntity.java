@@ -116,6 +116,41 @@ public class TradeBoardEntity extends BoardEntity {
         createBoardEntity(title, content, user);
     }
 
+    // 작성자 + 내용 + 지역 + 구매일자 + 연락처 + 공개여부 생성자
+    public TradeBoardEntity(String title,
+                            String content,
+                            String company,
+                            String modelName,
+                            double fuelEfficiency,
+                            int cc,
+                            int year,
+                            int mileage,
+                            int price,
+                            String phoneNumber,
+                            char isOpenToBuyer,
+                            Integer purchaseYear,
+                            Integer purchaseMonth,
+                            UserEntity user,
+                            LocationEntity location
+    ) {
+
+        this.company = company;
+        this.modelName = modelName;
+        this.fuelEfficiency = fuelEfficiency;
+        this.cc = cc;
+        this.year = year;
+        this.mileage = mileage;
+        this.price = price;
+        this.location = location;
+        this.isOpenToBuyer = isOpenToBuyer;
+        this.phoneNumber = phoneNumber;
+        if (purchaseYear != null && purchaseMonth != null) {
+            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        }
+        status = TradeStatus.FOR_SALE;
+        createBoardEntity(title, content, user);
+    }
+
     // 예약중 상태
     public void setReservedStatus() {
         status = TradeStatus.RESERVED;
