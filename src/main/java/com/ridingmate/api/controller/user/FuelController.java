@@ -1,6 +1,11 @@
 package com.ridingmate.api.controller.user;
 
+import com.ridingmate.api.payload.user.response.MyBikeResponse;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,5 +27,16 @@ import java.util.List;
 public class FuelController {
 
 
+    @GetMapping("/list/{bikeId}")
+    @ApiOperation(value = "내 바이크 연비 리스트")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void myBikeFuelList(
+            @RequestHeader(value = "Authorization") String token
+    ){
+
+    }
 
 }
