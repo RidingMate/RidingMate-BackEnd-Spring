@@ -1,5 +1,7 @@
 package com.ridingmate.api.payload.user.dto;
 
+import java.time.format.DateTimeFormatter;
+
 import com.ridingmate.api.entity.TradeBoardEntity;
 import lombok.Getter;
 
@@ -13,6 +15,8 @@ public class TradeBoardContentDto {
     private int cc;
     private int year;
     private int price;
+    private String location;
+    private String dateOfPurchase;
 
     public TradeBoardContentDto(TradeBoardEntity tradeBoard) {
         title = tradeBoard.getTitle();
@@ -22,5 +26,7 @@ public class TradeBoardContentDto {
         cc = tradeBoard.getCc();
         year = tradeBoard.getYear();
         price = tradeBoard.getPrice();
+        location = tradeBoard.getLocation().getName();
+        dateOfPurchase = tradeBoard.getDateOfPurchase().format(DateTimeFormatter.ofPattern("YYYY-MM"));
     }
 }
