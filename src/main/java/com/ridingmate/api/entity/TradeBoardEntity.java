@@ -77,118 +77,12 @@ public class TradeBoardEntity extends BoardEntity {
     // TODO : 썸네일 저장을 위한 location 저장 컬럼
     // File에 대한 entity 필요할거같음 생성해서 연관관계 연결
 
-    // 작성자 없는 생성자
-    public TradeBoardEntity(String title,
-                            String company,
-                            String modelName,
-                            double fuelEfficiency,
-                            int cc,
-                            int year,
-                            int mileage,
-                            int price
-    ) {
-
-        this.company = company;
-        this.modelName = modelName;
-        this.fuelEfficiency = fuelEfficiency;
-        this.cc = cc;
-        this.year = year;
-        this.mileage = mileage;
-        this.price = price;
-        status = TradeStatus.FOR_SALE;
-        createBoardEntity(title);
-    }
-
-    // 작성자 있는 생성자
-    public TradeBoardEntity(String title,
-                            String company,
-                            String modelName,
-                            double fuelEfficiency,
-                            int cc,
-                            int year,
-                            int mileage,
-                            int price,
-                            UserEntity user
-    ) {
-
-        this.company = company;
-        this.modelName = modelName;
-        this.fuelEfficiency = fuelEfficiency;
-        this.cc = cc;
-        this.year = year;
-        this.mileage = mileage;
-        this.price = price;
-        status = TradeStatus.FOR_SALE;
-        createBoardEntity(title, user);
-    }
-
-    // 작성자, 내바이크 생성자
-    public TradeBoardEntity(String title, String content, UserEntity user, BikeEntity bike) {
-        myBike = bike;
-        createBoardEntity(title, content, user);
-    }
-
     // 작성자, 내바이크, 지역 생성자
     public TradeBoardEntity(String title, String content, UserEntity user, BikeEntity bike,
                             LocationEntity location) {
         myBike = bike;
         this.location = location;
         createBoardEntity(title, content, user);
-    }
-
-    // 작성자 + 지역 생성자
-    public TradeBoardEntity(String title,
-                            String company,
-                            String modelName,
-                            double fuelEfficiency,
-                            int cc,
-                            int year,
-                            int mileage,
-                            int price,
-                            UserEntity user,
-                            LocationEntity location
-    ) {
-
-        this.company = company;
-        this.modelName = modelName;
-        this.fuelEfficiency = fuelEfficiency;
-        this.cc = cc;
-        this.year = year;
-        this.mileage = mileage;
-        this.price = price;
-        this.location = location;
-        status = TradeStatus.FOR_SALE;
-        createBoardEntity(title, user);
-    }
-
-    // 작성자 + 지역 + 구매일자 생성자
-    public TradeBoardEntity(String title,
-                            String company,
-                            String modelName,
-                            double fuelEfficiency,
-                            int cc,
-                            int year,
-                            int mileage,
-                            int price,
-                            Integer purchaseYear,
-                            Integer purchaseMonth,
-                            UserEntity user,
-                            LocationEntity location
-    ) {
-
-        this.company = company;
-        this.modelName = modelName;
-        this.fuelEfficiency = fuelEfficiency;
-        this.cc = cc;
-        this.year = year;
-        this.mileage = mileage;
-        this.price = price;
-        this.location = location;
-        if (purchaseYear != null && purchaseMonth != null) {
-            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
-        }
-        status = TradeStatus.FOR_SALE;
-        createBoardEntity(title, user);
     }
 
     // 작성자 + 내용 + 지역 + 구매일자 생성자
@@ -215,6 +109,41 @@ public class TradeBoardEntity extends BoardEntity {
         this.mileage = mileage;
         this.price = price;
         this.location = location;
+        if (purchaseYear != null && purchaseMonth != null) {
+            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        }
+        status = TradeStatus.FOR_SALE;
+        createBoardEntity(title, content, user);
+    }
+
+    // 작성자 + 내용 + 지역 + 구매일자 + 연락처 + 공개여부 생성자
+    public TradeBoardEntity(String title,
+                            String content,
+                            String company,
+                            String modelName,
+                            double fuelEfficiency,
+                            int cc,
+                            int year,
+                            int mileage,
+                            int price,
+                            String phoneNumber,
+                            char isOpenToBuyer,
+                            Integer purchaseYear,
+                            Integer purchaseMonth,
+                            UserEntity user,
+                            LocationEntity location
+    ) {
+
+        this.company = company;
+        this.modelName = modelName;
+        this.fuelEfficiency = fuelEfficiency;
+        this.cc = cc;
+        this.year = year;
+        this.mileage = mileage;
+        this.price = price;
+        this.location = location;
+        this.isOpenToBuyer = isOpenToBuyer;
+        this.phoneNumber = phoneNumber;
         if (purchaseYear != null && purchaseMonth != null) {
             dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
         }
