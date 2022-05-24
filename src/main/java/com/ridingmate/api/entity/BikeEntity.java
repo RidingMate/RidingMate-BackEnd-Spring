@@ -92,7 +92,7 @@ public class BikeEntity extends BaseTime{
 
 
     //바이크 등록
-    public static BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage, String bikeNickname, BikeRole bikeRole, LocalDate dateOfPurchase){
+    public BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage, String bikeNickname, BikeRole bikeRole, LocalDate dateOfPurchase){
 
         //바이크 별명을 입력하지 않았을 경우
         String nickname = null;

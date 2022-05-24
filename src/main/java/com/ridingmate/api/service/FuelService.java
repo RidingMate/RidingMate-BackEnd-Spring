@@ -5,6 +5,7 @@ import com.ridingmate.api.entity.BikeEntity;
 import com.ridingmate.api.entity.FuelEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.user.response.FuelListResponse;
 import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.FuelRepository;
 import com.ridingmate.api.service.common.AuthService;
@@ -28,13 +29,14 @@ public class FuelService {
     private final FuelRepository fuelRepository;
     private final BikeRepository bikeRepository;
 
-    public void list(long bikeId){
+    public FuelListResponse list(long bikeIdx){
         UserEntity user = authService.getUserEntityByAuthentication();
 
-        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeId, user).orElseThrow(()->
+        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
         List<FuelEntity> list = fuelRepository.findByBikeOrderByCreateAt(bikeEntity);
 
+        return new FuelListResponse().convertEntityToResponse(list, bikeEntity);
     }
 }

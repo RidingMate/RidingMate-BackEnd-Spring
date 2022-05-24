@@ -1,6 +1,9 @@
 package com.ridingmate.api.controller.user;
 
+import com.ridingmate.api.payload.user.response.FuelListResponse;
 import com.ridingmate.api.payload.user.response.MyBikeResponse;
+import com.ridingmate.api.service.BikeService;
+import com.ridingmate.api.service.FuelService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -26,17 +29,20 @@ import java.util.List;
 @RequestMapping("/v1/fuel")
 public class FuelController {
 
+    private final FuelService fuelService;
 
-    @GetMapping("/list/{bikeId}")
+
+    @GetMapping("/list/{bike_idx}")
     @ApiOperation(value = "내 바이크 연비 리스트")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void myBikeFuelList(
-            @RequestHeader(value = "Authorization") String token
+    public FuelListResponse myBikeFuelList(
+            @RequestHeader(value = "Authorization") String token,
+            @PathVariable("bike_idx") Long bike_idx
     ){
-
+        return fuelService.list(bike_idx);
     }
 
 }
