@@ -9,6 +9,9 @@ import java.time.LocalDate;
 @Getter
 public class MaintenanceInsertRequest {
 
+    @ApiModelProperty(value = "바이크 idx", required = true)
+    private Long bike_idx;
+
     @ApiModelProperty(value = "제목", required = true)
     private String title;
 

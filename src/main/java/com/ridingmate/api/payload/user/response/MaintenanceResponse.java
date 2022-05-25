@@ -25,6 +25,7 @@ public class MaintenanceResponse {
     private String location;
     private String amount;
     private String content;
+    private BikeEntity bikeEntity;
 
     // TODO : 사진 기록해야함 -> 멀티파트를 이용한 썸네일 저장
     // TODO : BLOB같은거 이용해서 내용에 사진도 들어갈 수 있게 저장
@@ -38,6 +39,7 @@ public class MaintenanceResponse {
                 .location(maintenanceEntity.getLocation())
                 .amount(maintenanceEntity.getAmount())
                 .content(maintenanceEntity.getContent())
+                .bikeEntity(maintenanceEntity.getBike())
                 .build();
     }
 
