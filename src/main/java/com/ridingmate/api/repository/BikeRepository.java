@@ -20,7 +20,7 @@ public interface BikeRepository extends JpaRepository<BikeEntity, Long> {
 
     List<BikeEntity> findByUserAndBikeRole(UserEntity userEntity, BikeRole bikeRole);
 
-    List<BikeEntity> findByUserOrderByBikeRole(UserEntity userEntity);
+//    List<BikeEntity> findByUserOrderByBikeRole(UserEntity userEntity);
 
     List<BikeEntity> findByUser(UserEntity user);
 

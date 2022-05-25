@@ -27,28 +27,30 @@ public class MaintenanceService {
 
 
     //3 bike entity에서 maintenance 정보 불러오기,,, 근데 말이 안되는것같긴 함
-    public List<MaintenanceResponse> getMaintenanceList(Long bike_id) {
-        BikeEntity bike = bikeRepository.findById(bike_id).orElseThrow(()->
-                new CustomException(ResponseCode.NOT_FOUND_BIKE));
-
-        List<MaintenanceEntity> maintenances = bike.getMaintenances(); // 이게 말이 되나,,,?
-
-        return maintenances.stream().map(maintenanceEntity ->
-                new MaintenanceResponse().convertEntityToResponse(maintenanceEntity))
-                .collect(Collectors.toList());
-    }
-    
-    // 2 bike id로 bike entity 가져와서 그걸로 찾기
 //    public List<MaintenanceResponse> getMaintenanceList(Long bike_id) {
 //        BikeEntity bike = bikeRepository.findById(bike_id).orElseThrow(()->
 //                new CustomException(ResponseCode.NOT_FOUND_BIKE));
-//        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBike(bike);
-//        return maintenanceEntities.stream().map(maintenanceEntity ->
+//
+//        List<MaintenanceEntity> maintenances = bike.getMaintenances(); // 이게 말이 되나,,,?
+//
+//        return maintenances.stream().map(maintenanceEntity ->
 //                new MaintenanceResponse().convertEntityToResponse(maintenanceEntity))
 //                .collect(Collectors.toList());
 //    }
-    
-        // 1 bikeIdx로 찾기...?
+
+    //     2 bike id로 bike entity 가져와서 그걸로 찾기
+    public List<MaintenanceResponse> getMaintenanceList(Long bike_id) {
+
+        BikeEntity bike = bikeRepository.findById(bike_id).orElseThrow(() ->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBike(bike);
+
+        return maintenanceEntities.stream().map(maintenanceEntity ->
+                        new MaintenanceResponse().convertEntityToResponse(maintenanceEntity))
+                .collect(Collectors.toList());
+    }
+
+    // 1 bikeIdx로 찾기...?
 //    @Transactional
 //    public List<MaintenanceResponse> getMaintenanceList(Long bike_id) {
 //        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBikeIdx(bike_id);
