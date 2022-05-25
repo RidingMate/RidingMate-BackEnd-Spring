@@ -125,7 +125,7 @@ public class BikeController {
         bikeService.updateBikeRole(bike_idx);
     }
 
-    @GetMapping("/list/zzz")
+    @GetMapping("/list")
     @ApiOperation(value = "내 바이크 리스트")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
