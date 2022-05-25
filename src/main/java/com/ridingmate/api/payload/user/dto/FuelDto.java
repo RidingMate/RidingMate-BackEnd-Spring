@@ -14,6 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class FuelDto {
+
+    //TODO : 스웨거에 나오는지 확인
     @ApiModelProperty(value = "주유량")
     private int fuelVolume;
     @ApiModelProperty(value = "주유 가격")
