@@ -78,7 +78,8 @@ public class BikeService {
 
         Enum<BikeRole> bikeRoleEnum = BikeRole.checkBikeRole(request.getBikeRole(), user);
 
-        BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum, request.getDateOfPurchase());
+//        BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum, request.getDateOfPurchase());
+        BikeEntity bikeEntity = new BikeEntity().createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum, request.getDateOfPurchase());
         bikeRepository.save(bikeEntity);
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
