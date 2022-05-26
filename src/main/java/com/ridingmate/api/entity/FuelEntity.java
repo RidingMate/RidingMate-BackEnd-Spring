@@ -1,5 +1,6 @@
 package com.ridingmate.api.entity;
 
+import com.ridingmate.api.payload.user.request.AddFuelRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,9 +54,18 @@ public class FuelEntity extends BaseTime {
     @Column(name = "fuelAmount")
     private int fuelAmount;
 
+    //초기화 여부
+    @Column(name = "reset")
+    private char reset;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bike_id")
     private BikeEntity bike;
+
+    public FuelEntity createEntity(BikeEntity bikeEntity, AddFuelRequest addFuelRequest){
+
+        return this;
+    }
 
 
 }

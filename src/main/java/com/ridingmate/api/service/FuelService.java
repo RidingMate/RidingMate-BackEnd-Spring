@@ -1,16 +1,22 @@
 package com.ridingmate.api.service;
 
 import com.ridingmate.api.consts.ResponseCode;
+import com.ridingmate.api.entity.AddBikeEntity;
 import com.ridingmate.api.entity.BikeEntity;
 import com.ridingmate.api.entity.FuelEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.common.ApiResponse;
+import com.ridingmate.api.payload.user.request.AddBikeRequest;
+import com.ridingmate.api.payload.user.request.AddFuelRequest;
 import com.ridingmate.api.payload.user.response.FuelListResponse;
 import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.FuelRepository;
 import com.ridingmate.api.service.common.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -38,5 +44,16 @@ public class FuelService {
         List<FuelEntity> list = fuelRepository.findByBikeOrderByCreateAt(bikeEntity);
 
         return new FuelListResponse().convertEntityToResponse(list, bikeEntity);
+    }
+
+    @Transactional
+    public ResponseEntity<ApiResponse> addFuel(AddFuelRequest addFuelRequest){
+        UserEntity user = authService.getUserEntityByAuthentication();
+
+        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(addFuelRequest.getBike_idx(), user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 }
