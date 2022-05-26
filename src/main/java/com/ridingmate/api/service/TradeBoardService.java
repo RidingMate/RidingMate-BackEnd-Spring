@@ -1,5 +1,6 @@
 package com.ridingmate.api.service;
 
+import com.querydsl.core.types.Predicate;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
@@ -11,6 +12,7 @@ import com.ridingmate.api.service.common.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,11 @@ public class TradeBoardService implements BoardService {
 
     public Page<TradeBoardEntity> getBoardList(PageRequest page) {
         return tradeBoardRepository.findAll(page);
+    }
+
+    // 검색조건, 페이징 객체로 리스트 조회
+    private Page<TradeBoardEntity> getTradeBoardList(Pageable pageable, Predicate predicate) {
+        return tradeBoardRepository.findAll(predicate, pageable);
     }
 
     public Page<TradeBoardEntity> getBoardSearchList(PageRequest page, TradeSearchRequest request) {
