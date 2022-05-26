@@ -5,6 +5,7 @@ import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.user.dto.TradeBoardDto;
 import com.ridingmate.api.payload.user.request.TradeSearchRequest;
 import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
@@ -40,12 +41,12 @@ public class TradeBoardService implements BoardService {
     }
 
     // 검색조건, 페이징 객체로 리스트 조회
-    private Page<TradeBoardEntity> getTradeBoardList(Pageable pageable, Predicate predicate) {
+    private Page<TradeBoardEntity> getBoardList(Pageable pageable, Predicate predicate) {
         return tradeBoardRepository.findAll(predicate, pageable);
     }
 
-    public Page<TradeBoardEntity> getBoardSearchList(PageRequest page, TradeSearchRequest request) {
-        return null;
+    public Page<TradeBoardDto> getTradeBoardList(Pageable pageable, TradeSearchRequest request) {
+        return getBoardList(pageable, null).map(tradeBoard -> new TradeBoardDto(tradeBoard));
     }
 
     @Transactional
