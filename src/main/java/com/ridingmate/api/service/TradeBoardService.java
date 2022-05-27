@@ -37,14 +37,6 @@ public class TradeBoardService implements BoardService {
         // TODO : 파일 관련 처리 추가
     }
 
-    public Page<TradeBoardEntity> getBoardList(PageRequest page) {
-        return tradeBoardRepository.findAll(page);
-    }
-
-    public Page<TradeBoardEntity> getBoardList(Predicate predicate, PageRequest page) {
-        return tradeBoardRepository.findAll(predicate, page);
-    }
-
     private Page<TradeBoardEntity> getBoardList(Pageable pageable, Predicate predicate) {
         return tradeBoardRepository.findAll(predicate, pageable);
     }
