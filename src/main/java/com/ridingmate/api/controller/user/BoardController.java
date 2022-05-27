@@ -23,6 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -72,11 +73,9 @@ public class BoardController {
     @GetMapping("/notice/list")
     @ApiOperation("공지사항 리스트 조회")
     public Page<NoticeBoardDto> getNoticeBoardList(
-            @RequestParam(value = "pageNum") @Min(value = 1) int pageNum
+            Pageable pageable
     ) {
-        Sort sort = Sort.by("createAt").descending();
-        PageRequest page = PageRequest.of(pageNum - 1, 3, sort);
-        return noticeBoardService.getBoardList(page).map(noticeBoard -> new NoticeBoardDto(noticeBoard));
+        return noticeBoardService.getNoticeBoardList(pageable).map(noticeBoard -> new NoticeBoardDto(noticeBoard));
     }
 
     @GetMapping("/trade/list")
