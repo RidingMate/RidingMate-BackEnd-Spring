@@ -18,11 +18,8 @@ public class TradeSearchRequest {
     @ApiModelProperty(value = "모델명")
     private String modelName;
 
-    @ApiModelProperty(value = "거래지역 - 시군")
-    private String sigun;
-
-    @ApiModelProperty(value = "거래지역 - 구")
-    private String gu;
+    @ApiModelProperty(value = "지역코드")
+    private String locationCode;
 
     @ApiModelProperty(value = "주행거리 최소값")
     private int minMileage = 0;
