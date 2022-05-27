@@ -1,5 +1,6 @@
 package com.ridingmate.api.service;
 
+import com.querydsl.core.types.Predicate;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.NoticeBoardEntity;
@@ -31,6 +32,10 @@ public class NoticeBoardService implements BoardService {
 
     public Page<NoticeBoardEntity> getBoardList(PageRequest page) {
         return noticeBoardRepository.findAll(page);
+    }
+
+    public Page<NoticeBoardEntity> getBoardList(Predicate predicate, PageRequest page) {
+        return noticeBoardRepository.findAll(predicate, page);
     }
 
     public Page<NoticeBoardEntity> getNoticeBoardList(Pageable pageable) {

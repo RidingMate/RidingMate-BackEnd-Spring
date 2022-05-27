@@ -40,7 +40,10 @@ public class TradeBoardService implements BoardService {
         return tradeBoardRepository.findAll(page);
     }
 
-    // 검색조건, 페이징 객체로 리스트 조회
+    public Page<TradeBoardEntity> getBoardList(Predicate predicate, PageRequest page) {
+        return tradeBoardRepository.findAll(predicate, page);
+    }
+
     private Page<TradeBoardEntity> getBoardList(Pageable pageable, Predicate predicate) {
         return tradeBoardRepository.findAll(predicate, pageable);
     }
