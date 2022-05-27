@@ -5,6 +5,7 @@ import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.user.dto.NoticeBoardDto;
 import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.NoticeBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +39,8 @@ public class NoticeBoardService implements BoardService {
         return noticeBoardRepository.findAll(predicate, page);
     }
 
-    public Page<NoticeBoardEntity> getNoticeBoardList(Pageable pageable) {
-        return noticeBoardRepository.findAll(pageable);
+    public Page<NoticeBoardDto> getNoticeBoardList(Pageable pageable) {
+        return noticeBoardRepository.findAll(pageable).map(noticeBoard -> new NoticeBoardDto(noticeBoard));
     }
 
     @Transactional

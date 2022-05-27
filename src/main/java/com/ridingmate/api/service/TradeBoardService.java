@@ -9,6 +9,7 @@ import com.ridingmate.api.payload.user.dto.TradeBoardDto;
 import com.ridingmate.api.payload.user.request.TradeSearchRequest;
 import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
+import com.ridingmate.api.repository.predicate.BoardPredicate;
 import com.ridingmate.api.service.common.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -49,7 +50,8 @@ public class TradeBoardService implements BoardService {
     }
 
     public Page<TradeBoardDto> getTradeBoardList(Pageable pageable, TradeSearchRequest request) {
-        return getBoardList(pageable, null).map(tradeBoard -> new TradeBoardDto(tradeBoard));
+        return getBoardList(pageable, BoardPredicate.tradeBoardPredicate(request))
+                .map(tradeBoard -> new TradeBoardDto(tradeBoard));
     }
 
     @Transactional
