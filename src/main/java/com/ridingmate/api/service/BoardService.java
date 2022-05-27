@@ -13,10 +13,6 @@ public interface BoardService {
 
     void deleteBoardContent(Long boardId);
 
-    Page getBoardList(PageRequest page);
-
-    Page getBoardList(Predicate predicate, PageRequest page);
-
     BoardEntity getBoardContent(Long boardId);
 
 }

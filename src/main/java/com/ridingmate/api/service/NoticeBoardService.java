@@ -8,6 +8,8 @@ import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.NoticeBoardDto;
 import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.NoticeBoardRepository;
+import com.ridingmate.api.repository.predicate.BoardPredicate;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -31,16 +33,13 @@ public class NoticeBoardService implements BoardService {
     public void updateBoardContent(BoardEntity board) {
     }
 
-    public Page<NoticeBoardEntity> getBoardList(PageRequest page) {
-        return noticeBoardRepository.findAll(page);
-    }
-
-    public Page<NoticeBoardEntity> getBoardList(Predicate predicate, PageRequest page) {
+    private Page<NoticeBoardEntity> getBoardList(Predicate predicate, Pageable page) {
         return noticeBoardRepository.findAll(predicate, page);
     }
 
     public Page<NoticeBoardDto> getNoticeBoardList(Pageable pageable) {
-        return noticeBoardRepository.findAll(pageable).map(noticeBoard -> new NoticeBoardDto(noticeBoard));
+        return getBoardList(BoardPredicate.noticeBoardPredicate(), pageable)
+                .map(noticeBoard -> new NoticeBoardDto(noticeBoard));
     }
 
     @Transactional

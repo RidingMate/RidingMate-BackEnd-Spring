@@ -10,4 +10,9 @@ public class BoardPredicate {
         BooleanBuilder builder = new BooleanBuilder();
         return builder;
     }
+
+    public static Predicate noticeBoardPredicate() {
+        BooleanBuilder builder = new BooleanBuilder();
+        return builder;
+    }
 }
