@@ -12,7 +12,7 @@ public class AddFuelRequest {
     private long bike_idx;
 
     @ApiModelProperty(value = "주유 날짜")
-    private LocalDate time;
+    private LocalDate date;
 
     @ApiModelProperty(value = "현재 주행 거리")
     private int mileage;

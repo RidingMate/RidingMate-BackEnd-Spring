@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -62,6 +63,10 @@ public class FuelEntity extends BaseTime {
     @Column(name = "fuel_efficiency")
     private double fuelEfficiency;
 
+    //연비
+    @Column(name = "date")
+    private LocalDate date;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bike_id")
     private BikeEntity bike;
@@ -74,6 +79,7 @@ public class FuelEntity extends BaseTime {
         this.fuelAmount = addFuelRequest.getAmount();
         this.reset = 'N';
         this.bike = bikeEntity;
+        this.date = addFuelRequest.getDate();
         this.fuelEfficiency = (this.recentMileage - this.previousMileage) / this.fuelVolume;
         return this;
     }
