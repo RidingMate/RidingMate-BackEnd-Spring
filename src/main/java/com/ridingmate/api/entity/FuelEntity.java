@@ -63,7 +63,12 @@ public class FuelEntity extends BaseTime {
     private BikeEntity bike;
 
     public FuelEntity createEntity(BikeEntity bikeEntity, AddFuelRequest addFuelRequest){
-
+        this.previousMileage = bike.getMileage();
+        this.recentMileage = addFuelRequest.getMileage();
+        this.fuelVolume = addFuelRequest.getFuelVolume();
+        this.fuelAmount = addFuelRequest.getAmount();
+        this.reset = 'N';
+        this.bike = bikeEntity;
         return this;
     }
 

@@ -17,6 +17,9 @@ public class AddFuelRequest {
     @ApiModelProperty(value = "현재 주행 거리")
     private int mileage;
 
+    @ApiModelProperty(value = "주유량")
+    private int fuelVolume;
+
     @ApiModelProperty(value = "주유 가격")
     private int amount;
 }
