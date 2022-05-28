@@ -21,6 +21,7 @@ public enum ResponseCode {
     NOT_FOUND_YEAR(3002, "연식을 찾을 수 없습니다."),
     NOT_FOUND_BIKE(3003, "바이크를 찾을 수 없습니다."),
     NOT_FOUND_BOARD(3004, "게시글을 찾을 수 없습니다."),
+    MILEAGE_INPUT_ERROR(3005, "현재 주행거리보다 입력 주행거리가 짧습니다."),
     ;
 
 

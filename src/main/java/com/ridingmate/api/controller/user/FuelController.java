@@ -1,5 +1,7 @@
 package com.ridingmate.api.controller.user;
 
+import com.ridingmate.api.payload.common.ApiResponse;
+import com.ridingmate.api.payload.user.request.AddFuelRequest;
 import com.ridingmate.api.payload.user.response.FuelListResponse;
 import com.ridingmate.api.payload.user.response.MyBikeResponse;
 import com.ridingmate.api.service.BikeService;
@@ -8,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +46,19 @@ public class FuelController {
             @PathVariable("bike_idx") Long bike_idx
     ){
         return fuelService.list(bike_idx);
+    }
+
+    @PutMapping("/add/{bike_idx}")
+    @ApiOperation(value = "내 바이크 연비 리스트")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ApiResponse> myBikeFuelList(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestBody AddFuelRequest addFuelRequest
+            ){
+        return fuelService.addFuel(addFuelRequest);
     }
 
 }

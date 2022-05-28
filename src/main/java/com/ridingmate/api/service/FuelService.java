@@ -46,13 +46,19 @@ public class FuelService {
         return new FuelListResponse().convertEntityToResponse(list, bikeEntity);
     }
 
-    @Transactional
+
+    //주유 기록 추가
+   @Transactional
     public ResponseEntity<ApiResponse> addFuel(AddFuelRequest addFuelRequest){
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(addFuelRequest.getBike_idx(), user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
-
+        if(addFuelRequest.getMileage() < bikeEntity.getMileage()){
+            throw new CustomException(ResponseCode.MILEAGE_INPUT_ERROR);
+        }
+        FuelEntity fuelEntity = new FuelEntity().createEntity(bikeEntity, addFuelRequest);
+        bikeEntity.addFuel(fuelEntity.getRecentMileage(), fuelEntity.getFuelEfficiency());
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }

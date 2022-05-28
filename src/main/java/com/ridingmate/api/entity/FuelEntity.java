@@ -58,9 +58,14 @@ public class FuelEntity extends BaseTime {
     @Column(name = "reset")
     private char reset;
 
+    //연비
+    @Column(name = "fuel_efficiency")
+    private double fuelEfficiency;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bike_id")
     private BikeEntity bike;
+
 
     public FuelEntity createEntity(BikeEntity bikeEntity, AddFuelRequest addFuelRequest){
         this.previousMileage = bike.getMileage();
@@ -69,6 +74,7 @@ public class FuelEntity extends BaseTime {
         this.fuelAmount = addFuelRequest.getAmount();
         this.reset = 'N';
         this.bike = bikeEntity;
+        this.fuelEfficiency = (this.recentMileage - this.previousMileage) / this.fuelVolume;
         return this;
     }
 
