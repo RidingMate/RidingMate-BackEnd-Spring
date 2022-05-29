@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TradeBoardService implements BoardService {
+public class TradeBoardService {
 
     private final BoardRepository boardRepository;
     private final TradeBoardRepository tradeBoardRepository;
@@ -32,11 +32,6 @@ public class TradeBoardService implements BoardService {
     private final LocationService locationService;
 
     @Transactional
-    public void insertBoardContent(BoardEntity board) {
-        // TODO : 파일 등록 로직 추가
-        boardRepository.save(board);
-    }
-
     public void insertTradeBoardContent(BoardDto.Request.TradeInsert dto) {
         // TODO : 내 바이크 조건처리 필요
         UserEntity userEntity = authService.getUserEntityByAuthentication();
@@ -63,7 +58,7 @@ public class TradeBoardService implements BoardService {
                 dto.getPurchaseMonth(),
                 userEntity,
                 location);
-        insertBoardContent(tradeBoard);
+        boardRepository.save(tradeBoard);
     }
 
     @Transactional
@@ -89,14 +84,14 @@ public class TradeBoardService implements BoardService {
                                                               .build());
     }
 
-    @Transactional
-    public TradeBoardEntity getBoardContent(Long boardId) {
+    private TradeBoardEntity getBoardContent(Long boardId) {
         BoardEntity board = boardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BOARD));
         board.increaseHitCount();
         return (TradeBoardEntity) board;
     }
 
+    @Transactional
     public BoardDto.Response.TradeContent getTradeBoardContent(Long boardId) {
         TradeBoardEntity board = getBoardContent(boardId);
         return BoardDto.Response.TradeContent.builder()
