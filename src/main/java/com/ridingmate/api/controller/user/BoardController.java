@@ -15,24 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.consts.ResponseCode;
-import com.ridingmate.api.entity.LocationEntity;
-import com.ridingmate.api.entity.NoticeBoardEntity;
-import com.ridingmate.api.entity.TradeBoardEntity;
-import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.ParameterException;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.dto.BoardDto;
-import com.ridingmate.api.payload.user.dto.NoticeBoardContentDto;
-import com.ridingmate.api.payload.user.dto.NoticeBoardDto;
-import com.ridingmate.api.payload.user.dto.TradeBoardContentDto;
-import com.ridingmate.api.payload.user.dto.TradeBoardDto;
-import com.ridingmate.api.payload.user.request.NoticeBoardRequest;
-import com.ridingmate.api.payload.user.request.TradeBoardRequest;
-import com.ridingmate.api.payload.user.request.TradeSearchRequest;
-import com.ridingmate.api.service.LocationService;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
-import com.ridingmate.api.service.common.AuthService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -72,8 +59,6 @@ public class BoardController {
 
     private final NoticeBoardService noticeBoardService;
     private final TradeBoardService tradeBoardService;
-    private final AuthService authService;
-    private final LocationService locationService;
 
     @GetMapping("/notice/list")
     @ApiOperation("공지사항 리스트 조회")
@@ -85,15 +70,15 @@ public class BoardController {
 
     @GetMapping("/trade/list")
     @ApiOperation("거래글 리스트 조회")
-    public Page<TradeBoardDto> getTradeBoardList(
-            @Valid TradeSearchRequest search,
+    public Page<BoardDto.Response.TradeList> getTradeBoardList(
+            @Valid BoardDto.Request.TradeList dto,
             Pageable pageable,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
         }
-        return tradeBoardService.getTradeBoardList(pageable, search);
+        return tradeBoardService.getTradeList(pageable, dto);
     }
 
 
@@ -114,39 +99,13 @@ public class BoardController {
     @ApiOperation("거래글 등록")
     public ResponseEntity insertTradeBoard(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody @Valid TradeBoardRequest request,
+            @RequestBody @Valid BoardDto.Request.TradeInsert dto,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
         }
-
-        // TODO : 내 바이크 조건처리 필요
-        UserEntity userEntity = authService.getUserEntityByAuthentication();
-
-        // 거래 지역
-        LocationEntity location = null;
-        if (request.getLocationCode() != null) {
-            location = locationService.getLocation(request.getLocationCode());
-        }
-
-        TradeBoardEntity tradeBoard = new TradeBoardEntity(
-                request.getTitle(),
-                request.getContent(),
-                request.getCompany(),
-                request.getModelName(),
-                request.getFuelEfficiency(),
-                request.getCc(),
-                request.getYear(),
-                request.getMileage(),
-                request.getPrice(),
-                request.getPhoneNumber(),
-                request.getIsOpenToBuyer(),
-                request.getPurchaseYear(),
-                request.getPurchaseMonth(),
-                userEntity,
-                location);
-        tradeBoardService.insertBoardContent(tradeBoard);
+        tradeBoardService.insertTradeBoardContent(dto);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
@@ -158,7 +117,7 @@ public class BoardController {
 
     @GetMapping("/trade/{boardId}")
     @ApiOperation("거래글 상세 조회")
-    public ResponseEntity<TradeBoardContentDto> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(new TradeBoardContentDto(tradeBoardService.getBoardContent(boardId)));
+    public ResponseEntity<BoardDto.Response.TradeContent> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
+        return ResponseEntity.ok(tradeBoardService.getTradeBoardContent(boardId));
     }
 }

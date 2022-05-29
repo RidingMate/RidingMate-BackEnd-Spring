@@ -77,15 +77,11 @@ public class TradeBoardService implements BoardService {
         return tradeBoardRepository.findAll(predicate, pageable);
     }
 
-    public Page<TradeBoardDto> getTradeBoardList(Pageable pageable, TradeSearchRequest request) {
-        return getBoardList(pageable, BoardPredicate.tradeBoardPredicate(request))
-                .map(tradeBoard -> new TradeBoardDto(tradeBoard));
-    }
-
     public Page<BoardDto.Response.TradeList> getTradeList(Pageable pageable, BoardDto.Request.TradeList dto) {
         return getBoardList(pageable, BoardPredicate.tradeBoardPredicate(dto))
                 .map(tradeBoard -> BoardDto.Response.TradeList.builder()
                                                               .id(tradeBoard.getIdx())
+                                                              .title(tradeBoard.getTitle())
                                                               .company(tradeBoard.getCompany())
                                                               .modelName(tradeBoard.getModelName())
                                                               .price(tradeBoard.getPrice())
@@ -106,12 +102,15 @@ public class TradeBoardService implements BoardService {
     public BoardDto.Response.TradeContent getTradeBoardContent(Long boardId) {
         TradeBoardEntity board = getBoardContent(boardId);
         return BoardDto.Response.TradeContent.builder()
+                                             .title(board.getTitle())
                                              .company(board.getCompany())
                                              .modelName(board.getModelName())
                                              .price(board.getPrice())
                                              .cc(board.getCc())
                                              .mileage(board.getMileage())
                                              .year(board.getYear())
+                                             .dateOfPurchase(board.getDateOfPurchase().toString())
+                                             .location(board.getLocation() != null ? board.getLocation().getName() : "")
                                              .build();
     }
 
