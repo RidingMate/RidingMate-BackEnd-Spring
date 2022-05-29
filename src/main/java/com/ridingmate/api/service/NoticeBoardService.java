@@ -21,15 +21,10 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class NoticeBoardService implements BoardService {
+public class NoticeBoardService {
 
     private final BoardRepository boardRepository;
     private final NoticeBoardRepository noticeBoardRepository;
-
-    @Transactional
-    public void insertBoardContent(BoardEntity board) {
-        boardRepository.save(board);
-    }
 
     @Transactional
     public void updateBoardContent(BoardEntity board) {
@@ -48,19 +43,20 @@ public class NoticeBoardService implements BoardService {
                                                                 .build());
     }
 
+    @Transactional
     public void insertNoticeBoard(BoardDto.Request.NoticeInsert dto) {
         NoticeBoardEntity noticeBoard = new NoticeBoardEntity(dto.getTitle());
         boardRepository.save(noticeBoard);
     }
 
-    @Transactional
-    public NoticeBoardEntity getBoardContent(Long boardId) {
+    private NoticeBoardEntity getBoardContent(Long boardId) {
         BoardEntity board = boardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BOARD));
         board.increaseHitCount();
         return (NoticeBoardEntity) board;
     }
 
+    @Transactional
     public BoardDto.Response.NoticeContent getNoticeBoardContent(Long boardId) {
         NoticeBoardEntity board = getBoardContent(boardId);
         return BoardDto.Response.NoticeContent.builder()
