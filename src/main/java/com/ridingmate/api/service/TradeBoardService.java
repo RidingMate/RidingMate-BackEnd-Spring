@@ -13,8 +13,6 @@ import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
-import com.ridingmate.api.payload.user.dto.TradeBoardDto;
-import com.ridingmate.api.payload.user.request.TradeSearchRequest;
 import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
