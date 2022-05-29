@@ -49,7 +49,7 @@ public class FuelController {
     }
 
     @PutMapping("/add/{bike_idx}")
-    @ApiOperation(value = "내 바이크 연비 리스트")
+    @ApiOperation(value = "주유 기록 추가")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })

@@ -1,13 +1,11 @@
 package com.ridingmate.api.service;
 
 import com.ridingmate.api.consts.ResponseCode;
-import com.ridingmate.api.entity.AddBikeEntity;
 import com.ridingmate.api.entity.BikeEntity;
 import com.ridingmate.api.entity.FuelEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.ApiResponse;
-import com.ridingmate.api.payload.user.request.AddBikeRequest;
 import com.ridingmate.api.payload.user.request.AddFuelRequest;
 import com.ridingmate.api.payload.user.response.FuelListResponse;
 import com.ridingmate.api.repository.BikeRepository;
@@ -18,8 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
@@ -58,7 +57,19 @@ public class FuelService {
             throw new CustomException(ResponseCode.MILEAGE_INPUT_ERROR);
         }
         FuelEntity fuelEntity = new FuelEntity().createEntity(bikeEntity, addFuelRequest);
-        bikeEntity.addFuel(fuelEntity.getRecentMileage(), fuelEntity.getFuelEfficiency());
+        fuelRepository.save(fuelEntity);
+
+        AtomicReference<Double> totalFuelEfficiency = new AtomicReference<>((double) 0);
+        AtomicInteger totalCountOiling = new AtomicInteger();
+        bikeEntity.getFuels().forEach(data->{
+            if(data.getReset() == 'N'){
+                totalFuelEfficiency.updateAndGet(v -> new Double((double) (v + data.getFuelEfficiency())));
+                totalCountOiling.getAndIncrement();
+
+            }
+        });
+        bikeEntity.addFuel(fuelEntity.getRecentMileage(), totalFuelEfficiency.get(), totalCountOiling.get());
+        bikeRepository.save(bikeEntity);
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
