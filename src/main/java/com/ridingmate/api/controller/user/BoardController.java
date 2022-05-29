@@ -21,6 +21,7 @@ import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.ParameterException;
 import com.ridingmate.api.payload.common.ApiResponse;
+import com.ridingmate.api.payload.user.dto.BoardDto;
 import com.ridingmate.api.payload.user.dto.NoticeBoardContentDto;
 import com.ridingmate.api.payload.user.dto.NoticeBoardDto;
 import com.ridingmate.api.payload.user.dto.TradeBoardContentDto;
@@ -76,10 +77,10 @@ public class BoardController {
 
     @GetMapping("/notice/list")
     @ApiOperation("공지사항 리스트 조회")
-    public Page<NoticeBoardDto> getNoticeBoardList(
+    public Page<BoardDto.Response.NoticeList> getNoticeBoardList(
             Pageable pageable
     ) {
-        return noticeBoardService.getNoticeBoardList(pageable);
+        return noticeBoardService.getNoticeList(pageable);
     }
 
     @GetMapping("/trade/list")
@@ -99,14 +100,13 @@ public class BoardController {
     @PostMapping("/notice")
     @ApiOperation("공지사항 등록")
     public ResponseEntity insertNoticeBoard(
-            @RequestBody @Valid NoticeBoardRequest request,
+            @RequestBody @Valid BoardDto.Request.NoticeInsert request,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
         }
-        NoticeBoardEntity noticeBoard = new NoticeBoardEntity(request.getTitle());
-        noticeBoardService.insertBoardContent(noticeBoard);
+        noticeBoardService.insertNoticeBoard(request);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
