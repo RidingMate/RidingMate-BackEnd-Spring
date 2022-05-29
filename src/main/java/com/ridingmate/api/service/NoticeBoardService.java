@@ -13,7 +13,6 @@ import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
-import com.ridingmate.api.payload.user.dto.NoticeBoardDto;
 import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.NoticeBoardRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
