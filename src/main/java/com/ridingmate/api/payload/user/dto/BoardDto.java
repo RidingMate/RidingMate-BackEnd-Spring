@@ -1,5 +1,6 @@
 package com.ridingmate.api.payload.user.dto;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
@@ -59,6 +60,7 @@ public class BoardDto {
             private String title;
 
             @ApiModelProperty(value = "가격")
+            @Min(0)
             private int price;
 
             @ApiModelProperty(value = "업체명")
@@ -77,6 +79,7 @@ public class BoardDto {
             private int year;
 
             @ApiModelProperty(value = "주행거리")
+            @Min(0)
             private int mileage;
 
             @ApiModelProperty(value = "지역 코드")
@@ -95,7 +98,8 @@ public class BoardDto {
             private String phoneNumber;
 
             @ApiModelProperty(value = "구매자에게 주유/정비 정보 공개하기 Y/N")
-            private char isOpenToBuyer;
+            @Pattern(regexp = "^[Y|N]{1}$", message = "Y와 N만 입력 가능합니다.")
+            private String isOpenToBuyer;
         }
 
         @Data
