@@ -1,5 +1,7 @@
 package com.ridingmate.api.service;
 
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.user.dto.BoardDto;
 import com.ridingmate.api.payload.user.dto.NoticeBoardDto;
 import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.NoticeBoardRepository;
@@ -40,6 +43,20 @@ public class NoticeBoardService implements BoardService {
     public Page<NoticeBoardDto> getNoticeBoardList(Pageable pageable) {
         return getBoardList(BoardPredicate.noticeBoardPredicate(), pageable)
                 .map(noticeBoard -> new NoticeBoardDto(noticeBoard));
+    }
+
+    public Page<BoardDto.Response.NoticeList> getNoticeList(Pageable pageable) {
+        return getBoardList(BoardPredicate.noticeBoardPredicate(), pageable)
+                .map(noticeBoard -> BoardDto.Response.NoticeList.builder()
+                                                                .id(noticeBoard.getIdx())
+                                                                .title(noticeBoard.getTitle())
+                                                                .date(noticeBoard.getCreateAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                                                                .build());
+    }
+
+    public void insertNoticeBoard(BoardDto.Request.NoticeInsert dto) {
+        NoticeBoardEntity noticeBoard = new NoticeBoardEntity(dto.getTitle());
+        boardRepository.save(noticeBoard);
     }
 
     @Transactional
