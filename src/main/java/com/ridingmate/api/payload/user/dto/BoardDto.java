@@ -3,8 +3,6 @@ package com.ridingmate.api.payload.user.dto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
