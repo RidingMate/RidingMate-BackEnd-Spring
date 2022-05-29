@@ -152,8 +152,8 @@ public class BoardController {
 
     @GetMapping("/notice/{boardId}")
     @ApiOperation("공지사항 상세 조회")
-    public ResponseEntity<NoticeBoardContentDto> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(new NoticeBoardContentDto(noticeBoardService.getBoardContent(boardId)));
+    public ResponseEntity<BoardDto.Response.NoticeContent> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
+        return ResponseEntity.ok(noticeBoardService.getNoticeBoardContent(boardId));
     }
 
     @GetMapping("/trade/{boardId}")

@@ -40,11 +40,6 @@ public class NoticeBoardService implements BoardService {
         return noticeBoardRepository.findAll(predicate, page);
     }
 
-    public Page<NoticeBoardDto> getNoticeBoardList(Pageable pageable) {
-        return getBoardList(BoardPredicate.noticeBoardPredicate(), pageable)
-                .map(noticeBoard -> new NoticeBoardDto(noticeBoard));
-    }
-
     public Page<BoardDto.Response.NoticeList> getNoticeList(Pageable pageable) {
         return getBoardList(BoardPredicate.noticeBoardPredicate(), pageable)
                 .map(noticeBoard -> BoardDto.Response.NoticeList.builder()
@@ -65,6 +60,13 @@ public class NoticeBoardService implements BoardService {
                 new CustomException(ResponseCode.NOT_FOUND_BOARD));
         board.increaseHitCount();
         return (NoticeBoardEntity) board;
+    }
+
+    public BoardDto.Response.NoticeContent getNoticeBoardContent(Long boardId) {
+        NoticeBoardEntity board = getBoardContent(boardId);
+        return BoardDto.Response.NoticeContent.builder()
+                                              .title(board.getTitle())
+                                              .build();
     }
 
     @Transactional

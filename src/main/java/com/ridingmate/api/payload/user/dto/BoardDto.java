@@ -3,14 +3,12 @@ package com.ridingmate.api.payload.user.dto;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-import com.ridingmate.api.entity.BoardEntity;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 
 public class BoardDto {
 
@@ -112,6 +110,7 @@ public class BoardDto {
 
     public static class Response {
 
+        @Getter
         @Builder
         public static class TradeList {
             private Long id;
@@ -124,6 +123,7 @@ public class BoardDto {
             private int price;
         }
 
+        @Getter
         @Builder
         public static class TradeContent {
             private String title;
@@ -137,13 +137,17 @@ public class BoardDto {
             private String dateOfPurchase;
         }
 
+        @Getter
         @Builder
         public static class NoticeList {
             private Long id;
+
             private String title;
+
             private String date;
         }
 
+        @Getter
         @Builder
         public static class NoticeContent {
             private String title;
