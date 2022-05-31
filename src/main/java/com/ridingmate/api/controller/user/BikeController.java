@@ -1,5 +1,6 @@
 package com.ridingmate.api.controller.user;
 
+import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.request.AddBikeRequest;
 import com.ridingmate.api.payload.user.request.BikeInsertRequest;
@@ -162,5 +163,6 @@ public class BikeController {
     ){
         bikeService.addBikeRequest(addBikeRequest);
     }
+
 
 }

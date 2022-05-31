@@ -5,7 +5,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.LocationEntity;
+import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.repository.LocationRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -18,11 +20,17 @@ public class LocationService {
 
     // 도, 광역시 리스트 조회
     public List<LocationEntity> getLocationList() {
-        return locationRepository.findByLocationCodeEndsWith("00000000");
+        // 하위지역 사용하게되면 변경필요
+        return locationRepository.findAllByOrderByLocationCode();
     }
 
     // 시군구 리스트 조회
     public List<LocationEntity> getSubLocationList(String upperLocationCode) {
         return locationRepository.findByUpperLocationCode(upperLocationCode);
+    }
+
+    public LocationEntity getLocation(String locationCode) {
+        return locationRepository.findById(locationCode).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_LOCATION));
     }
 }

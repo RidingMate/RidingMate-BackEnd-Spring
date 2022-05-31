@@ -57,18 +57,21 @@ public class TradeBoardEntity extends BoardEntity {
 
     // 구매자에게 주유/정비정보 공개
     @Column(name = "is_open_to_buyer")
-    private char isOpenToBuyer;
+    private Character isOpenToBuyer;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "trade_status")
     private TradeStatus status;
 
-    // TODO : 내 바이크를 올릴경우 내 바이크와 연관관계 필요
+    // 내 바이크를 올릴경우 내 바이크와 연관관계 필요
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "my_bike_idx")
     private BikeEntity myBike;
 
-    // TODO : 직거래를 위한 지역에 대한 연관관계도 필요할듯
+    // 직거래를 위한 지역에 대한 연관관계도 필요할듯
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_code")
+    private LocationEntity location;
 
     // TODO : 썸네일 컬럼 추가
     // TODO : 썸네일 저장을 위한 location 저장 컬럼
@@ -122,6 +125,100 @@ public class TradeBoardEntity extends BoardEntity {
     // 작성자, 내바이크 생성자
     public TradeBoardEntity(String title, String content, UserEntity user, BikeEntity bike) {
         myBike = bike;
+        createBoardEntity(title, content, user);
+    }
+
+    // 작성자, 내바이크, 지역 생성자
+    public TradeBoardEntity(String title, String content, UserEntity user, BikeEntity bike,
+                            LocationEntity location) {
+        myBike = bike;
+        this.location = location;
+        createBoardEntity(title, content, user);
+    }
+
+    // 작성자 + 지역 생성자
+    public TradeBoardEntity(String title,
+                            String company,
+                            String modelName,
+                            double fuelEfficiency,
+                            int cc,
+                            int year,
+                            int mileage,
+                            int price,
+                            UserEntity user,
+                            LocationEntity location
+    ) {
+
+        this.company = company;
+        this.modelName = modelName;
+        this.fuelEfficiency = fuelEfficiency;
+        this.cc = cc;
+        this.year = year;
+        this.mileage = mileage;
+        this.price = price;
+        this.location = location;
+        status = TradeStatus.FOR_SALE;
+        createBoardEntity(title, user);
+    }
+
+    // 작성자 + 지역 + 구매일자 생성자
+    public TradeBoardEntity(String title,
+                            String company,
+                            String modelName,
+                            double fuelEfficiency,
+                            int cc,
+                            int year,
+                            int mileage,
+                            int price,
+                            Integer purchaseYear,
+                            Integer purchaseMonth,
+                            UserEntity user,
+                            LocationEntity location
+    ) {
+
+        this.company = company;
+        this.modelName = modelName;
+        this.fuelEfficiency = fuelEfficiency;
+        this.cc = cc;
+        this.year = year;
+        this.mileage = mileage;
+        this.price = price;
+        this.location = location;
+        if (purchaseYear != null && purchaseMonth != null) {
+            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        }
+        status = TradeStatus.FOR_SALE;
+        createBoardEntity(title, user);
+    }
+
+    // 작성자 + 내용 + 지역 + 구매일자 생성자
+    public TradeBoardEntity(String title,
+                            String content,
+                            String company,
+                            String modelName,
+                            double fuelEfficiency,
+                            int cc,
+                            int year,
+                            int mileage,
+                            int price,
+                            Integer purchaseYear,
+                            Integer purchaseMonth,
+                            UserEntity user,
+                            LocationEntity location
+    ) {
+
+        this.company = company;
+        this.modelName = modelName;
+        this.fuelEfficiency = fuelEfficiency;
+        this.cc = cc;
+        this.year = year;
+        this.mileage = mileage;
+        this.price = price;
+        this.location = location;
+        if (purchaseYear != null && purchaseMonth != null) {
+            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        }
+        status = TradeStatus.FOR_SALE;
         createBoardEntity(title, content, user);
     }
 
