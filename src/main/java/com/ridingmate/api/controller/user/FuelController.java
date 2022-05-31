@@ -61,4 +61,17 @@ public class FuelController {
         return fuelService.addFuel(addFuelRequest);
     }
 
+    @GetMapping("/reset/{bike_idx}")
+    @ApiOperation(value = "내 바이크 연비 초기화")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ApiResponse> resetFuel(
+            @RequestHeader(value = "Authorization") String token,
+            @PathVariable("bike_idx") Long bike_idx
+    ){
+        return fuelService.reset(bike_idx);
+    }
+
 }
