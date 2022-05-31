@@ -54,7 +54,7 @@ public class BikeEntity extends BaseTime{
 
     //연비
     @Column(name = "fuel_efficiency")
-    private int fuelEfficiency;
+    private double fuelEfficiency;
 
     //주유 횟수
     @Column(name = "count_oiling")
@@ -123,6 +123,7 @@ public class BikeEntity extends BaseTime{
         this.mileage = request.getMileage();
         this.bikeNickname = request.getBikeNickName();
         this.bikeRole = bikeRole;
+        this.countOiling++;
     }
 
     //바이크 권한 변경
@@ -133,6 +134,12 @@ public class BikeEntity extends BaseTime{
     public boolean checkBikeRole(){
         if(bikeRole == BikeRole.REPRESENTATIVE) return true;
         return false;
+    }
+
+    public void addFuel(int recentMileage, double totalFuelEfficiency, int countOiling){
+        countOiling++;
+        this.mileage = recentMileage;
+        this.fuelEfficiency = totalFuelEfficiency/countOiling;
     }
 
 
