@@ -131,15 +131,23 @@ public class BikeEntity extends BaseTime{
         this.bikeRole = bikeRole;
     }
 
+    //바이크 권한 확인
     public boolean checkBikeRole(){
         if(bikeRole == BikeRole.REPRESENTATIVE) return true;
         return false;
     }
 
+    //연비 추가
+    //현재 주행거리 최신화
+    //연비 - 초기화 되지 않은 연비 받아서 저장
     public void addFuel(int recentMileage, double totalFuelEfficiency, int countOiling){
-        countOiling++;
+        this.countOiling++;
         this.mileage = recentMileage;
-        this.fuelEfficiency = totalFuelEfficiency/countOiling;
+        this.fuelEfficiency = totalFuelEfficiency/(double)countOiling;
+    }
+
+    public void resetFuel(){
+        this.fuelEfficiency = 0;
     }
 
 

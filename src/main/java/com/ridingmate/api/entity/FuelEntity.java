@@ -84,5 +84,9 @@ public class FuelEntity extends BaseTime {
         return this;
     }
 
+    public void reset(){
+        this.reset = 'Y';
+    }
+
 
 }

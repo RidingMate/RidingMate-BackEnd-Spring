@@ -65,11 +65,30 @@ public class FuelService {
             if(data.getReset() == 'N'){
                 totalFuelEfficiency.updateAndGet(v -> new Double((double) (v + data.getFuelEfficiency())));
                 totalCountOiling.getAndIncrement();
-
             }
         });
         bikeEntity.addFuel(fuelEntity.getRecentMileage(), totalFuelEfficiency.get(), totalCountOiling.get());
         bikeRepository.save(bikeEntity);
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+    }
+
+    //연비 초기화
+    @Transactional
+    public ResponseEntity<ApiResponse> reset(long bikeIdx){
+        UserEntity user = authService.getUserEntityByAuthentication();
+
+        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+
+        fuelRepository.findByBikeAndReset(bikeEntity, 'N').forEach(data->{
+            data.reset();
+            fuelRepository.save(data);
+        });
+
+        bikeEntity.resetFuel();
+        bikeRepository.save(bikeEntity);
+
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
