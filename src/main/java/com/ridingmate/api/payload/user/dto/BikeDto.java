@@ -21,7 +21,7 @@ public class BikeDto {
     //주행거리
     private int mileage;
     //연비
-    private int fuelEfficiency;
+    private double fuelEfficiency;
     //주유 횟수
     private int countOiling;
     //정비 횟수
