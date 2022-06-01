@@ -8,9 +8,11 @@ import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.common.BindingErrorDto;
+import com.ridingmate.api.payload.user.dto.ResponseDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,9 +20,17 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalControllerAdvice {
 
+    private ResponseEntity<ResponseDto<?>> response(ResponseCode code, Object response) {
+        return ResponseEntity.status(code.getResponseCode())
+                             .body(ResponseDto.builder()
+                                              .response(response)
+                                              .responseCode(code)
+                                              .build());
+    }
+
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ApiResponse> customException(CustomException e) {
-        return ResponseEntity.badRequest().body(new ApiResponse(e.getErrorCode()));
+    public ResponseEntity<?> customException(CustomException e) {
+        return response(e.getErrorCode(), null);
     }
 
     @ExceptionHandler(BindException.class)
@@ -31,7 +41,7 @@ public class GlobalControllerAdvice {
                                                    .message(error.getDefaultMessage())
                                                                         .build())
                                            .collect(Collectors.toList());
-        return ResponseEntity.badRequest().body(errorList);
+        return response(ResponseCode.INVALID_PARAMETER, errorList);
     }
 
 //    @ExceptionHandler(NullPointerException.class)
