@@ -13,7 +13,7 @@ import lombok.Setter;
 public class LocationDto {
 
     @ApiModelProperty(value = "지역 코드")
-    private String locationCode;
+    private String code;
 
     @ApiModelProperty(value = "지역명")
     private String name;

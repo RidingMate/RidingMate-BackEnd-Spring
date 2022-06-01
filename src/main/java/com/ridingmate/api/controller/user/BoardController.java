@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.dto.BoardDto;
-import com.ridingmate.api.payload.user.dto.BoardDto.Response.TradeList;
 import com.ridingmate.api.payload.user.dto.PageDto;
+import com.ridingmate.api.payload.user.dto.ResponseDto;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
 
@@ -64,16 +64,18 @@ public class BoardController {
 
     @GetMapping("/notice/list")
     @ApiOperation("공지사항 리스트 조회")
-    public PageDto<BoardDto.Response.NoticeList> getNoticeBoardList(
+    public ResponseDto<PageDto<BoardDto.Response.NoticeList>> getNoticeBoardList(
             Pageable pageable
     ) {
-        return new PageDto<>(noticeBoardService.getNoticeBoardList(pageable));
+        return ResponseDto.<PageDto<BoardDto.Response.NoticeList>>builder()
+                          .response(new PageDto<>(noticeBoardService.getNoticeBoardList(pageable)))
+                          .build();
     }
 
     @SneakyThrows
     @GetMapping("/trade/list")
     @ApiOperation("거래글 리스트 조회")
-    public PageDto<TradeList> getTradeBoardList(
+    public ResponseDto<PageDto<BoardDto.Response.TradeList>> getTradeBoardList(
             @Valid BoardDto.Request.TradeList dto,
             Pageable pageable,
             BindingResult result
@@ -81,14 +83,15 @@ public class BoardController {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        return new PageDto<>(tradeBoardService.getTradeBoardList(pageable, dto));
+        return ResponseDto.<PageDto<BoardDto.Response.TradeList>>builder()
+                          .response(new PageDto<>(tradeBoardService.getTradeBoardList(pageable, dto)))
+                          .build();
     }
-
 
     @SneakyThrows
     @PostMapping("/notice")
     @ApiOperation("공지사항 등록")
-    public ResponseEntity insertNoticeBoard(
+    public ResponseDto insertNoticeBoard(
             @RequestBody @Valid BoardDto.Request.NoticeInsert request,
             BindingResult result
     ) {
@@ -96,13 +99,13 @@ public class BoardController {
             throw new BindException(result);
         }
         noticeBoardService.insertNoticeBoard(request);
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+        return ResponseDto.builder().build();
     }
 
     @SneakyThrows
     @PostMapping("/trade")
     @ApiOperation("거래글 등록")
-    public ResponseEntity insertTradeBoard(
+    public ResponseDto insertTradeBoard(
             @RequestHeader(value = "Authorization") String token,
             @RequestBody @Valid BoardDto.Request.TradeInsert dto,
             BindingResult result
@@ -111,18 +114,22 @@ public class BoardController {
             throw new BindException(result);
         }
         tradeBoardService.insertTradeBoardContent(dto);
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+        return ResponseDto.builder().build();
     }
 
     @GetMapping("/notice/{boardId}")
     @ApiOperation("공지사항 상세 조회")
-    public ResponseEntity<BoardDto.Response.NoticeContent> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(noticeBoardService.getNoticeBoardContent(boardId));
+    public ResponseDto<BoardDto.Response.NoticeContent> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
+        return ResponseDto.<BoardDto.Response.NoticeContent>builder()
+                          .response(noticeBoardService.getNoticeBoardContent(boardId))
+                          .build();
     }
 
     @GetMapping("/trade/{boardId}")
     @ApiOperation("거래글 상세 조회")
-    public ResponseEntity<BoardDto.Response.TradeContent> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(tradeBoardService.getTradeBoardContent(boardId));
+    public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
+        return ResponseDto.<BoardDto.Response.TradeContent>builder()
+                .response(tradeBoardService.getTradeBoardContent(boardId))
+                .build();
     }
 }

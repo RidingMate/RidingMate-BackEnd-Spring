@@ -1,19 +1,13 @@
 package com.ridingmate.api.payload.common;
 
-import com.ridingmate.api.consts.ResponseCode;
 import lombok.Getter;
 
 @Getter
-public class AuthResponse extends ResponseDto {
+public class AuthResponse {
 
     private String accessToken;
 
-    public AuthResponse(ResponseCode response) {
-        this.response = response;
-    }
-
-    public AuthResponse(String accessToken, ResponseCode response) {
+    public AuthResponse(String accessToken) {
         this.accessToken = accessToken;
-        this.response = response;
     }
 }
