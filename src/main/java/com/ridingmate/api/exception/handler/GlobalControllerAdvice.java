@@ -1,28 +1,37 @@
 package com.ridingmate.api.exception.handler;
 
-import com.ridingmate.api.exception.CustomException;
-import com.ridingmate.api.exception.ParameterException;
-import com.ridingmate.api.payload.common.ApiResponse;
-import com.ridingmate.api.payload.common.ParameterErrorResponse;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.common.ApiResponse;
+import com.ridingmate.api.payload.common.BindingErrorDto;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalControllerAdvice extends ResponseEntityExceptionHandler {
-
+public class GlobalControllerAdvice {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ApiResponse> customException(CustomException e) {
         return ResponseEntity.badRequest().body(new ApiResponse(e.getErrorCode()));
     }
 
-    @ExceptionHandler(ParameterException.class)
-    public ResponseEntity<ParameterErrorResponse> parameterException(ParameterException e) {
-        return ResponseEntity.badRequest().body(new ParameterErrorResponse(400, e.getMessage()));
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<?> onBindException(BindException e) {
+        List<BindingErrorDto> errorList = e.getFieldErrors().stream()
+                                           .map(error -> BindingErrorDto.builder()
+                                                   .field(error.getField())
+                                                   .message(error.getDefaultMessage())
+                                                                        .build())
+                                           .collect(Collectors.toList());
+        return ResponseEntity.badRequest().body(errorList);
     }
 
 //    @ExceptionHandler(NullPointerException.class)
