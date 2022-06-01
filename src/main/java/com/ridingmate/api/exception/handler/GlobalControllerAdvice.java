@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.exception.CustomException;
-import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.common.BindingErrorDto;
-import com.ridingmate.api.payload.user.dto.ResponseDto;
+import com.ridingmate.api.payload.common.ResponseDto;
 
 import lombok.extern.slf4j.Slf4j;
 

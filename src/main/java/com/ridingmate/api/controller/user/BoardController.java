@@ -3,7 +3,6 @@ package com.ridingmate.api.controller.user;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,11 +13,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ridingmate.api.consts.ResponseCode;
-import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.dto.BoardDto;
 import com.ridingmate.api.payload.user.dto.PageDto;
-import com.ridingmate.api.payload.user.dto.ResponseDto;
+import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
 

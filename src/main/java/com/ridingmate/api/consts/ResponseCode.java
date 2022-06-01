@@ -3,8 +3,10 @@ package com.ridingmate.api.consts;
 import org.springframework.http.HttpStatus;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -30,11 +32,14 @@ public enum ResponseCode {
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, 3999, "파라미터 값이 잘못되었습니다")
     ;
 
+    @JsonIgnore
     private HttpStatus status;
 
     @JsonProperty(value = "code")
+    @ApiModelProperty(value = "응답 코드")
     private int responseCode;
 
     @JsonProperty(value = "message")
+    @ApiModelProperty(value = "응답 메시지")
     private String responseMessage;
 }

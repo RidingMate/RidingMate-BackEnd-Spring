@@ -1,14 +1,13 @@
 package com.ridingmate.api.controller.user;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.payload.user.dto.LocationDto;
-import com.ridingmate.api.payload.user.dto.ResponseDto;
+import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.service.LocationService;
 
 import io.swagger.annotations.ApiOperation;

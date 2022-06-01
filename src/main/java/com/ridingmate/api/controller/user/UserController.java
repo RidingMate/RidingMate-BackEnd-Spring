@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.payload.common.AuthResponse;
-import com.ridingmate.api.payload.user.dto.ResponseDto;
+import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.request.NormalJoinRequest;
 import com.ridingmate.api.payload.user.request.NormalLoginRequest;
 import com.ridingmate.api.service.UserService;

@@ -75,7 +75,16 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("RidingMate Web REST API TEST")
-                .description("")
+                .description("**응답 객체**\n"
+                             + "```\n"
+                             + "{\n"
+                             + "    \"status\": {\n"
+                             + "        \"code\"      : Int - 응답 코드,\n"
+                             + "        \"message\"   : String - 응답 메시지,\n"
+                             + "    },\n"
+                             + "    \"response\"  : Object - 데이터\n"
+                             + "}\n"
+                             + "```")
                 .version("1.0")
                 .build();
     }
