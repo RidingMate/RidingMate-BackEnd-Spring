@@ -70,7 +70,7 @@ public class TradeBoardService {
         return tradeBoardRepository.findAll(predicate, pageable);
     }
 
-    public Page<BoardDto.Response.TradeList> getTradeList(Pageable pageable, BoardDto.Request.TradeList dto) {
+    public Page<BoardDto.Response.TradeList> getTradeBoardList(Pageable pageable, BoardDto.Request.TradeList dto) {
         return getBoardList(pageable, BoardPredicate.tradeBoardPredicate(dto))
                 .map(tradeBoard -> BoardDto.Response.TradeList.builder()
                                                               .id(tradeBoard.getIdx())

@@ -18,6 +18,8 @@ import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.exception.ParameterException;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.BoardDto.Response.TradeList;
+import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
 
@@ -62,15 +64,15 @@ public class BoardController {
 
     @GetMapping("/notice/list")
     @ApiOperation("공지사항 리스트 조회")
-    public Page<BoardDto.Response.NoticeList> getNoticeBoardList(
+    public PageDto<BoardDto.Response.NoticeList> getNoticeBoardList(
             Pageable pageable
     ) {
-        return noticeBoardService.getNoticeList(pageable);
+        return new PageDto<>(noticeBoardService.getNoticeBoardList(pageable));
     }
 
     @GetMapping("/trade/list")
     @ApiOperation("거래글 리스트 조회")
-    public Page<BoardDto.Response.TradeList> getTradeBoardList(
+    public PageDto<TradeList> getTradeBoardList(
             @Valid BoardDto.Request.TradeList dto,
             Pageable pageable,
             BindingResult result
@@ -78,7 +80,7 @@ public class BoardController {
         if (result.hasErrors()) {
             throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
         }
-        return tradeBoardService.getTradeList(pageable, dto);
+        return new PageDto<>(tradeBoardService.getTradeBoardList(pageable, dto));
     }
 
 
