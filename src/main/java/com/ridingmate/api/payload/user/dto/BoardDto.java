@@ -4,16 +4,20 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 
+@ApiModel(description = "거래글 관련 dto")
 public class BoardDto {
 
+    @ApiModel(description = "거래글 요청 dto")
     public static class Request {
 
         @Data
+        @ApiModel(description = "거래글 리스트 요청 dto")
         public static class TradeList {
             @ApiModelProperty(value = "제조사")
             private String company;
@@ -54,6 +58,7 @@ public class BoardDto {
         }
 
         @Data
+        @ApiModel(description = "거래글 등록 dto")
         public static class TradeInsert {
             @NotEmpty(message = "제목은 필수입니다.")
             @ApiModelProperty(value = "거래글 제목", required = true)
@@ -103,6 +108,7 @@ public class BoardDto {
         }
 
         @Data
+        @ApiModel(description = "공지사항 등록 dto")
         public static class NoticeInsert {
             @NotEmpty(message = "제목은 필수입니다.")
             @ApiModelProperty(value = "공지사항 게시글 제목", required = true)
@@ -114,47 +120,86 @@ public class BoardDto {
 
         @Getter
         @Builder
+        @ApiModel(description = "거래글 리스트 dto")
         public static class TradeList {
+            @ApiModelProperty(value = "게시글 ID")
             private Long id;
+
+            @ApiModelProperty(value = "게시글 제목")
             private String title;
+
+            @ApiModelProperty(value = "모델명")
             private String modelName;
+
+            @ApiModelProperty(value = "업체명")
             private String company;
+
+            @ApiModelProperty(value = "주행거리")
             private int mileage;
+
+            @ApiModelProperty(value = "CC")
             private int cc;
+
+            @ApiModelProperty(value = "연식")
             private int year;
+
+            @ApiModelProperty(value = "가격")
             private int price;
         }
 
         @Getter
         @Builder
+        @ApiModel(description = "거래글 상세 dto")
         public static class TradeContent {
+            @ApiModelProperty(value = "게시글 제목")
             private String title;
+
+            @ApiModelProperty(value = "모델명")
             private String modelName;
+
+            @ApiModelProperty(value = "업체명")
             private String company;
+
+            @ApiModelProperty(value = "주행거리")
             private int mileage;
+
+            @ApiModelProperty(value = "CC")
             private int cc;
+
+            @ApiModelProperty(value = "연식")
             private int year;
+
+            @ApiModelProperty(value = "가격")
             private int price;
+
+            @ApiModelProperty(value = "거래지역명")
             private String location;
+
+            @ApiModelProperty(value = "구매 일자")
             private String dateOfPurchase;
         }
 
         @Getter
         @Builder
+        @ApiModel(description = "공지사항 리스트 dto")
         public static class NoticeList {
+            @ApiModelProperty(value = "게시글 ID")
             private Long id;
 
+            @ApiModelProperty(value = "게시글 제목")
             private String title;
 
+            @ApiModelProperty(value = "작성 일자")
             private String date;
         }
 
         @Getter
         @Builder
+        @ApiModel(description = "공지사항 상세 dto")
         public static class NoticeContent {
+            @ApiModelProperty(value = "게시글 제목")
             private String title;
         }
-
 
     }
 }
