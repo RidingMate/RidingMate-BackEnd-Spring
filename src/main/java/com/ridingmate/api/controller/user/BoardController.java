@@ -19,6 +19,7 @@ import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
 
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -114,16 +115,18 @@ public class BoardController {
         return ResponseDto.builder().build();
     }
 
-    @GetMapping("/notice/{boardId}")
     @ApiOperation("공지사항 상세 조회")
+    @GetMapping("/notice/{boardId}")
+    @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
     public ResponseDto<BoardDto.Response.NoticeContent> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
         return ResponseDto.<BoardDto.Response.NoticeContent>builder()
                           .response(noticeBoardService.getNoticeBoardContent(boardId))
                           .build();
     }
 
-    @GetMapping("/trade/{boardId}")
     @ApiOperation("거래글 상세 조회")
+    @GetMapping("/trade/{boardId}")
+    @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
     public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
         return ResponseDto.<BoardDto.Response.TradeContent>builder()
                 .response(tradeBoardService.getTradeBoardContent(boardId))
