@@ -1,6 +1,7 @@
 package com.ridingmate.api.entity;
 
 import com.ridingmate.api.entity.value.BikeRole;
+import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -92,7 +93,7 @@ public class BikeEntity extends BaseTime{
 
 
     //바이크 등록
-    public BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage, String bikeNickname, BikeRole bikeRole, LocalDate dateOfPurchase){
+    public BikeEntity createBike(UserEntity userEntity, BikeRole bikeRole, BikeInsertRequest request){
 
         //바이크 별명을 입력하지 않았을 경우
         String nickname = null;
@@ -104,14 +105,15 @@ public class BikeEntity extends BaseTime{
 
         return BikeEntity.builder()
                 .user(userEntity)
-                .company(company)
-                .model(model)
-                .year(year)
-                .mileage(mileage)
-                .bikeNickname(nickname)
+                .company(request.getCompany())
+                .model(request.getModel())
+                .year(request.getYear())
+                .mileage(request.getMileage())
+                .bikeNickname(request.getBikeNickName())
                 .fuels(new ArrayList<>())
                 .maintenances(new ArrayList<>())
                 .bikeRole(bikeRole)
+                .dateOfPurchase(request.getDateOfPurchase())
                 .build();
     }
 

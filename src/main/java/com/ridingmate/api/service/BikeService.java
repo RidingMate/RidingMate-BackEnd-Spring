@@ -78,8 +78,7 @@ public class BikeService {
 
         Enum<BikeRole> bikeRoleEnum = BikeRole.checkBikeRole(request.getBikeRole(), user);
 
-//        BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum, request.getDateOfPurchase());
-        BikeEntity bikeEntity = new BikeEntity().createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum, request.getDateOfPurchase());
+        BikeEntity bikeEntity = new BikeEntity().createBike(user,(BikeRole) bikeRoleEnum, request);
         bikeRepository.save(bikeEntity);
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
@@ -121,7 +120,7 @@ public class BikeService {
 
 
 
-    //내 바이크 리스트 - 대표바이크 컬럼 없음
+    //내 바이크 리스트
     public List<MyBikeResponse> bikeList(){
         UserEntity user = authService.getUserEntityByAuthentication();
         List<BikeEntity> bikeEntities = bikeRepository.findByUserOrderByBikeRole(user);
