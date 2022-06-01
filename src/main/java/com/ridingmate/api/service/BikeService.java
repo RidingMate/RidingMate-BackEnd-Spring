@@ -121,7 +121,7 @@ public class BikeService {
 
 
 
-    //내 바이크 리스트 - 대표바이크 컬럼 없음
+    //내 바이크 리스트
     public List<MyBikeResponse> bikeList(){
         UserEntity user = authService.getUserEntityByAuthentication();
         List<BikeEntity> bikeEntities = bikeRepository.findByUserOrderByBikeRole(user);

@@ -34,6 +34,7 @@ public class FuelService {
     private final FuelRepository fuelRepository;
     private final BikeRepository bikeRepository;
 
+    //연비 리스트
     public FuelListResponse list(long bikeIdx){
         UserEntity user = authService.getUserEntityByAuthentication();
 
