@@ -1,4 +1,4 @@
-package com.ridingmate.api.payload.user.response;
+package com.ridingmate.api.payload.user.dto;
 
 import java.util.List;
 
@@ -8,12 +8,12 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @Data
-public class PageResponse<T> {
+public class PageDto<T> {
 
     Pageable pageable;
     List<T> content;
 
-    public PageResponse(Page<T> page) {
+    public PageDto(Page<T> page) {
         content = page.getContent();
         pageable = new Pageable(
                 page.getPageable().getPageSize(),
