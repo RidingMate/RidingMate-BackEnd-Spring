@@ -2,9 +2,9 @@ package com.ridingmate.api.controller.user;
 
 import javax.validation.Valid;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.consts.ResponseCode;
-import com.ridingmate.api.exception.ParameterException;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.dto.BoardDto;
 import com.ridingmate.api.payload.user.dto.BoardDto.Response.TradeList;
@@ -25,6 +24,7 @@ import com.ridingmate.api.service.TradeBoardService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 /*
     중고장터 관련 컨트롤러
     필터 :   제조사
@@ -70,6 +70,7 @@ public class BoardController {
         return new PageDto<>(noticeBoardService.getNoticeBoardList(pageable));
     }
 
+    @SneakyThrows
     @GetMapping("/trade/list")
     @ApiOperation("거래글 리스트 조회")
     public PageDto<TradeList> getTradeBoardList(
@@ -78,12 +79,13 @@ public class BoardController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
+            throw new BindException(result);
         }
         return new PageDto<>(tradeBoardService.getTradeBoardList(pageable, dto));
     }
 
 
+    @SneakyThrows
     @PostMapping("/notice")
     @ApiOperation("공지사항 등록")
     public ResponseEntity insertNoticeBoard(
@@ -91,12 +93,13 @@ public class BoardController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
+            throw new BindException(result);
         }
         noticeBoardService.insertNoticeBoard(request);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
+    @SneakyThrows
     @PostMapping("/trade")
     @ApiOperation("거래글 등록")
     public ResponseEntity insertTradeBoard(
@@ -105,7 +108,7 @@ public class BoardController {
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
+            throw new BindException(result);
         }
         tradeBoardService.insertTradeBoardContent(dto);
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
