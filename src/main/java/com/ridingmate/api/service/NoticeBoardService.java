@@ -34,7 +34,7 @@ public class NoticeBoardService {
         return noticeBoardRepository.findAll(predicate, page);
     }
 
-    public Page<BoardDto.Response.NoticeList> getNoticeList(Pageable pageable) {
+    public Page<BoardDto.Response.NoticeList> getNoticeBoardList(Pageable pageable) {
         return getBoardList(BoardPredicate.noticeBoardPredicate(), pageable)
                 .map(noticeBoard -> BoardDto.Response.NoticeList.builder()
                                                                 .id(noticeBoard.getIdx())
