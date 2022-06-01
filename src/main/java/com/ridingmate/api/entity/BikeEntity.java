@@ -79,11 +79,11 @@ public class BikeEntity extends BaseTime{
 
 
     // 연비 기록
-    @OneToMany(mappedBy = "bike")
+    @OneToMany(mappedBy = "bike", orphanRemoval = true)
     private List<FuelEntity> fuels = new ArrayList<>();
 
     // 정비 기록
-    @OneToMany(mappedBy = "bike")
+    @OneToMany(mappedBy = "bike", orphanRemoval = true)
     private List<MaintenanceEntity> maintenances = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

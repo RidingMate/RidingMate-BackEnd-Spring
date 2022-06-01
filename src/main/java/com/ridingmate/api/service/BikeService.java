@@ -150,4 +150,16 @@ public class BikeService {
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
+    //내 바이크 삭제
+    @Transactional
+    public ResponseEntity<ApiResponse> deleteBike(long bikeIdx){
+        UserEntity user = authService.getUserEntityByAuthentication();
+        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+
+        bikeRepository.delete(bikeEntity);
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+    }
+
 }
