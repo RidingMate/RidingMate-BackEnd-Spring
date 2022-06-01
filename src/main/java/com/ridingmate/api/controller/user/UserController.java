@@ -2,7 +2,6 @@ package com.ridingmate.api.controller.user;
 
 import javax.validation.Valid;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.payload.common.AuthResponse;
+import com.ridingmate.api.payload.user.dto.ResponseDto;
 import com.ridingmate.api.payload.user.request.NormalJoinRequest;
 import com.ridingmate.api.payload.user.request.NormalLoginRequest;
 import com.ridingmate.api.service.UserService;
@@ -29,38 +29,46 @@ public class UserController {
     @SneakyThrows
     @PostMapping("/normal/join")
     @ApiOperation("일반유저(아이디, 패스워드) 회원가입")
-    public ResponseEntity normalJoin(
+    public ResponseDto<AuthResponse> normalJoin(
             @Valid @RequestBody NormalJoinRequest request,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        return ResponseEntity.ok(userService.normalJoin(request));
+        return ResponseDto.<AuthResponse>builder()
+                          .response(userService.normalJoin(request))
+                          .build();
     }
 
     @PostMapping("/social/join")
     @ApiOperation("소셜 회원가입")
-    public AuthResponse socialJoin() {
-        return userService.socialJoin();
+    public ResponseDto<AuthResponse> socialJoin() {
+        return ResponseDto.<AuthResponse>builder()
+                          .response(userService.socialJoin())
+                          .build();
     }
 
     @SneakyThrows
     @PostMapping("/normal/login")
     @ApiOperation("일반유저(아이디, 패스워드) 로그인")
-    public ResponseEntity normalLogin(
+    public ResponseDto<AuthResponse> normalLogin(
             @Valid @RequestBody NormalLoginRequest request,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        return ResponseEntity.ok(userService.normalLogin(request));
+        return ResponseDto.<AuthResponse>builder()
+                          .response(userService.normalLogin(request))
+                          .build();
     }
 
     @PostMapping("/social/login")
     @ApiOperation("소셜 로그인")
-    public AuthResponse socialLogin() {
-        return userService.socialLogin();
+    public ResponseDto<AuthResponse> socialLogin() {
+        return ResponseDto.<AuthResponse>builder()
+                          .response(userService.socialLogin())
+                          .build();
     }
 }

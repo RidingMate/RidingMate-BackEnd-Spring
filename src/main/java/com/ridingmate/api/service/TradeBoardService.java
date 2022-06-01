@@ -13,7 +13,6 @@ import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
-import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
 import com.ridingmate.api.service.common.AuthService;
@@ -25,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TradeBoardService {
 
-    private final BoardRepository boardRepository;
     private final TradeBoardRepository tradeBoardRepository;
     private final AwsS3Service s3Service;
     private final AuthService authService;
@@ -58,7 +56,7 @@ public class TradeBoardService {
                 dto.getPurchaseMonth(),
                 userEntity,
                 location);
-        boardRepository.save(tradeBoard);
+        tradeBoardRepository.save(tradeBoard);
     }
 
     @Transactional
@@ -85,7 +83,7 @@ public class TradeBoardService {
     }
 
     private TradeBoardEntity getBoardContent(Long boardId) {
-        BoardEntity board = boardRepository.findById(boardId).orElseThrow(() ->
+        BoardEntity board = tradeBoardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BOARD));
         board.increaseHitCount();
         return (TradeBoardEntity) board;
@@ -110,7 +108,7 @@ public class TradeBoardService {
     @Transactional
     public void deleteBoardContent(Long boardId) {
         // TODO : 파일 삭제 로직 추가
-        boardRepository.deleteById(boardId);
+        tradeBoardRepository.deleteById(boardId);
     }
 
 }

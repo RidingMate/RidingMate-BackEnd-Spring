@@ -13,7 +13,6 @@ import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
-import com.ridingmate.api.repository.BoardRepository;
 import com.ridingmate.api.repository.NoticeBoardRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
 
@@ -23,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NoticeBoardService {
 
-    private final BoardRepository boardRepository;
     private final NoticeBoardRepository noticeBoardRepository;
 
     @Transactional
@@ -46,11 +44,11 @@ public class NoticeBoardService {
     @Transactional
     public void insertNoticeBoard(BoardDto.Request.NoticeInsert dto) {
         NoticeBoardEntity noticeBoard = new NoticeBoardEntity(dto.getTitle());
-        boardRepository.save(noticeBoard);
+        noticeBoardRepository.save(noticeBoard);
     }
 
     private NoticeBoardEntity getBoardContent(Long boardId) {
-        BoardEntity board = boardRepository.findById(boardId).orElseThrow(() ->
+        BoardEntity board = noticeBoardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BOARD));
         board.increaseHitCount();
         return (NoticeBoardEntity) board;
@@ -66,7 +64,7 @@ public class NoticeBoardService {
 
     @Transactional
     public void deleteBoardContent(Long boardId) {
-        boardRepository.deleteById(boardId);
+        noticeBoardRepository.deleteById(boardId);
     }
 
 }
