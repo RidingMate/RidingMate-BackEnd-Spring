@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ridingmate.api.annotation.CurrentUser;
+import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.BoardDto;
 import com.ridingmate.api.payload.user.dto.PageDto;
-import com.ridingmate.api.payload.common.ResponseDto;
+import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
 
@@ -23,6 +25,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import springfox.documentation.annotations.ApiIgnore;
 /*
     중고장터 관련 컨트롤러
     필터 :   제조사
@@ -90,13 +93,15 @@ public class BoardController {
     @PostMapping("/notice")
     @ApiOperation("공지사항 등록")
     public ResponseDto insertNoticeBoard(
+            @RequestHeader(value = "Authorization") String token,
             @RequestBody @Valid BoardDto.Request.NoticeInsert request,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        noticeBoardService.insertNoticeBoard(request);
+        noticeBoardService.insertNoticeBoard(request, user.getIdx());
         return ResponseDto.builder().build();
     }
 
@@ -106,12 +111,13 @@ public class BoardController {
     public ResponseDto insertTradeBoard(
             @RequestHeader(value = "Authorization") String token,
             @RequestBody @Valid BoardDto.Request.TradeInsert dto,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        tradeBoardService.insertTradeBoardContent(dto);
+        tradeBoardService.insertTradeBoardContent(dto, user.getIdx());
         return ResponseDto.builder().build();
     }
 

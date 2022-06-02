@@ -14,8 +14,8 @@ import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
 import com.ridingmate.api.repository.TradeBoardRepository;
+import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
-import com.ridingmate.api.service.common.AuthService;
 import com.ridingmate.api.service.common.AwsS3Service;
 
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,15 @@ public class TradeBoardService {
 
     private final TradeBoardRepository tradeBoardRepository;
     private final AwsS3Service s3Service;
-    private final AuthService authService;
     private final LocationService locationService;
+    private final UserRepository userRepository;
 
     @Transactional
-    public void insertTradeBoardContent(BoardDto.Request.TradeInsert dto) {
+    public void insertTradeBoardContent(BoardDto.Request.TradeInsert dto, long userIdx) {
         // TODO : 내 바이크 조건처리 필요
-        UserEntity userEntity = authService.getUserEntityByAuthentication();
+        UserEntity userEntity = userRepository.findById(userIdx).orElseThrow(() ->
+                new CustomException(ResponseCode.NOT_FOUND_USER)
+        );
 
         // 거래 지역
         LocationEntity location = null;

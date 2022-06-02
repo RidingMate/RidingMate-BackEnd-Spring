@@ -1,10 +1,10 @@
 package com.ridingmate.api.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -19,6 +19,10 @@ public class NoticeBoardEntity extends BoardEntity {
 
     public NoticeBoardEntity(String title) {
         createBoardEntity(title);
+    }
+
+    public NoticeBoardEntity(String title, UserEntity user) {
+        createBoardEntity(title, user);
     }
 
 }
