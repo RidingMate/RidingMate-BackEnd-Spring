@@ -17,10 +17,6 @@ public class NoticeBoardEntity extends BoardEntity {
      * 공지사항에 필요한 데이터나 기능이 있다면 추가
      */
 
-    public NoticeBoardEntity(String title) {
-        createBoardEntity(title);
-    }
-
     public NoticeBoardEntity(String title, UserEntity user) {
         createBoardEntity(title, user);
     }
