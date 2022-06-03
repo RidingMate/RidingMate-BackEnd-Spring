@@ -1,5 +1,6 @@
 package com.ridingmate.api.entity;
 
+import com.ridingmate.api.payload.user.request.AddFuelRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -53,9 +55,38 @@ public class FuelEntity extends BaseTime {
     @Column(name = "fuelAmount")
     private int fuelAmount;
 
+    //초기화 여부
+    @Column(name = "reset")
+    private char reset;
+
+    //연비
+    @Column(name = "fuel_efficiency")
+    private double fuelEfficiency;
+
+    //연비
+    @Column(name = "date")
+    private LocalDate date;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bike_id")
     private BikeEntity bike;
+
+
+    public FuelEntity createEntity(BikeEntity bikeEntity, AddFuelRequest addFuelRequest){
+        this.previousMileage = bikeEntity.getMileage();
+        this.recentMileage = addFuelRequest.getMileage();
+        this.fuelVolume = addFuelRequest.getFuelVolume();
+        this.fuelAmount = addFuelRequest.getAmount();
+        this.reset = 'N';
+        this.bike = bikeEntity;
+        this.date = addFuelRequest.getDate();
+        this.fuelEfficiency = (addFuelRequest.getMileage() - bikeEntity.getMileage()) / addFuelRequest.getFuelVolume();
+        return this;
+    }
+
+    public void reset(){
+        this.reset = 'Y';
+    }
 
 
 }

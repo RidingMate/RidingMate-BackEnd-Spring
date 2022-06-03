@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface FuelRepository extends JpaRepository<FuelEntity, Long> {
     List<FuelEntity> findByBikeOrderByCreateAt(BikeEntity bikeEntity);
+
+    List<FuelEntity> findByBikeAndReset(BikeEntity bikeEntity, char reset);
 }

@@ -2,6 +2,7 @@ package com.ridingmate.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ridingmate.api.entity.value.BikeRole;
+import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,7 +56,7 @@ public class BikeEntity extends BaseTime{
 
     //연비
     @Column(name = "fuel_efficiency")
-    private int fuelEfficiency;
+    private double fuelEfficiency;
 
     //주유 횟수
     @Column(name = "count_oiling")
@@ -80,11 +81,11 @@ public class BikeEntity extends BaseTime{
 
 
     // 연비 기록
-    @OneToMany(mappedBy = "bike")
+    @OneToMany(mappedBy = "bike", orphanRemoval = true)
     private List<FuelEntity> fuels = new ArrayList<>();
 
     // 정비 기록
-    @OneToMany(mappedBy = "bike")
+    @OneToMany(mappedBy = "bike", orphanRemoval = true)
     private List<MaintenanceEntity> maintenances = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -93,7 +94,7 @@ public class BikeEntity extends BaseTime{
 
 
     //바이크 등록
-    public BikeEntity createBike(UserEntity userEntity, String company, String model, int year, int mileage, String bikeNickname, BikeRole bikeRole, LocalDate dateOfPurchase){
+    public BikeEntity createBike(UserEntity userEntity, BikeRole bikeRole, BikeInsertRequest request){
 
         //바이크 별명을 입력하지 않았을 경우
         String nickname = null;
@@ -105,14 +106,15 @@ public class BikeEntity extends BaseTime{
 
         return BikeEntity.builder()
                 .user(userEntity)
-                .company(company)
-                .model(model)
-                .year(year)
-                .mileage(mileage)
-                .bikeNickname(nickname)
+                .company(request.getCompany())
+                .model(request.getModel())
+                .year(request.getYear())
+                .mileage(request.getMileage())
+                .bikeNickname(request.getBikeNickName())
                 .fuels(new ArrayList<>())
                 .maintenances(new ArrayList<>())
                 .bikeRole(bikeRole)
+                .dateOfPurchase(request.getDateOfPurchase())
                 .build();
     }
 
@@ -124,6 +126,7 @@ public class BikeEntity extends BaseTime{
         this.mileage = request.getMileage();
         this.bikeNickname = request.getBikeNickName();
         this.bikeRole = bikeRole;
+        this.countOiling++;
     }
 
     //바이크 권한 변경
@@ -131,9 +134,23 @@ public class BikeEntity extends BaseTime{
         this.bikeRole = bikeRole;
     }
 
+    //바이크 권한 확인
     public boolean checkBikeRole(){
         if(bikeRole == BikeRole.REPRESENTATIVE) return true;
         return false;
+    }
+
+    //연비 추가
+    //현재 주행거리 최신화
+    //연비 - 초기화 되지 않은 연비 받아서 저장
+    public void addFuel(int recentMileage, double totalFuelEfficiency, int countOiling){
+        this.countOiling++;
+        this.mileage = recentMileage;
+        this.fuelEfficiency = totalFuelEfficiency/(double)countOiling;
+    }
+
+    public void resetFuel(){
+        this.fuelEfficiency = 0;
     }
 
 
