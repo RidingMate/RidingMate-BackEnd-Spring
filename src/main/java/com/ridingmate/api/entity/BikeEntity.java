@@ -1,6 +1,5 @@
 package com.ridingmate.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ridingmate.api.entity.value.BikeRole;
 import com.ridingmate.api.payload.user.request.BikeInsertRequest;
 import com.ridingmate.api.payload.user.request.BikeUpdateRequest;

@@ -1,35 +1,31 @@
 package com.ridingmate.api.controller.user;
 
-import com.ridingmate.api.consts.ResponseCode;
-import com.ridingmate.api.entity.LocationEntity;
-import com.ridingmate.api.entity.NoticeBoardEntity;
-import com.ridingmate.api.entity.TradeBoardEntity;
-import com.ridingmate.api.entity.UserEntity;
-import com.ridingmate.api.exception.ParameterException;
-import com.ridingmate.api.payload.common.ApiResponse;
-import com.ridingmate.api.payload.user.dto.NoticeBoardContentDto;
-import com.ridingmate.api.payload.user.dto.NoticeBoardDto;
-import com.ridingmate.api.payload.user.dto.TradeBoardContentDto;
-import com.ridingmate.api.payload.user.dto.TradeBoardDto;
-import com.ridingmate.api.payload.user.request.NoticeBoardRequest;
-import com.ridingmate.api.payload.user.request.TradeBoardRequest;
-import com.ridingmate.api.payload.user.request.TradeSearchRequest;
-import com.ridingmate.api.service.LocationService;
+import javax.validation.Valid;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.ridingmate.api.annotation.CurrentUser;
+import com.ridingmate.api.payload.common.ResponseDto;
+import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.PageDto;
+import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
-import com.ridingmate.api.service.common.AuthService;
 
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
+import lombok.SneakyThrows;
+import springfox.documentation.annotations.ApiIgnore;
 /*
     중고장터 관련 컨트롤러
     필터 :   제조사
@@ -66,99 +62,80 @@ public class BoardController {
 
     private final NoticeBoardService noticeBoardService;
     private final TradeBoardService tradeBoardService;
-    private final AuthService authService;
-    private final LocationService locationService;
 
     @GetMapping("/notice/list")
     @ApiOperation("공지사항 리스트 조회")
-    public Page<NoticeBoardDto> getNoticeBoardList(
-            @RequestParam(value = "pageNum") @Min(value = 1) int pageNum
+    public ResponseDto<PageDto<BoardDto.Response.NoticeList>> getNoticeBoardList(
+            Pageable pageable
     ) {
-        Sort sort = Sort.by("createAt").descending();
-        PageRequest page = PageRequest.of(pageNum - 1, 3, sort);
-        return noticeBoardService.getBoardList(page).map(noticeBoard -> new NoticeBoardDto(noticeBoard));
+        return ResponseDto.<PageDto<BoardDto.Response.NoticeList>>builder()
+                          .response(new PageDto<>(noticeBoardService.getNoticeBoardList(pageable)))
+                          .build();
     }
 
+    @SneakyThrows
     @GetMapping("/trade/list")
     @ApiOperation("거래글 리스트 조회")
-    public Page<TradeBoardDto> getTradeBoardList(
-            @RequestParam(value = "pageNum") @Min(value = 1) int pageNum,
-            @ModelAttribute @Valid TradeSearchRequest search,
+    public ResponseDto<PageDto<BoardDto.Response.TradeList>> getTradeBoardList(
+            @Valid BoardDto.Request.TradeList dto,
+            Pageable pageable,
             BindingResult result
     ) {
-
         if (result.hasErrors()) {
-            throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
+            throw new BindException(result);
         }
-
-        Sort sort = Sort.by("createAt").descending();
-        PageRequest page = PageRequest.of(pageNum - 1, 10, sort);
-        return tradeBoardService.getBoardList(page).map(tradeBoard -> new TradeBoardDto(tradeBoard));
+        return ResponseDto.<PageDto<BoardDto.Response.TradeList>>builder()
+                          .response(new PageDto<>(tradeBoardService.getTradeBoardList(pageable, dto)))
+                          .build();
     }
 
-
+    @SneakyThrows
     @PostMapping("/notice")
     @ApiOperation("공지사항 등록")
-    public ResponseEntity insertNoticeBoard(
-            @RequestBody @Valid NoticeBoardRequest request,
+    public ResponseDto insertNoticeBoard(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestBody @Valid BoardDto.Request.NoticeInsert request,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
     ) {
         if (result.hasErrors()) {
-            throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
+            throw new BindException(result);
         }
-        NoticeBoardEntity noticeBoard = new NoticeBoardEntity(request.getTitle());
-        noticeBoardService.insertBoardContent(noticeBoard);
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+        noticeBoardService.insertNoticeBoard(request, user.getIdx());
+        return ResponseDto.builder().build();
     }
 
+    @SneakyThrows
     @PostMapping("/trade")
     @ApiOperation("거래글 등록")
-    public ResponseEntity insertTradeBoard(
+    public ResponseDto insertTradeBoard(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody @Valid TradeBoardRequest request,
+            @RequestBody @Valid BoardDto.Request.TradeInsert dto,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
     ) {
-
         if (result.hasErrors()) {
-            throw new ParameterException(result.getFieldErrors().get(0).getDefaultMessage());
+            throw new BindException(result);
         }
-
-        // TODO : 내 바이크 조건처리 필요
-        UserEntity userEntity = authService.getUserEntityByAuthentication();
-
-        // 거래 지역
-        LocationEntity location = null;
-        if (request.getLocationCode() != null) {
-            location = locationService.getLocation(request.getLocationCode());
-        }
-
-        TradeBoardEntity tradeBoard = new TradeBoardEntity(
-                request.getTitle(),
-                request.getContent(),
-                request.getCompany(),
-                request.getModelName(),
-                request.getFuelEfficiency(),
-                request.getCc(),
-                request.getYear(),
-                request.getMileage(),
-                request.getPrice(),
-                request.getPurchaseYear(),
-                request.getPurchaseMonth(),
-                userEntity,
-                location);
-        tradeBoardService.insertBoardContent(tradeBoard);
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+        tradeBoardService.insertTradeBoardContent(dto, user.getIdx());
+        return ResponseDto.builder().build();
     }
 
-    @GetMapping("/notice/{boardId}")
     @ApiOperation("공지사항 상세 조회")
-    public ResponseEntity<NoticeBoardContentDto> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(new NoticeBoardContentDto(noticeBoardService.getBoardContent(boardId)));
+    @GetMapping("/notice/{boardId}")
+    @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
+    public ResponseDto<BoardDto.Response.NoticeContent> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
+        return ResponseDto.<BoardDto.Response.NoticeContent>builder()
+                          .response(noticeBoardService.getNoticeBoardContent(boardId))
+                          .build();
     }
 
-    @GetMapping("/trade/{boardId}")
     @ApiOperation("거래글 상세 조회")
-    public ResponseEntity<TradeBoardContentDto> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseEntity.ok(new TradeBoardContentDto(tradeBoardService.getBoardContent(boardId)));
+    @GetMapping("/trade/{boardId}")
+    @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
+    public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
+        return ResponseDto.<BoardDto.Response.TradeContent>builder()
+                .response(tradeBoardService.getTradeBoardContent(boardId))
+                .build();
     }
 }
