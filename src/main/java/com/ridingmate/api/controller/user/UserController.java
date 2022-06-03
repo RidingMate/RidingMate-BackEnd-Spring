@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.payload.common.AuthResponse;
 import com.ridingmate.api.payload.common.ResponseDto;
-import com.ridingmate.api.payload.user.request.NormalJoinRequest;
-import com.ridingmate.api.payload.user.request.NormalLoginRequest;
+import com.ridingmate.api.payload.user.dto.NormalUserDto;
 import com.ridingmate.api.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
@@ -30,7 +29,7 @@ public class UserController {
     @PostMapping("/normal/join")
     @ApiOperation("일반유저(아이디, 패스워드) 회원가입")
     public ResponseDto<AuthResponse> normalJoin(
-            @Valid @RequestBody NormalJoinRequest request,
+            @Valid @RequestBody NormalUserDto.Request.Join request,
             BindingResult result
     ) {
         if (result.hasErrors()) {
@@ -53,7 +52,7 @@ public class UserController {
     @PostMapping("/normal/login")
     @ApiOperation("일반유저(아이디, 패스워드) 로그인")
     public ResponseDto<AuthResponse> normalLogin(
-            @Valid @RequestBody NormalLoginRequest request,
+            @Valid @RequestBody NormalUserDto.Request.Login request,
             BindingResult result
     ) {
         if (result.hasErrors()) {
