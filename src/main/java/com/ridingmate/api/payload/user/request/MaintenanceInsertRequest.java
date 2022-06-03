@@ -30,6 +30,6 @@ public class MaintenanceInsertRequest {
     // TODO : 사진 기록해야함 -> 멀티파트를 이용한 썸네일 저장
     // TODO : BLOB같은거 이용해서 내용에 사진도 들어갈 수 있게 저장
 
-    @ApiModelProperty(value = "제목", required = false)
+    @ApiModelProperty(value = "제목")
     private String content;
 }
