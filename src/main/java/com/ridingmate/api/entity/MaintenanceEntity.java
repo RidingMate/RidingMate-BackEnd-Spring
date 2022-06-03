@@ -1,6 +1,5 @@
 package com.ridingmate.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ridingmate.api.entity.value.BikeRole;
 import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
 import com.ridingmate.api.payload.user.request.MaintenanceInsertRequest;
@@ -77,7 +76,7 @@ public class MaintenanceEntity extends BaseTime {
                 .location(request.getLocation())
                 .amount(request.getAmount())
                 .content(request.getContent())
-                .bike(bike)
+                .bike(bike) // 가져와서 일케 넣어주는것이 맞나,,,? request에서 id 넣어줘야하나
                 .build();
     }
 

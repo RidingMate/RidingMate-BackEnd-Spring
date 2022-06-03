@@ -6,7 +6,6 @@ import com.ridingmate.api.entity.MaintenanceEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.ApiResponse;
-import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.payload.user.request.MaintenanceInsertRequest;
 import com.ridingmate.api.payload.user.request.MaintenanceUpdateRequest;
 import com.ridingmate.api.payload.user.response.MaintenanceResponse;
@@ -40,11 +39,9 @@ public class MaintenanceService {
 
         List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBike(bike);
 
-        BikeDto bikeDto = BikeDto.convertEntityToDto(bike);
-
         return maintenanceEntities.stream()
                 .filter(maintenanceEntity -> maintenanceEntity.getDateOfMaintenance().getYear()==year)
-                .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity, bikeDto))
+                .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity))
                 .collect(Collectors.toList());
     }
 
@@ -57,9 +54,7 @@ public class MaintenanceService {
 
         MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx,bike);
 
-        BikeDto bikeDto = BikeDto.convertEntityToDto(bike);
-
-        return new MaintenanceResponse().convertEntityToResponse(maintenanceEntity, bikeDto);
+        return new MaintenanceResponse().convertEntityToResponse(maintenanceEntity);
     }
 
     @Transactional
