@@ -125,7 +125,6 @@ public class BikeEntity extends BaseTime{
         this.mileage = request.getMileage();
         this.bikeNickname = request.getBikeNickName();
         this.bikeRole = bikeRole;
-        this.countOiling++;
     }
 
     //바이크 권한 변경
