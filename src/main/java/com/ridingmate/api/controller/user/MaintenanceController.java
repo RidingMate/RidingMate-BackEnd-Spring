@@ -33,15 +33,6 @@ public class MaintenanceController {
 
     private final MaintenanceService maintenanceService;
 
-//    @GetMapping("/list/{bike_idx}") // 연도로 URI 받아라,......
-//    public List<MaintenanceResponse> maintenanceList(
-//            @RequestHeader(value = "Authorization") String token,
-//            @PathVariable("bike_idx") Long bike_idx
-//    ) {
-//
-//        return maintenanceService.getMaintenanceList(bike_idx);
-//    }
-
     @GetMapping("/list/{bike_idx}/{year}")
     @ApiOperation(value="정비기록 리스트 조회 - 연도별")
     @ApiImplicitParams({

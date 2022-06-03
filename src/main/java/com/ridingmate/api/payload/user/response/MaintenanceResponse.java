@@ -3,6 +3,7 @@ package com.ridingmate.api.payload.user.response;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.ridingmate.api.entity.BikeEntity;
 import com.ridingmate.api.entity.MaintenanceEntity;
+import com.ridingmate.api.payload.user.dto.BikeDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -25,12 +26,12 @@ public class MaintenanceResponse {
     private String location;
     private String amount;
     private String content;
-    private BikeEntity bikeEntity;
+    private BikeDto bikeDto;
 
     // TODO : 사진 기록해야함 -> 멀티파트를 이용한 썸네일 저장
     // TODO : BLOB같은거 이용해서 내용에 사진도 들어갈 수 있게 저장
 
-    public MaintenanceResponse convertEntityToResponse(MaintenanceEntity maintenanceEntity){
+    public MaintenanceResponse convertEntityToResponse(MaintenanceEntity maintenanceEntity, BikeDto bikeDto){
         return MaintenanceResponse.builder()
                 .idx(maintenanceEntity.getIdx())
                 .title(maintenanceEntity.getTitle())
@@ -39,7 +40,7 @@ public class MaintenanceResponse {
                 .location(maintenanceEntity.getLocation())
                 .amount(maintenanceEntity.getAmount())
                 .content(maintenanceEntity.getContent())
-                .bikeEntity(maintenanceEntity.getBike())
+                .bikeDto(bikeDto)
                 .build();
     }
 

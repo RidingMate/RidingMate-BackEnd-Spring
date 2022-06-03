@@ -6,6 +6,7 @@ import com.ridingmate.api.entity.MaintenanceEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.ApiResponse;
+import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.payload.user.request.MaintenanceInsertRequest;
 import com.ridingmate.api.payload.user.request.MaintenanceUpdateRequest;
 import com.ridingmate.api.payload.user.response.MaintenanceResponse;
@@ -37,11 +38,13 @@ public class MaintenanceService {
         BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx,user).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
+        BikeDto bikeDto = BikeDto.convertEntityToDto(bike);
+
         List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBike(bike);
 
         return maintenanceEntities.stream()
                 .filter(maintenanceEntity -> maintenanceEntity.getDateOfMaintenance().getYear()==year)
-                .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity))
+                .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity, bikeDto))
                 .collect(Collectors.toList());
     }
 
@@ -52,9 +55,11 @@ public class MaintenanceService {
         BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx,user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
+        BikeDto bikeDto = BikeDto.convertEntityToDto(bike);
+
         MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx,bike);
 
-        return new MaintenanceResponse().convertEntityToResponse(maintenanceEntity);
+        return new MaintenanceResponse().convertEntityToResponse(maintenanceEntity, bikeDto);
     }
 
     @Transactional
