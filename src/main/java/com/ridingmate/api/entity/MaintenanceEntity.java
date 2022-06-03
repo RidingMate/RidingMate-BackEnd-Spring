@@ -52,10 +52,6 @@ public class MaintenanceEntity extends BaseTime {
     @Column(name = "location", nullable = false)
     private String location;
 
-    // 정비 위치 리스트?
-//    @Column(name = "location")
-//    private List<> location = new ArrayList<>();
-
     //정비 가격
     @Column(name = "amount", nullable = false)
     private String amount;
@@ -71,7 +67,7 @@ public class MaintenanceEntity extends BaseTime {
     @Column(name="content")
     private String content;
 
-    public static MaintenanceEntity createMaintenance(MaintenanceInsertRequest request){
+    public static MaintenanceEntity createMaintenance(MaintenanceInsertRequest request, BikeEntity bike){
 
         return MaintenanceEntity.builder()
                 .title(request.getTitle())
@@ -80,6 +76,7 @@ public class MaintenanceEntity extends BaseTime {
                 .location(request.getLocation())
                 .amount(request.getAmount())
                 .content(request.getContent())
+                .bike(bike) // 가져와서 일케 넣어주는것이 맞나,,,? request에서 id 넣어줘야하나
                 .build();
     }
 
