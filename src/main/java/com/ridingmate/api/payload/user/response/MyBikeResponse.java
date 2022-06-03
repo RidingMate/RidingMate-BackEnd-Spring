@@ -20,7 +20,7 @@ public class MyBikeResponse {
     @ApiModelProperty(value = "누적 주행거리")
     private int milage;
     @ApiModelProperty(value = "평균 연비")
-    private int fuelEfficiency;
+    private double fuelEfficiency;
     @ApiModelProperty(value = "구입 일자")
     private LocalDate dateOfPurchase;
     @ApiModelProperty(value = "주유기록 카운트")

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class FuelListResponse {
     List<FuelDto> fuelList;
     @ApiModelProperty(value = "최근 연비")
-    private int fuelEfficiency;
+    private double fuelEfficiency;
 
     public FuelListResponse convertEntityToResponse(List<FuelEntity> fuelEntities, BikeEntity bikeEntity){
         this.fuelList = fuelEntities.stream().map(fuelEntity -> new FuelDto().convertEntityToDto(fuelEntity)).collect(Collectors.toList());
