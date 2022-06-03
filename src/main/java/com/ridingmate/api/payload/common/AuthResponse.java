@@ -1,19 +1,17 @@
 package com.ridingmate.api.payload.common;
 
-import com.ridingmate.api.consts.ResponseCode;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 
 @Getter
-public class AuthResponse extends ResponseDto {
+@ApiModel(description = "인증용 응답 객체")
+public class AuthResponse {
 
+    @ApiModelProperty(value = "Bearer 토큰 값")
     private String accessToken;
 
-    public AuthResponse(ResponseCode response) {
-        this.response = response;
-    }
-
-    public AuthResponse(String accessToken, ResponseCode response) {
+    public AuthResponse(String accessToken) {
         this.accessToken = accessToken;
-        this.response = response;
     }
 }

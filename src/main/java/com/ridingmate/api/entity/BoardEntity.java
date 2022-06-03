@@ -44,10 +44,6 @@ public abstract class BoardEntity extends BaseTime {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public void createBoardEntity(String title) {
-        this.title = title;
-    }
-
     public void createBoardEntity(String title, UserEntity user) {
         this.title = title;
         this.user = user;
