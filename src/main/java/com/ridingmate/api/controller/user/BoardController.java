@@ -17,8 +17,11 @@ import com.ridingmate.api.annotation.CurrentUser;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
+import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
@@ -136,7 +139,9 @@ public class BoardController {
     @ApiOperation("거래글 상세 조회")
     @GetMapping("/trade/{boardId}")
     @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
-    public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
+    public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(
+            @PathVariable("boardId") Long boardId
+    ) {
         return ResponseDto.<BoardDto.Response.TradeContent>builder()
                 .response(tradeBoardService.getTradeBoardContent(boardId))
                 .build();
@@ -165,6 +170,28 @@ public class BoardController {
         tradeBoardService.insertReply(dto, user.getIdx());
         return ResponseDto.builder()
                           .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
+    @ApiOperation("거래글 댓글만 조회")
+    @GetMapping("/trade/comment")
+    public ResponseDto<PageDto<Info>> getCommentList(
+            Comment dto,
+            Pageable commentPageable
+    ) {
+        return ResponseDto.<PageDto<Info>>builder()
+                          .response(new PageDto<>(tradeBoardService.getCommentList(dto, commentPageable)))
+                          .build();
+    }
+
+    @ApiOperation("거래글 대댓글 조회")
+    @GetMapping("/trade/reply")
+    public ResponseDto<PageDto<Info>> getReplyList(
+            Reply dto,
+            Pageable commentPageable
+    ) {
+        return ResponseDto.<PageDto<Info>>builder()
+                          .response(new PageDto<>(tradeBoardService.getReplyList(dto, commentPageable)))
                           .build();
     }
 }
