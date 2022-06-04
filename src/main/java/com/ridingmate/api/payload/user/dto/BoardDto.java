@@ -151,6 +151,9 @@ public class BoardDto {
         @Builder
         @ApiModel(description = "거래글 상세 dto")
         public static class TradeContent {
+            @ApiModelProperty(value = "게시글 ID")
+            private Long boardId;
+
             @ApiModelProperty(value = "게시글 제목")
             private String title;
 
@@ -177,6 +180,8 @@ public class BoardDto {
 
             @ApiModelProperty(value = "구매 일자")
             private String dateOfPurchase;
+
+            private PageDto<CommentDto.Response.Info> comments;
         }
 
         @Getter
