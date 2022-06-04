@@ -46,6 +46,7 @@ public class MaintenanceController {
             @PathVariable("bike_idx") Long bike_idx,
             @PathVariable("year") int year
     ) {
+        // 연도별로 취합해서 보내줘야하는디 return 타입을 어케해야하나~~
         return maintenanceService.getMaintenanceList(bike_idx, year);
     }
 

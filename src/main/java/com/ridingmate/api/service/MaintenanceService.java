@@ -72,6 +72,8 @@ public class MaintenanceService {
         BikeEntity bike = bikeRepository.findByIdxAndUser(request.getBike_idx(),user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
+        bike.countUpMaintenance();
+
         MaintenanceEntity maintenanceEntity = MaintenanceEntity.createMaintenance(request, bike);
 
         maintenanceRepository.save(maintenanceEntity);
@@ -100,6 +102,8 @@ public class MaintenanceService {
 
         BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx,user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
+
+        bike.countDownMaintenance();
 
         MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx,bike);
 
