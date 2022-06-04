@@ -17,7 +17,8 @@ import com.ridingmate.api.annotation.CurrentUser;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.BoardDto;
-import com.ridingmate.api.payload.user.dto.CommentDto;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
@@ -145,10 +146,23 @@ public class BoardController {
     @PostMapping("/trade/comment")
     public ResponseDto<?> insertComment(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody CommentDto.Request.Insert dto,
+            @RequestBody InsertComment dto,
             @ApiIgnore @CurrentUser UserPrincipal user
     ) {
         tradeBoardService.insertComment(dto, user.getIdx());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
+    @ApiOperation("거래글 대댓글 등록")
+    @PostMapping("/trade/reply")
+    public ResponseDto<?> insertReply(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestBody InsertReply dto,
+            @ApiIgnore @CurrentUser UserPrincipal user
+    ) {
+        tradeBoardService.insertReply(dto, user.getIdx());
         return ResponseDto.builder()
                           .responseCode(ResponseCode.SUCCESS)
                           .build();

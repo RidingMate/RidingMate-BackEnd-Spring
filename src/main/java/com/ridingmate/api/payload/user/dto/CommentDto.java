@@ -10,7 +10,21 @@ public class CommentDto {
 
         @Data
         @ApiModel(description = "댓글 등록 dto")
-        public static class Insert {
+        public static class InsertComment {
+            @ApiModelProperty("댓글 내용")
+            private String content;
+
+            @ApiModelProperty("게시글 번호")
+            private Long boardId;
+        }
+
+        @Data
+        @ApiModel(description = "대댓글 등록 dto")
+        public static class InsertReply {
+
+            @ApiModelProperty("상위 댓글 번호")
+            private Long commentId;
+
             @ApiModelProperty("댓글 내용")
             private String content;
 
