@@ -78,7 +78,7 @@ public class BikeService {
 
         Enum<BikeRole> bikeRoleEnum = BikeRole.checkBikeRole(request.getBikeRole(), user);
 
-        BikeEntity bikeEntity = BikeEntity.createBike(user, request.getCompany(), request.getModel(), request.getYear(), request.getMileage(), request.getBikeNickName(), (BikeRole) bikeRoleEnum, request.getDateOfPurchase());
+        BikeEntity bikeEntity = new BikeEntity().createBike(user,(BikeRole) bikeRoleEnum, request);
         bikeRepository.save(bikeEntity);
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
@@ -120,7 +120,7 @@ public class BikeService {
 
 
 
-    //내 바이크 리스트 - 대표바이크 컬럼 없음
+    //내 바이크 리스트
     public List<MyBikeResponse> bikeList(){
         UserEntity user = authService.getUserEntityByAuthentication();
         List<BikeEntity> bikeEntities = bikeRepository.findByUserOrderByBikeRole(user);
@@ -145,6 +145,18 @@ public class BikeService {
         UserEntity user = authService.getUserEntityByAuthentication();
         AddBikeEntity addBikeEntity = new AddBikeEntity().convertRequestToEntity(addBikeRequest, user);
         addBikeRepository.save(addBikeEntity);
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+    }
+
+    //내 바이크 삭제
+    @Transactional
+    public ResponseEntity<ApiResponse> deleteBike(long bikeIdx){
+        UserEntity user = authService.getUserEntityByAuthentication();
+        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+
+        bikeRepository.delete(bikeEntity);
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
