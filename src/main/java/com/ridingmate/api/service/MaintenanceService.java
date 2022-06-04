@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,10 +41,12 @@ public class MaintenanceService {
 
         BikeDto bikeDto = BikeDto.convertEntityToDto(bike);
 
-        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBike(bike);
-        
+        LocalDate startDate = LocalDate.of(year,1,1);
+        LocalDate endDate = LocalDate.of(year,12,31);
+
+        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBikeAndDateOfMaintenanceBetween(bike,startDate,endDate);
+
         return maintenanceEntities.stream()
-                .filter(maintenanceEntity -> maintenanceEntity.getDateOfMaintenance().getYear()==year)
                 .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity, bikeDto))
                 .collect(Collectors.toList());
     }
