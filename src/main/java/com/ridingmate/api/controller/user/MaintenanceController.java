@@ -46,6 +46,7 @@ public class MaintenanceController {
             @PathVariable("bike_idx") Long bike_idx,
             @PathVariable("year") int year
     ) {
+        // 연도별로 취합해서 보내줘야하는디 return 타입을 어케해야하나~~
         return maintenanceService.getMaintenanceList(bike_idx, year);
     }
 
@@ -88,6 +89,21 @@ public class MaintenanceController {
             @RequestBody MaintenanceUpdateRequest request){
 
         return maintenanceService.updateMaintenance(request);
+    }
+
+    @DeleteMapping("/delete/{bike_idx}/{maintenance_idx}")
+    @ApiOperation(value = "정비 기록 삭제")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+            @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "Long", required = true),
+            @ApiImplicitParam(name = "maintenance_idx", value = "maintenance_idx", dataType = "Long", required = true),
+    })
+    public ResponseEntity<ApiResponse> deleteMaintenance(
+            @RequestHeader(value = "Authorization") String token,
+            @PathVariable("bike_idx") Long bike_idx,
+            @PathVariable("maintenance_idx") Long maintenance_idx){
+
+        return maintenanceService.deleteMaintenance(bike_idx, maintenance_idx);
     }
 
 }

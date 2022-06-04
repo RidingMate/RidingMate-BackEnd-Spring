@@ -76,7 +76,7 @@ public class MaintenanceEntity extends BaseTime {
                 .location(request.getLocation())
                 .amount(request.getAmount())
                 .content(request.getContent())
-                .bike(bike) // 가져와서 일케 넣어주는것이 맞나,,,? request에서 id 넣어줘야하나
+                .bike(bike)
                 .build();
     }
 

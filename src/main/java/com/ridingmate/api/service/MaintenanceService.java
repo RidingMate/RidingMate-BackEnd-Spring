@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,10 +41,12 @@ public class MaintenanceService {
 
         BikeDto bikeDto = BikeDto.convertEntityToDto(bike);
 
-        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBike(bike);
+        LocalDate startDate = LocalDate.of(year,1,1);
+        LocalDate endDate = LocalDate.of(year,12,31);
+
+        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBikeAndDateOfMaintenanceBetween(bike,startDate,endDate);
 
         return maintenanceEntities.stream()
-                .filter(maintenanceEntity -> maintenanceEntity.getDateOfMaintenance().getYear()==year)
                 .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity, bikeDto))
                 .collect(Collectors.toList());
     }
@@ -69,6 +72,8 @@ public class MaintenanceService {
         BikeEntity bike = bikeRepository.findByIdxAndUser(request.getBike_idx(),user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
+        bike.countUpMaintenance();
+
         MaintenanceEntity maintenanceEntity = MaintenanceEntity.createMaintenance(request, bike);
 
         maintenanceRepository.save(maintenanceEntity);
@@ -90,4 +95,20 @@ public class MaintenanceService {
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
+
+    @Transactional
+    public ResponseEntity<ApiResponse> deleteMaintenance(Long bike_idx, Long maintenance_idx){
+        UserEntity user = authService.getUserEntityByAuthentication();
+
+        BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx,user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+
+        bike.countDownMaintenance();
+
+        MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx,bike);
+
+        maintenanceRepository.delete(maintenanceEntity);
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+    }
 }

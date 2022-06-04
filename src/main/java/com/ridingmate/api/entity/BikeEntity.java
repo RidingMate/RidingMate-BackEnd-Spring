@@ -151,5 +151,11 @@ public class BikeEntity extends BaseTime{
         this.fuelEfficiency = 0;
     }
 
-
+    // 정비 횟수 증가, 감소 메소드 만들기
+    public void countUpMaintenance(){
+        this.countMaintenance ++;
+    }
+    public void countDownMaintenance(){
+        this.countMaintenance --;
+    }
 }
