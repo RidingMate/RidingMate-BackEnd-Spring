@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.annotation.CurrentUser;
+import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.CommentDto;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
@@ -137,5 +139,18 @@ public class BoardController {
         return ResponseDto.<BoardDto.Response.TradeContent>builder()
                 .response(tradeBoardService.getTradeBoardContent(boardId))
                 .build();
+    }
+
+    @ApiOperation("거래글 댓글 등록")
+    @PostMapping("/trade/comment")
+    public ResponseDto<?> insertComment(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestBody CommentDto.Request.Insert dto,
+            @ApiIgnore @CurrentUser UserPrincipal user
+    ) {
+        tradeBoardService.insertComment(dto, user.getIdx());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
     }
 }
