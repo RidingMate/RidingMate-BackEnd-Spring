@@ -90,4 +90,19 @@ public class MaintenanceController {
         return maintenanceService.updateMaintenance(request);
     }
 
+    @DeleteMapping("/delete/{bike_idx}/{maintenance_idx}")
+    @ApiOperation(value = "정비 기록 삭제")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+            @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "Long", required = true),
+            @ApiImplicitParam(name = "maintenance_idx", value = "maintenance_idx", dataType = "Long", required = true),
+    })
+    public ResponseEntity<ApiResponse> deleteMaintenance(
+            @RequestHeader(value = "Authorization") String token,
+            @PathVariable("bike_idx") Long bike_idx,
+            @PathVariable("maintenance_idx") Long maintenance_idx){
+
+        return maintenanceService.deleteMaintenance(bike_idx, maintenance_idx);
+    }
+
 }

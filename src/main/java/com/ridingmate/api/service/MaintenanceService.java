@@ -41,7 +41,7 @@ public class MaintenanceService {
         BikeDto bikeDto = BikeDto.convertEntityToDto(bike);
 
         List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBike(bike);
-
+        
         return maintenanceEntities.stream()
                 .filter(maintenanceEntity -> maintenanceEntity.getDateOfMaintenance().getYear()==year)
                 .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity, bikeDto))
@@ -90,4 +90,18 @@ public class MaintenanceService {
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
+
+    @Transactional
+    public ResponseEntity<ApiResponse> deleteMaintenance(Long bike_idx, Long maintenance_idx){
+        UserEntity user = authService.getUserEntityByAuthentication();
+
+        BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx,user).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+
+        MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx,bike);
+
+        maintenanceRepository.delete(maintenanceEntity);
+
+        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+    }
 }
