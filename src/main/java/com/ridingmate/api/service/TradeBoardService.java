@@ -1,7 +1,13 @@
 package com.ridingmate.api.service;
 
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,8 +20,11 @@ import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.CommentDto;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
+import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
+import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.repository.CommentRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
 import com.ridingmate.api.repository.UserRepository;
@@ -99,7 +108,15 @@ public class TradeBoardService {
     @Transactional
     public BoardDto.Response.TradeContent getTradeBoardContent(Long boardId) {
         TradeBoardEntity board = getBoardContent(boardId);
+        Page<Info> comments = commentRepository.findByBoardAndParentCommentIdxIsNull(board, PageRequest.of(0, 7, Sort.by("createAt").descending()))
+                .map(comment -> Info.builder()
+                                    .commentId(comment.getIdx())
+                                    .content(comment.getContent())
+                                    .date(comment.getCreateAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                                    .username(comment.getUser().getNickname())
+                                    .build());
         return BoardDto.Response.TradeContent.builder()
+                                             .boardId(board.getIdx())
                                              .title(board.getTitle())
                                              .company(board.getCompany())
                                              .modelName(board.getModelName())
@@ -107,8 +124,10 @@ public class TradeBoardService {
                                              .cc(board.getCc())
                                              .mileage(board.getMileage())
                                              .year(board.getYear())
-                                             .dateOfPurchase(board.getDateOfPurchase().toString())
-                                             .location(board.getLocation() != null ? board.getLocation().getName() : "")
+                                             .dateOfPurchase(board.getDateOfPurchase() != null ? board.getDateOfPurchase().toString() : null)
+                                             .location(board.getLocation() != null ?
+                                                       board.getLocation().getName() : "")
+                                             .comments(new PageDto<>(comments))
                                              .build();
     }
 
