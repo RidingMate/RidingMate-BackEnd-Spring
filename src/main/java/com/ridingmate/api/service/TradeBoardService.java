@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,15 +18,17 @@ import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
-import com.ridingmate.api.payload.user.dto.CommentDto;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.repository.CommentRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
 import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
+import com.ridingmate.api.repository.predicate.CommentPredicate;
 import com.ridingmate.api.service.common.AwsS3Service;
 
 import lombok.RequiredArgsConstructor;
@@ -108,7 +108,7 @@ public class TradeBoardService {
     @Transactional
     public BoardDto.Response.TradeContent getTradeBoardContent(Long boardId) {
         TradeBoardEntity board = getBoardContent(boardId);
-        Page<Info> comments = commentRepository.findByBoardAndParentCommentIdxIsNull(board, PageRequest.of(0, 7, Sort.by("createAt").descending()))
+        Page<Info> comments = commentRepository.findAll(CommentPredicate.getComment(board, null), PageRequest.of(0, 7, Sort.by("createAt").descending()))
                 .map(comment -> Info.builder()
                                     .commentId(comment.getIdx())
                                     .content(comment.getContent())
@@ -164,5 +164,29 @@ public class TradeBoardService {
                                              .user(user)
                                              .build();
         commentRepository.save(comment);
+    }
+
+    public Page<Info> getCommentList(Comment dto, Pageable commentPageable) {
+        TradeBoardEntity tradeBoard = tradeBoardRepository.findById(dto.getBoardId()).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        return commentRepository.findAll(CommentPredicate.getComment(tradeBoard, null), commentPageable)
+                                .map(comment -> Info.builder()
+                                                    .commentId(comment.getIdx())
+                                                    .content(comment.getContent())
+                                                    .date(comment.getCreateAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                                                    .username(comment.getUser().getNickname())
+                                                    .build());
+    }
+
+    public Page<Info> getReplyList(Reply dto, Pageable commentPageable) {
+        TradeBoardEntity tradeBoard = tradeBoardRepository.findById(dto.getBoardId()).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        return commentRepository.findAll(CommentPredicate.getComment(tradeBoard, dto.getCommentId()), commentPageable)
+                .map(comment -> Info.builder()
+                                    .commentId(comment.getIdx())
+                                    .content(comment.getContent())
+                                    .date(comment.getCreateAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                                    .username(comment.getUser().getNickname())
+                                    .build());
     }
 }

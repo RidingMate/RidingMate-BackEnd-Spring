@@ -32,6 +32,23 @@ public class CommentDto {
             @ApiModelProperty("게시글 번호")
             private Long boardId;
         }
+
+        @Data
+        @ApiModel(description = "댓글 조회 요청 dto")
+        public static class Comment {
+            @ApiModelProperty("게시글 번호")
+            private Long boardId;
+        }
+
+        @Data
+        @ApiModel(description = "대댓글 조회 요청 dto")
+        public static class Reply {
+            @ApiModelProperty("상위 댓글 번호")
+            private Long commentId;
+
+            @ApiModelProperty("게시글 번호")
+            private Long boardId;
+        }
     }
 
     public static class Response {
