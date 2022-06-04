@@ -29,6 +29,12 @@ public class CommentEntity extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    /**
+     * 부모 댓글(대댓글 전용 컬럼), 대댓글 아닐때 null
+     */
+    @Column(name = "parent_comment_idx")
+    private Long parentCommentIdx;
+
     //댓글 내용
     @Column(name = "content")
     private String content;

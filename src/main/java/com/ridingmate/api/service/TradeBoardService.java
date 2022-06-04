@@ -14,7 +14,8 @@ import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
-import com.ridingmate.api.payload.user.dto.CommentDto;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
 import com.ridingmate.api.repository.CommentRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
 import com.ridingmate.api.repository.UserRepository;
@@ -118,11 +119,11 @@ public class TradeBoardService {
     }
 
     @Transactional
-    public void insertComment(CommentDto.Request.Insert dto, Long userIdx) {
-        TradeBoardEntity tradeBoard = tradeBoardRepository.findById(dto.getBoardId()).orElseThrow(
-                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+    public void insertComment(InsertComment dto, Long userIdx) {
         UserEntity user = userRepository.findById(userIdx).orElseThrow(
                 () -> new CustomException(ResponseCode.NOT_FOUND_USER));
+        TradeBoardEntity tradeBoard = tradeBoardRepository.findById(dto.getBoardId()).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
         CommentEntity comment = CommentEntity.builder()
                                              .board(tradeBoard)
                                              .content(dto.getContent())
@@ -131,4 +132,18 @@ public class TradeBoardService {
         commentRepository.save(comment);
     }
 
+    @Transactional
+    public void insertReply(InsertReply dto, Long userIdx) {
+        UserEntity user = userRepository.findById(userIdx).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_USER));
+        TradeBoardEntity tradeBoard = tradeBoardRepository.findById(dto.getBoardId()).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        CommentEntity comment = CommentEntity.builder()
+                                             .parentCommentIdx(dto.getCommentId())
+                                             .board(tradeBoard)
+                                             .content(dto.getContent())
+                                             .user(user)
+                                             .build();
+        commentRepository.save(comment);
+    }
 }
