@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.annotation.CurrentUser;
 import com.ridingmate.api.consts.ResponseCode;
+import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.BoardDto;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
@@ -141,10 +142,15 @@ public class BoardController {
     @GetMapping("/trade/{boardId}")
     @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
     public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(
+            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             @PathVariable("boardId") Long boardId
     ) {
+        if (user == null) {
+            throw new CustomException(ResponseCode.INVALID_TOKEN);
+        }
         return ResponseDto.<BoardDto.Response.TradeContent>builder()
-                .response(tradeBoardService.getTradeBoardContent(boardId))
+                .response(tradeBoardService.getTradeBoardContent(boardId, user.getIdx()))
                 .build();
     }
 
