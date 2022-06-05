@@ -189,4 +189,19 @@ public class TradeBoardService {
                                     .username(comment.getUser().getNickname())
                                     .build());
     }
+
+    /**
+     * 거래글 판매완료 처리
+     * @param boardId
+     */
+    @Transactional
+    public void setTradeStatusToComplete(Long boardId, Long userIdx) {
+        TradeBoardEntity tradeBoard = tradeBoardRepository.findById(boardId).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        if (tradeBoard.getUser().getIdx() != userIdx) {
+            throw new CustomException(ResponseCode.NOT_WRITER_OF_BOARD);
+        }
+        tradeBoard.setCompletedStatus();
+    }
+
 }

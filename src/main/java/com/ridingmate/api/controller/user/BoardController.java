@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -192,6 +193,19 @@ public class BoardController {
     ) {
         return ResponseDto.<PageDto<Info>>builder()
                           .response(new PageDto<>(tradeBoardService.getReplyList(dto, commentPageable)))
+                          .build();
+    }
+
+    @ApiOperation("거래글 상태 판매완료로 변경")
+    @PutMapping("/trade/{boardId}/status/complete")
+    public ResponseDto<?> setTradeStatusToComplete(
+            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            @PathVariable Long boardId
+    ) {
+        tradeBoardService.setTradeStatusToComplete(boardId, user.getIdx());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
                           .build();
     }
 }
