@@ -181,6 +181,9 @@ public class BoardDto {
             @ApiModelProperty(value = "구매 일자")
             private String dateOfPurchase;
 
+            @ApiModelProperty(value = "내 게시글 여부")
+            private Boolean isMyPost;
+
             private PageDto<CommentDto.Response.Info> comments;
         }
 

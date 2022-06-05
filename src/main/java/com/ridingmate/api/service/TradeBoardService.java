@@ -106,7 +106,7 @@ public class TradeBoardService {
     }
 
     @Transactional
-    public BoardDto.Response.TradeContent getTradeBoardContent(Long boardId) {
+    public BoardDto.Response.TradeContent getTradeBoardContent(Long boardId, Long userIdx) {
         TradeBoardEntity board = getBoardContent(boardId);
         Page<Info> comments = commentRepository.findAll(CommentPredicate.getComment(board, null), PageRequest.of(0, 7, Sort.by("createAt").descending()))
                 .map(comment -> Info.builder()
@@ -128,6 +128,7 @@ public class TradeBoardService {
                                              .location(board.getLocation() != null ?
                                                        board.getLocation().getName() : "")
                                              .comments(new PageDto<>(comments))
+                                             .isMyPost(board.getUser() != null && board.getUser().getIdx() == userIdx)
                                              .build();
     }
 
