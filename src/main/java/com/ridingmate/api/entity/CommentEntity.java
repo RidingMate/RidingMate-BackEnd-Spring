@@ -2,12 +2,14 @@ package com.ridingmate.api.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 @Builder
 @Table(name = "RMC_COMMENT")
@@ -28,6 +30,12 @@ public class CommentEntity extends BaseTime {
     @Column(name = "idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
+
+    /**
+     * 부모 댓글(대댓글 전용 컬럼), 대댓글 아닐때 null
+     */
+    @Column(name = "parent_comment_idx")
+    private Long parentCommentIdx;
 
     //댓글 내용
     @Column(name = "content")

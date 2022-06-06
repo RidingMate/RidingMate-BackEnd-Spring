@@ -8,14 +8,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.annotation.CurrentUser;
+import com.ridingmate.api.consts.ResponseCode;
+import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
+import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
@@ -133,9 +141,77 @@ public class BoardController {
     @ApiOperation("거래글 상세 조회")
     @GetMapping("/trade/{boardId}")
     @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
-    public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
+    public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(
+            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            @PathVariable("boardId") Long boardId
+    ) {
+        if (user == null) {
+            throw new CustomException(ResponseCode.INVALID_TOKEN);
+        }
         return ResponseDto.<BoardDto.Response.TradeContent>builder()
-                .response(tradeBoardService.getTradeBoardContent(boardId))
+                .response(tradeBoardService.getTradeBoardContent(boardId, user.getIdx()))
                 .build();
+    }
+
+    @ApiOperation("거래글 댓글 등록")
+    @PostMapping("/trade/comment")
+    public ResponseDto<?> insertComment(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestBody InsertComment dto,
+            @ApiIgnore @CurrentUser UserPrincipal user
+    ) {
+        tradeBoardService.insertComment(dto, user.getIdx());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
+    @ApiOperation("거래글 대댓글 등록")
+    @PostMapping("/trade/reply")
+    public ResponseDto<?> insertReply(
+            @RequestHeader(value = "Authorization") String token,
+            @RequestBody InsertReply dto,
+            @ApiIgnore @CurrentUser UserPrincipal user
+    ) {
+        tradeBoardService.insertReply(dto, user.getIdx());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
+    @ApiOperation("거래글 댓글만 조회")
+    @GetMapping("/trade/comment")
+    public ResponseDto<PageDto<Info>> getCommentList(
+            Comment dto,
+            Pageable commentPageable
+    ) {
+        return ResponseDto.<PageDto<Info>>builder()
+                          .response(new PageDto<>(tradeBoardService.getCommentList(dto, commentPageable)))
+                          .build();
+    }
+
+    @ApiOperation("거래글 대댓글 조회")
+    @GetMapping("/trade/reply")
+    public ResponseDto<PageDto<Info>> getReplyList(
+            Reply dto,
+            Pageable commentPageable
+    ) {
+        return ResponseDto.<PageDto<Info>>builder()
+                          .response(new PageDto<>(tradeBoardService.getReplyList(dto, commentPageable)))
+                          .build();
+    }
+
+    @ApiOperation("거래글 상태 판매완료로 변경")
+    @PutMapping("/trade/{boardId}/status/complete")
+    public ResponseDto<?> setTradeStatusToComplete(
+            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            @PathVariable Long boardId
+    ) {
+        tradeBoardService.setTradeStatusToComplete(boardId, user.getIdx());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
     }
 }
