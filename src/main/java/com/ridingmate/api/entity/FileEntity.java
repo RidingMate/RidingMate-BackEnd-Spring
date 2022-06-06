@@ -20,7 +20,10 @@ public class FileEntity extends BaseTime {
 
     /*
         썸네일 등의 파일 저장 테이블
-        TODO : 리사이즈 파일 같은엔티티로 통용하고 경로만 바꾸는건 어떨지
+
+        이미지 저장 경로
+        이미지 표출 방법 - cloudFront 사용할지
+        리사이즈 저장이 필요한지.
      */
 
     @Id
