@@ -20,8 +20,32 @@ public class AwsS3Service {
 
     private final AmazonS3 amazonS3;
 
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    public String putS3File(String fileName, InputStream inputStream, String contentType) {
+        if(inputStream != null) {
+            try {
+                ObjectMetadata meta = new ObjectMetadata();
+                meta.setContentLength(inputStream.available());
+                meta.setContentType(contentType);
+
+                PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, inputStream, meta).withCannedAcl(CannedAccessControlList.PublicRead);
+                putObjectRequest.getRequestClientOptions().setReadLimit(100000);
+
+                PutObjectResult result = amazonS3.putObject(putObjectRequest);
+                if(result != null) {
+                    return fileName;
+                }
+
+            } catch (Exception e) {
+                log.error("S3에 파일 등록 중 오류 발생 : {}", e.getMessage());
+                return null;
+            }
+        }
+        return null;
+    }
 
     public InputStream getS3File(String filePath) {
         S3Object object = null;
@@ -45,29 +69,6 @@ public class AwsS3Service {
     public List<S3ObjectSummary> getS3ObjectFileList(String fileListPath) {
         ListObjectsV2Result result = amazonS3.listObjectsV2(new ListObjectsV2Request().withBucketName(bucket).withPrefix(fileListPath));
         return result.getObjectSummaries();
-    }
-
-    public String putS3File(String fileName, InputStream inputStream, String contentType) {
-        if(inputStream != null) {
-            try {
-                ObjectMetadata meta = new ObjectMetadata();
-                meta.setContentLength(inputStream.available());
-                meta.setContentType(contentType);
-
-                PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, inputStream, meta).withCannedAcl(CannedAccessControlList.PublicRead);
-                putObjectRequest.getRequestClientOptions().setReadLimit(100000);
-
-                PutObjectResult result = amazonS3.putObject(putObjectRequest);
-                if(result != null) {
-                    return fileName;
-                }
-
-            } catch (Exception e) {
-                log.error("S3에 파일 등록 중 오류 발생 : {}", e.getMessage());
-                return null;
-            }
-        }
-        return null;
     }
 
     public void deleteS3File(String filePath) {
