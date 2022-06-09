@@ -38,7 +38,13 @@ public enum ResponseCode {
 
     NOT_WRITER_OF_BOARD(HttpStatus.BAD_REQUEST, 3007, "게시글의 작성자가 아닙니다."),
 
-    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, 3999, "파라미터 값이 잘못되었습니다")
+    INVALID_PARAMETER(HttpStatus.BAD_REQUEST, 3999, "파라미터 값이 잘못되었습니다"),
+
+
+
+    DONT_SAVE_S3_FILE(HttpStatus.BAD_REQUEST, 5000, "파일을 저장할 수 없습니다.")
+    //파일 관련
+
     ;
 
     @JsonIgnore
