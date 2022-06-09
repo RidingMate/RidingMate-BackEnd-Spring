@@ -1,6 +1,7 @@
 package com.ridingmate.api.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ridingmate.api.payload.common.FileResult;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -24,6 +25,13 @@ public class FileEntity extends BaseTime {
         이미지 저장 경로
         이미지 표출 방법 - cloudFront 사용할지
         리사이즈 저장이 필요한지.
+
+
+        유저 - 프로필
+        바이크 - 바이크 사진
+        게실글 - 게시글 사진
+        정비 - 정비 사진
+
      */
 
     @Id
@@ -31,49 +39,26 @@ public class FileEntity extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idx;
 
-    //파일 코드 생성
-    //TODO : 형식 정해야 할듯
-    @Column(name = "file_code")
-    private String fileCode;
+//    //파일 코드 생성
+//    //TODO : 형식 정해야 할듯
+//    @Column(name = "file_code")
+//    private String fileCode;
 
     //원본 파일 이름
     @Column(name = "original_name")
     @JsonIgnore
     private String originalName;
 
-    //저장 파일 이름
-    @Column(name = "stored_name")
-    @JsonIgnore
-    private String storedName;
-
-    //저장 경로
-    @Column(name = "folder_location")
-    private String folderLocation;
-
     //경로
     @Column(name = "location")
     @JsonIgnore
     private String location;
 
-    //확장자
-    @Column(name = "file_ext")
-    @JsonIgnore
-    private String fileExt;
 
-    //파일 사이즈
-    @Column(name = "file_size")
-    @JsonIgnore
-    private long fileSize;
-
-    public FileEntity createEntity(String fileCode, String originalName, String storedName, String folderLocation, String location, String fileExt, long fileSize){
+    public FileEntity createEntity(FileResult fileResult){
         return FileEntity.builder()
-                .fileCode(fileCode)
-                .originalName(originalName)
-                .storedName(storedName)
-                .folderLocation(folderLocation)
-                .location(location)
-                .fileExt(fileExt)
-                .fileSize(fileSize)
+                .originalName(fileResult.getOriginalFileName())
+                .location(fileResult.getUrl())
                 .build();
     }
 }

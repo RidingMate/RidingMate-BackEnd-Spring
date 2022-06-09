@@ -2,12 +2,15 @@ package com.ridingmate.api.service.common;
 
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.FileEntity;
+import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.common.FileResult;
 import com.ridingmate.api.repository.FileRepository;
 import com.ridingmate.api.util.FileUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,57 +24,25 @@ public class FileService {
     private final FileRepository fileRepository;
 
     //파일 업로드
-//    public FileEntity uploadFile(MultipartFile multipartFile, String test) throws Exception {
-//        String originalFileName = multipartFile.getOriginalFilename();
-//        String fileExt = FileUtil.getFileExt(originalFileName);
-//        String storeFileName = "";
-////        if(fileName == null){
-////            storeFileName = FileUtil.getFileName(fileExt);
-////        }else{
-////            if(fileExt.equals("undefined") || fileExt.equals("null")){
-////                storeFileName = fileName+".jpeg";
-////            }else{
-////                storeFileName = fileName+"."+fileExt;
-////            }
-////        }
-//
-////        String filePath = FileUtil.getFileFolder() + listUuid + "/";
-////        String folderLocation = filePath.substring(0, filePath.length() - 1);
-//        String folderLocation = "test";
-//
-//        //S3에 저장
-////        String location = awsS3Service.upload(multipartFile, "test");
-//        if(location == null) {
-//            throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
-//        }
-//
-//
-//        FileEntity fileEntity = new FileEntity().createEntity(
-//                FileUtil.getFileCode(),
-//                originalFileName,
-//                storeFileName,
-//                folderLocation,
-//                location,
-//                fileExt,
-//                multipartFile.getSize()
-//        );
-//
-//        fileRepository.save(fileEntity);
-//
-//
-//        return fileEntity;
-//    }
+    @Transactional
+    public FileResult uploadFile(MultipartFile multipartFile, UserEntity user) throws Exception {
+        FileResult fileResult = awsS3Service.putS3File(multipartFile, user.getUserUuid());
+        FileEntity fileEntity = new FileEntity().createEntity(fileResult);
+        fileRepository.save(fileEntity);
+
+        return fileResult;
+    }
 
     //다중파일 업로드
-//    public String uploadMultipleFile(List<MultipartFile> multipartFile) throws Exception {
-//
-//        String listUuid = UUID.randomUUID().toString();
-//        // s3에 저장
-//        for(MultipartFile m : multipartFile) {
-//            uploadFile(m, listUuid,"");
-//        }
-//
-//        return listUuid;
-//    }
+    @Transactional
+    public List<FileResult> uploadMultipleFile(List<MultipartFile> multipartFile, UserEntity user) throws Exception {
+        List<FileResult> fileResults = awsS3Service.putS3FileList(multipartFile, user.getUserUuid());
+        fileResults.forEach(data->{
+            FileEntity fileEntity = new FileEntity().createEntity(data);
+            fileRepository.save(fileEntity);
+        });
+
+        return fileResults;
+    }
 
 }

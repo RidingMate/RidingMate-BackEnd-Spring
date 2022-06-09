@@ -1,5 +1,6 @@
 package com.ridingmate.api.controller.common;
 
+import com.ridingmate.api.payload.common.FileResult;
 import com.ridingmate.api.service.common.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,7 @@ public class FileController {
 
 //    @PostMapping("/upload")
 //    @ResponseBody
-//    public String upload(@RequestPart MultipartFile multipartFile) throws Exception {
-//        return fileService.uploadFile(multipartFile,"test");
+//    public FileResult upload(@RequestPart MultipartFile multipartFile) throws Exception {
+//        return fileService.uploadFile(multipartFile,"test", "kang");
 //    }
 }
