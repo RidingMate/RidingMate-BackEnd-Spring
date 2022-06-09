@@ -6,13 +6,13 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import java.io.File;
 
 @Entity
 @Table(name = "RMC_FILE")
 @DynamicInsert
 @DynamicUpdate
 @Getter
-@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -64,4 +64,16 @@ public class FileEntity extends BaseTime {
     @Column(name = "file_size")
     @JsonIgnore
     private long fileSize;
+
+    public FileEntity createEntity(String fileCode, String originalName, String storedName, String folderLocation, String location, String fileExt, long fileSize){
+        return FileEntity.builder()
+                .fileCode(fileCode)
+                .originalName(originalName)
+                .storedName(storedName)
+                .folderLocation(folderLocation)
+                .location(location)
+                .fileExt(fileExt)
+                .fileSize(fileSize)
+                .build();
+    }
 }
