@@ -45,9 +45,8 @@ public class NoticeBoardService {
     }
 
     @Transactional
-    public void insertNoticeBoard(BoardDto.Request.NoticeInsert dto, long userIdx) {
-        UserEntity userEntity = userRepository.findById(userIdx).orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_USER));
-        NoticeBoardEntity noticeBoard = new NoticeBoardEntity(dto.getTitle(), userEntity);
+    public void insertNoticeBoard(BoardDto.Request.NoticeInsert dto, UserEntity user) {
+        NoticeBoardEntity noticeBoard = new NoticeBoardEntity(dto.getTitle(), user);
         noticeBoardRepository.save(noticeBoard);
     }
 

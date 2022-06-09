@@ -109,7 +109,7 @@ public class BoardController {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        noticeBoardService.insertNoticeBoard(request, user.getIdx());
+        noticeBoardService.insertNoticeBoard(request, user.getUser());
         return ResponseDto.builder().build();
     }
 
@@ -161,7 +161,7 @@ public class BoardController {
             @RequestBody InsertComment dto,
             @ApiIgnore @CurrentUser UserPrincipal user
     ) {
-        tradeBoardService.insertComment(dto, user.getIdx());
+        tradeBoardService.insertComment(dto, user.getUser());
         return ResponseDto.builder()
                           .responseCode(ResponseCode.SUCCESS)
                           .build();
@@ -174,7 +174,7 @@ public class BoardController {
             @RequestBody InsertReply dto,
             @ApiIgnore @CurrentUser UserPrincipal user
     ) {
-        tradeBoardService.insertReply(dto, user.getIdx());
+        tradeBoardService.insertReply(dto, user.getUser());
         return ResponseDto.builder()
                           .responseCode(ResponseCode.SUCCESS)
                           .build();

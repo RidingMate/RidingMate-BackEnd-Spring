@@ -1,6 +1,8 @@
 package com.ridingmate.api.security;
 
 import com.ridingmate.api.entity.NormalUserEntity;
+import com.ridingmate.api.entity.UserEntity;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,12 +24,15 @@ public class UserPrincipal implements UserDetails {
     private String authority;
     private boolean enabled;
 
-    public UserPrincipal(long idx, String userId, String password, String uuid, String authority) {
+    private UserEntity user;
+
+    public UserPrincipal(long idx, String userId, String password, String uuid, String authority, UserEntity user) {
         this.idx = idx;
         this.userId = userId;
         this.password = password;
         this.uuid = uuid;
         this.authority = authority;
+        this.user = user;
     }
 
     public UserPrincipal(long idx, String userId, String password, String authority) {
@@ -80,7 +85,8 @@ public class UserPrincipal implements UserDetails {
                 user.getUserId(),
                 user.getPassword(),
                 user.getUserUuid(),
-                user.getRole().toString()
+                user.getRole().toString(),
+                user
         );
     }
 }
