@@ -139,9 +139,7 @@ public class TradeBoardService {
     }
 
     @Transactional
-    public void insertComment(InsertComment dto, Long userIdx) {
-        UserEntity user = userRepository.findById(userIdx).orElseThrow(
-                () -> new CustomException(ResponseCode.NOT_FOUND_USER));
+    public void insertComment(InsertComment dto, UserEntity user) {
         TradeBoardEntity tradeBoard = tradeBoardRepository.findById(dto.getBoardId()).orElseThrow(
                 () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
         CommentEntity comment = CommentEntity.builder()
@@ -153,9 +151,7 @@ public class TradeBoardService {
     }
 
     @Transactional
-    public void insertReply(InsertReply dto, Long userIdx) {
-        UserEntity user = userRepository.findById(userIdx).orElseThrow(
-                () -> new CustomException(ResponseCode.NOT_FOUND_USER));
+    public void insertReply(InsertReply dto, UserEntity user) {
         TradeBoardEntity tradeBoard = tradeBoardRepository.findById(dto.getBoardId()).orElseThrow(
                 () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
         CommentEntity comment = CommentEntity.builder()
