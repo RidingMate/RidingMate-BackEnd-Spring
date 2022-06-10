@@ -42,7 +42,8 @@ public enum ResponseCode {
 
 
 
-    DONT_SAVE_S3_FILE(HttpStatus.BAD_REQUEST, 5000, "파일을 저장할 수 없습니다.")
+    DONT_SAVE_S3_FILE(HttpStatus.BAD_REQUEST, 5000, "파일을 저장할 수 없습니다."),
+    NOT_FOUND_FILE(HttpStatus.NOT_FOUND, 5001, "파일을 찾을 수 없습니다.")
     //파일 관련
 
     ;

@@ -21,4 +21,9 @@ public class FileController {
 //    public FileResult upload(@RequestPart MultipartFile multipartFile) throws Exception {
 //        return fileService.uploadFile(multipartFile,"test", "kang");
 //    }
+
+//    @DeleteMapping
+//    public void delete(String fileName){
+//        fileService.deleteFile(fileName);
+//    }
 }
