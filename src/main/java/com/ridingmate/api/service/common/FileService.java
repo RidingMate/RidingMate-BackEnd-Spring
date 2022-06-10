@@ -5,6 +5,7 @@ import com.ridingmate.api.entity.FileEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.FileResult;
+import com.ridingmate.api.payload.common.FileSave;
 import com.ridingmate.api.repository.FileRepository;
 import com.ridingmate.api.util.FileUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,14 +37,18 @@ public class FileService {
 
     //다중파일 업로드
     @Transactional
-    public List<FileResult> uploadMultipleFile(List<MultipartFile> multipartFile, UserEntity user) throws Exception {
+    public FileSave uploadMultipleFile(List<MultipartFile> multipartFile, UserEntity user) throws Exception {
+        FileSave fileSave = new FileSave();
         List<FileResult> fileResults = awsS3Service.putS3FileList(multipartFile, user.getUserUuid());
+        List<FileEntity> fileEntityList = new ArrayList<>();
         fileResults.forEach(data->{
             FileEntity fileEntity = new FileEntity().createEntity(data);
             fileRepository.save(fileEntity);
+            fileEntityList.add(fileEntity);
         });
 
-        return fileResults;
+
+        return fileSave.create(fileResults, fileEntityList);
     }
 
     @Transactional
