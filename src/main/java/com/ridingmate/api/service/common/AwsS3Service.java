@@ -62,36 +62,36 @@ public class AwsS3Service {
 
 
 
-
-
-    //아래부터 다시 수정해야함
-
-    public InputStream getS3File(String filePath) {
-        S3Object object = null;
-        try {
-            object = amazonS3.getObject(new GetObjectRequest(bucket, filePath));
-        } catch (AmazonS3Exception e) {
-            log.error("s3 파일 키가 존재하지 않습니다. key = {}", filePath);
-        }
-        return object == null ? null : object.getObjectContent();
-    }
-
-    public List<InputStream> getS3InputStreamFileList(String fileListPath) {
-        ListObjectsV2Result result = amazonS3.listObjectsV2(new ListObjectsV2Request().withBucketName(bucket).withPrefix(fileListPath));
-        List<InputStream> list = new ArrayList<>();
-        result.getObjectSummaries().forEach(data -> {
-            list.add(getS3File(data.getKey()));
-        });
-        return list;
-    }
-
-    public List<S3ObjectSummary> getS3ObjectFileList(String fileListPath) {
-        ListObjectsV2Result result = amazonS3.listObjectsV2(new ListObjectsV2Request().withBucketName(bucket).withPrefix(fileListPath));
-        return result.getObjectSummaries();
-    }
-
     public void deleteS3File(String filePath) {
         DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, filePath);
         amazonS3.deleteObject(deleteObjectRequest);
     }
+
+
+
+    //아래부터 다시 수정해야함
+
+//    public InputStream getS3File(String filePath) {
+//        S3Object object = null;
+//        try {
+//            object = amazonS3.getObject(new GetObjectRequest(bucket, filePath));
+//        } catch (AmazonS3Exception e) {
+//            log.error("s3 파일 키가 존재하지 않습니다. key = {}", filePath);
+//        }
+//        return object == null ? null : object.getObjectContent();
+//    }
+//
+//    public List<InputStream> getS3InputStreamFileList(String fileListPath) {
+//        ListObjectsV2Result result = amazonS3.listObjectsV2(new ListObjectsV2Request().withBucketName(bucket).withPrefix(fileListPath));
+//        List<InputStream> list = new ArrayList<>();
+//        result.getObjectSummaries().forEach(data -> {
+//            list.add(getS3File(data.getKey()));
+//        });
+//        return list;
+//    }
+//
+//    public List<S3ObjectSummary> getS3ObjectFileList(String fileListPath) {
+//        ListObjectsV2Result result = amazonS3.listObjectsV2(new ListObjectsV2Request().withBucketName(bucket).withPrefix(fileListPath));
+//        return result.getObjectSummaries();
+//    }
 }

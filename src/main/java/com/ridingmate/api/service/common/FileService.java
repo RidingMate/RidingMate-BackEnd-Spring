@@ -45,4 +45,20 @@ public class FileService {
         return fileResults;
     }
 
+    @Transactional
+    public void deleteFile(String fileName){
+        FileEntity fileEntity = fileRepository.findByOriginalName(fileName).orElseThrow(()->
+                new CustomException(ResponseCode.NOT_FOUND_FILE)
+        );
+        awsS3Service.deleteS3File(fileName);
+        fileRepository.delete(fileEntity);
+    }
+
+    @Transactional
+    public void deleteMultipleFile(List<FileEntity> files){
+        files.forEach(file->{
+            awsS3Service.deleteS3File(file.getOriginalName());
+        });
+    }
+
 }
