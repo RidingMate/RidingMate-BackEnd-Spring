@@ -125,7 +125,7 @@ public class BoardController {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        tradeBoardService.insertTradeBoardContent(dto, user.getIdx());
+        tradeBoardService.insertTradeBoardContent(dto, user.getUser());
         return ResponseDto.builder().build();
     }
 

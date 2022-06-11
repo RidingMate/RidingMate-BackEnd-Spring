@@ -44,11 +44,8 @@ public class TradeBoardService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public void insertTradeBoardContent(BoardDto.Request.TradeInsert dto, long userIdx) {
+    public void insertTradeBoardContent(BoardDto.Request.TradeInsert dto, UserEntity user) {
         // TODO : 내 바이크 조건처리 필요
-        UserEntity userEntity = userRepository.findById(userIdx).orElseThrow(() ->
-                new CustomException(ResponseCode.NOT_FOUND_USER)
-        );
 
         // 거래 지역
         LocationEntity location = null;
@@ -70,7 +67,7 @@ public class TradeBoardService {
                 dto.getIsOpenToBuyer(),
                 dto.getPurchaseYear(),
                 dto.getPurchaseMonth(),
-                userEntity,
+                user,
                 location);
         tradeBoardRepository.save(tradeBoard);
     }
