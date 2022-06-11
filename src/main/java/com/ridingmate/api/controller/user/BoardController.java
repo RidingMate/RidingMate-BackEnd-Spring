@@ -3,6 +3,7 @@ package com.ridingmate.api.controller.user;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ridingmate.api.annotation.CurrentUser;
 import com.ridingmate.api.consts.ResponseCode;
@@ -114,18 +116,18 @@ public class BoardController {
     }
 
     @SneakyThrows
-    @PostMapping("/trade")
+    @PostMapping(value = "/trade", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation("거래글 등록")
     public ResponseDto insertTradeBoard(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody @Valid BoardDto.Request.TradeInsert dto,
+            @Valid BoardDto.Request.TradeInsert dto,
             @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        tradeBoardService.insertTradeBoardContent(dto, user.getIdx());
+        tradeBoardService.insertTradeBoardContent(dto, user.getUser());
         return ResponseDto.builder().build();
     }
 

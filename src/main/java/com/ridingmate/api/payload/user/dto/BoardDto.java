@@ -1,8 +1,12 @@
 package com.ridingmate.api.payload.user.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -105,6 +109,9 @@ public class BoardDto {
             @ApiModelProperty(value = "구매자에게 주유/정비 정보 공개하기 Y/N")
             @Pattern(regexp = "^[Y|N]{1}$", message = "Y와 N만 입력 가능합니다.")
             private String isOpenToBuyer;
+            
+            @ApiModelProperty(value = "거래글 파일")
+            private List<MultipartFile> files;
         }
 
         @Data

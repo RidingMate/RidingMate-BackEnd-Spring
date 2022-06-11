@@ -26,10 +26,9 @@ import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.repository.CommentRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
-import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
 import com.ridingmate.api.repository.predicate.CommentPredicate;
-import com.ridingmate.api.service.common.AwsS3Service;
+import com.ridingmate.api.service.common.FileService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -38,17 +37,13 @@ import lombok.RequiredArgsConstructor;
 public class TradeBoardService {
 
     private final TradeBoardRepository tradeBoardRepository;
-    private final AwsS3Service s3Service;
     private final LocationService locationService;
-    private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final FileService fileService;
 
     @Transactional
-    public void insertTradeBoardContent(BoardDto.Request.TradeInsert dto, long userIdx) {
+    public void insertTradeBoardContent(BoardDto.Request.TradeInsert dto, UserEntity user) {
         // TODO : 내 바이크 조건처리 필요
-        UserEntity userEntity = userRepository.findById(userIdx).orElseThrow(() ->
-                new CustomException(ResponseCode.NOT_FOUND_USER)
-        );
 
         // 거래 지역
         LocationEntity location = null;
@@ -70,7 +65,7 @@ public class TradeBoardService {
                 dto.getIsOpenToBuyer(),
                 dto.getPurchaseYear(),
                 dto.getPurchaseMonth(),
-                userEntity,
+                user,
                 location);
         tradeBoardRepository.save(tradeBoard);
     }
