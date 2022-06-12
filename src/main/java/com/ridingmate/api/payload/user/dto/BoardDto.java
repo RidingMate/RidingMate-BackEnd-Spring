@@ -115,6 +115,63 @@ public class BoardDto {
         }
 
         @Data
+        @ApiModel(description = "거래글 수정 dto")
+        public static class TradeUpdate {
+            @NotEmpty(message = "거래글 id는 필수입니다.")
+            @ApiModelProperty(value = "거래글 ID", required = true)
+            private Long boardId;
+
+            @NotEmpty(message = "제목은 필수입니다.")
+            @ApiModelProperty(value = "거래글 제목", required = true)
+            private String title;
+
+            @ApiModelProperty(value = "가격")
+            @Min(0)
+            private int price;
+
+            @ApiModelProperty(value = "업체명")
+            private String company;
+
+            @ApiModelProperty(value = "모델명")
+            private String modelName;
+
+            @ApiModelProperty(value = "연비")
+            private double fuelEfficiency;
+
+            @ApiModelProperty(value = "cc")
+            private int cc;
+
+            @ApiModelProperty(value = "연식")
+            private int year;
+
+            @ApiModelProperty(value = "주행거리")
+            @Min(0)
+            private int mileage;
+
+            @ApiModelProperty(value = "지역 코드")
+            private String locationCode;
+
+            @ApiModelProperty(value = "구매 일자 연도")
+            private Integer purchaseYear;
+
+            @ApiModelProperty(value = "구매 일자 월")
+            private Integer purchaseMonth;
+
+            @ApiModelProperty(value = "상세 내용")
+            private String content;
+
+            @ApiModelProperty(value = "연락처")
+            private String phoneNumber;
+
+            @ApiModelProperty(value = "구매자에게 주유/정비 정보 공개하기 Y/N")
+            @Pattern(regexp = "^[Y|N]{1}$", message = "Y와 N만 입력 가능합니다.")
+            private String isOpenToBuyer;
+
+            @ApiModelProperty(value = "거래글 파일")
+            private List<MultipartFile> files;
+        }
+
+        @Data
         @ApiModel(description = "공지사항 등록 dto")
         public static class NoticeInsert {
             @NotEmpty(message = "제목은 필수입니다.")
