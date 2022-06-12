@@ -97,7 +97,7 @@ public class BikeEntity extends BaseTime{
 
         //바이크 별명을 입력하지 않았을 경우
         String nickname = null;
-        if(bikeNickname.equals("") || bikeNickname == null){
+        if(request.getBikeNickName().equals("") || request.getBikeNickName() == null){
             nickname = model;
         }else{
             nickname = bikeNickname;
@@ -109,7 +109,7 @@ public class BikeEntity extends BaseTime{
                 .model(request.getModel())
                 .year(request.getYear())
                 .mileage(request.getMileage())
-                .bikeNickname(request.getBikeNickName())
+                .bikeNickname(nickname)
                 .fuels(new ArrayList<>())
                 .maintenances(new ArrayList<>())
                 .bikeRole(bikeRole)
