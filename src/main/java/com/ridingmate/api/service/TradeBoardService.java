@@ -71,7 +71,7 @@ public class TradeBoardService {
     }
 
     @Transactional
-    public void updateBoardContent(BoardEntity board) {
+    public void updateBoardContent(BoardDto.Request.TradeUpdate dto) {
         // TODO : 파일 관련 처리 추가
     }
 
