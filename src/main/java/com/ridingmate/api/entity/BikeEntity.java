@@ -91,6 +91,10 @@ public class BikeEntity extends BaseTime{
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    //이미지
+    @OneToOne(mappedBy = "bike")
+    private FileEntity fileEntity;
+
 
     //바이크 등록
     public BikeEntity createBike(UserEntity userEntity, BikeRole bikeRole, BikeInsertRequest request){

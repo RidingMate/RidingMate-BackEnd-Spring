@@ -31,6 +31,8 @@ public class MyBikeResponse {
     private String bikeNickname;
     @ApiModelProperty(value = "대표 바이크 유무")
     private BikeRole bikeRole;
+    @ApiModelProperty(value = "image")
+    private String image;
 
     public MyBikeResponse convertEntityToResponse(BikeEntity bikeEntity){
         return MyBikeResponse.builder()
@@ -42,6 +44,7 @@ public class MyBikeResponse {
                 .countMaintenance(bikeEntity.getCountMaintenance())
                 .bikeNickname(bikeEntity.getBikeNickname())
                 .bikeRole(bikeEntity.getBikeRole())
+                .image(bikeEntity.getFileEntity().getLocation())
                 .build();
     }
 }

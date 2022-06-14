@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class BikeController {
         return bikeService.searchYear(company, model);
     }
 
-    @PostMapping
+    @PostMapping(value = "/insert")
     @ApiOperation(value = "바이크 등록")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
@@ -93,12 +94,13 @@ public class BikeController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> insertBike(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody BikeInsertRequest bikeInsertRequest
-            ){
-        return bikeService.insertBike(bikeInsertRequest);
+            @ModelAttribute BikeInsertRequest bikeInsertRequest,
+            @RequestPart(value = "file", required = false) MultipartFile file
+            ) throws Exception {
+        return bikeService.insertBike(bikeInsertRequest, file);
     }
 
-    @PutMapping
+    @PutMapping("/update")
     @ApiOperation(value = "바이크 수정")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
@@ -106,9 +108,10 @@ public class BikeController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> updateBike(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody BikeUpdateRequest request
-            ){
-        return bikeService.updateBike(request);
+            @ModelAttribute BikeUpdateRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file
+            ) throws Exception {
+        return bikeService.updateBike(request, file);
     }
 
     @GetMapping("/role/{bike_idx}")

@@ -23,12 +23,12 @@ public class FileService {
 
     //파일 업로드
     @Transactional
-    public FileResult uploadFile(MultipartFile multipartFile, UserEntity user) throws Exception {
+    public FileEntity uploadFile(MultipartFile multipartFile, UserEntity user) throws Exception {
         FileResult fileResult = awsS3Service.putS3File(multipartFile, user.getUserUuid());
         FileEntity fileEntity = new FileEntity().createEntity(fileResult);
         fileRepository.save(fileEntity);
 
-        return fileResult;
+        return fileEntity;
     }
 
     //다중파일 업로드
@@ -47,6 +47,19 @@ public class FileService {
     }
 
     @Transactional
+    public void deleteFileEntity(FileEntity fileEntity){
+        awsS3Service.deleteS3File(fileEntity.getOriginalName());
+        fileRepository.delete(fileEntity);
+    }
+
+    @Transactional
+    public void deleteMultipleFileEntity(List<FileEntity> files){
+        files.forEach(file->{
+            deleteFileEntity(file);
+        });
+    }
+
+    @Transactional
     public void deleteFile(String fileName){
         FileEntity fileEntity = fileRepository.findByOriginalName(fileName).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_FILE)
@@ -58,7 +71,7 @@ public class FileService {
     @Transactional
     public void deleteMultipleFile(List<FileEntity> files){
         files.forEach(file->{
-            awsS3Service.deleteS3File(file.getOriginalName());
+            deleteFile(file.getOriginalName());
         });
     }
 
