@@ -14,18 +14,18 @@ public class BoardPredicate {
     public static Predicate tradeBoardPredicate(BoardDto.Request.TradeList dto) {
         BooleanBuilder builder = new BooleanBuilder();
         if (StringUtils.hasText(dto.getCompany())) {
-            builder.and(tradeBoardEntity.company.eq(dto.getCompany()));
+            builder.and(CommonPredicate.isEq(tradeBoardEntity.company, dto.getCompany()));
         }
         if (StringUtils.hasText(dto.getModelName())) {
-            builder.and(tradeBoardEntity.modelName.eq(dto.getModelName()));
+            builder.and(CommonPredicate.isEq(tradeBoardEntity.modelName, dto.getModelName()));
         }
         if (StringUtils.hasText(dto.getLocationCode())) {
-            builder.and(tradeBoardEntity.location().locationCode.eq(dto.getLocationCode()));
+            builder.and(CommonPredicate.isEq(tradeBoardEntity.location().locationCode, dto.getLocationCode()));
         }
-        builder.and(tradeBoardEntity.mileage.between(dto.getMinMileage(), dto.getMaxMileage()));
-        builder.and(tradeBoardEntity.price.between(dto.getMinPrice(), dto.getMaxPrice()));
-        builder.and(tradeBoardEntity.year.between(dto.getMinYear(), dto.getMaxYear()));
-        builder.and(tradeBoardEntity.cc.between(dto.getMinCc(), dto.getMaxCc()));
+        builder.and(CommonPredicate.isBetween(tradeBoardEntity.mileage, dto.getMinMileage(), dto.getMaxMileage()));
+        builder.and(CommonPredicate.isBetween(tradeBoardEntity.price, dto.getMinPrice(), dto.getMaxPrice()));
+        builder.and(CommonPredicate.isBetween(tradeBoardEntity.year, dto.getMinYear(), dto.getMaxYear()));
+        builder.and(CommonPredicate.isBetween(tradeBoardEntity.cc, dto.getMinCc(), dto.getMaxCc()));
         if (dto.getHideComplete().equals("Y")) {
             builder.and(tradeBoardEntity.status.ne(TradeStatus.COMPLETED));
         }
