@@ -8,6 +8,8 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "RMC_FILE")
@@ -39,11 +41,6 @@ public class FileEntity extends BaseTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long idx;
 
-//    //파일 코드 생성
-//    //TODO : 형식 정해야 할듯
-//    @Column(name = "file_code")
-//    private String fileCode;
-
     //원본 파일 이름
     @Column(name = "original_name")
     @JsonIgnore
@@ -54,11 +51,18 @@ public class FileEntity extends BaseTime {
     @JsonIgnore
     private String location;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bike_id")
+    private BikeEntity bike;
 
     public FileEntity createEntity(FileResult fileResult){
         return FileEntity.builder()
                 .originalName(fileResult.getOriginalFileName())
                 .location(fileResult.getUrl())
                 .build();
+    }
+
+    public void connectBike(BikeEntity bikeEntity){
+        this.bike = bikeEntity;
     }
 }

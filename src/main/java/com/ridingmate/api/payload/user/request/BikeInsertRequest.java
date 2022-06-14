@@ -1,12 +1,15 @@
 package com.ridingmate.api.payload.user.request;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 
 @Getter
+@AllArgsConstructor
 public class BikeInsertRequest {
 
     @ApiModelProperty(value = "제조사 명", required = true)
@@ -28,5 +31,6 @@ public class BikeInsertRequest {
     private int mileage;
 
     @ApiModelProperty(value = "구입 날짜")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfPurchase;
 }

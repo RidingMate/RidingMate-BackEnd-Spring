@@ -12,10 +12,12 @@ import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
 import com.ridingmate.api.payload.user.response.MyBikeResponse;
 import com.ridingmate.api.repository.*;
 import com.ridingmate.api.service.common.AuthService;
+import com.ridingmate.api.service.common.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Comparator;
 import java.util.List;
@@ -31,6 +33,8 @@ public class BikeService {
     private final AuthService authService;
     private final BikeRepository bikeRepository;
     private final AddBikeRepository addBikeRepository;
+    private final FileService fileService;
+    private final FileRepository fileRepository;
 
     //바이크 제조사 검색
     public List<BikeSearchDto> searchCompany(){
@@ -67,8 +71,12 @@ public class BikeService {
     //TODO : Multipart 추가해야함
     //바이크 등록
     @Transactional
-    public ResponseEntity<ApiResponse> insertBike(BikeInsertRequest request){
+    public ResponseEntity<ApiResponse> insertBike(BikeInsertRequest request, MultipartFile file) throws Exception {
         UserEntity user = authService.getUserEntityByAuthentication();
+
+
+        System.out.println(request.getCompany());
+
         BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(request.getCompany()).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_COMPANY));
         BikeModelEntity bikeModelEntity = bikeModelRepository.findByModelAndBikeCompany(request.getModel(), bikeCompanyEntity).orElseThrow(()->
@@ -81,19 +89,34 @@ public class BikeService {
         BikeEntity bikeEntity = new BikeEntity().createBike(user,(BikeRole) bikeRoleEnum, request);
         bikeRepository.save(bikeEntity);
 
+        if(file != null){
+            FileEntity fileEntity = fileService.uploadFile(file, user);
+            fileEntity.connectBike(bikeEntity);
+            fileRepository.save(fileEntity);
+        }
+
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
     //TODO : Multipart 추가해야함
     //바이크 수정
     @Transactional
-    public ResponseEntity<ApiResponse> updateBike(BikeUpdateRequest request){
+    public ResponseEntity<ApiResponse> updateBike(BikeUpdateRequest request, MultipartFile file) throws Exception {
         UserEntity user = authService.getUserEntityByAuthentication();
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(request.getIdx(), user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
         Enum<BikeRole> bikeRoleEnum = BikeRole.checkBikeRole(request.getBikeRole(), user);
         bikeEntity.updateBike(request, (BikeRole) bikeRoleEnum);
         bikeRepository.save(bikeEntity);
+
+        if(file != null){
+            if(bikeEntity.getFileEntity() != null){
+                fileService.deleteFileEntity(bikeEntity.getFileEntity());
+            }
+            FileEntity fileEntity = fileService.uploadFile(file, user);
+            fileEntity.connectBike(bikeEntity);
+            fileRepository.save(fileEntity);
+        }
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
