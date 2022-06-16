@@ -1,5 +1,6 @@
 package com.ridingmate.api.controller.user;
 
+import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.request.AddBikeRequest;
@@ -50,10 +51,13 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<BikeSearchDto> searchCompany(
+    public ResponseDto<List<BikeSearchDto>> searchCompany(
             @RequestHeader(value = "Authorization") String token
     ){
-        return bikeService.searchCompany();
+        return ResponseDto.<List<BikeSearchDto>>builder()
+                .response(bikeService.searchCompany())
+                .build();
+//        return bikeService.searchCompany();
     }
 
     @GetMapping("/search/model")
@@ -63,11 +67,14 @@ public class BikeController {
             @ApiImplicitParam(name = "company", value = "company name", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<BikeSearchDto> searchModel(
+    public ResponseDto<List<BikeSearchDto>> searchModel(
             @RequestHeader(value = "Authorization") String token,
             @RequestParam(value = "company") String company
     ){
-        return bikeService.searchModel(company);
+        return ResponseDto.<List<BikeSearchDto>>builder()
+                .response(bikeService.searchModel(company))
+                .build();
+//        return bikeService.searchModel(company);
     }
 
     @GetMapping("/search/year")
@@ -78,12 +85,15 @@ public class BikeController {
             @ApiImplicitParam(name = "model", value = "model name", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<BikeSearchDto> searchYear(
+    public ResponseDto<List<BikeSearchDto>> searchYear(
             @RequestHeader(value = "Authorization") String token,
             @RequestParam(value = "company") String company,
             @RequestParam(value = "model") String model
     ){
-        return bikeService.searchYear(company, model);
+        return ResponseDto.<List<BikeSearchDto>>builder()
+                .response(bikeService.searchYear(company, model))
+                .build();
+//        return bikeService.searchYear(company, model);
     }
 
     @PostMapping(value = "/insert")
@@ -92,12 +102,13 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> insertBike(
+    public ResponseDto insertBike(
             @RequestHeader(value = "Authorization") String token,
             @ModelAttribute BikeInsertRequest bikeInsertRequest,
             @RequestPart(value = "file", required = false) MultipartFile file
             ) throws Exception {
-        return bikeService.insertBike(bikeInsertRequest, file);
+        bikeService.insertBike(bikeInsertRequest, file);
+        return ResponseDto.builder().build();
     }
 
     @PutMapping("/update")
@@ -106,12 +117,13 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> updateBike(
+    public ResponseDto updateBike(
             @RequestHeader(value = "Authorization") String token,
             @ModelAttribute BikeUpdateRequest request,
             @RequestPart(value = "file", required = false) MultipartFile file
             ) throws Exception {
-        return bikeService.updateBike(request, file);
+        bikeService.updateBike(request, file);
+        return ResponseDto.builder().build();
     }
 
     @GetMapping("/role/{bike_idx}")
@@ -121,11 +133,12 @@ public class BikeController {
             @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "int", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> updateBikeRole(
+    public ResponseDto updateBikeRole(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("bike_idx") Long bike_idx
     ){
-        return bikeService.updateBikeRole(bike_idx);
+        bikeService.updateBikeRole(bike_idx);
+        return ResponseDto.builder().build();
     }
 
     @GetMapping("/list")
@@ -134,10 +147,13 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<MyBikeResponse> myBikeList(
+    public ResponseDto<List<MyBikeResponse>> myBikeList(
             @RequestHeader(value = "Authorization") String token
     ){
-        return bikeService.bikeList();
+        return ResponseDto.<List<MyBikeResponse>>builder()
+                .response(bikeService.bikeList())
+                .build();
+//        return bikeService.bikeList();
     }
 
     @GetMapping("/detail/{bike_idx}")
@@ -147,11 +163,14 @@ public class BikeController {
             @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "int", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public MyBikeResponse bikeDetail(
+    public ResponseDto<MyBikeResponse> bikeDetail(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("bike_idx") Long bike_idx
     ){
-        return bikeService.bikeDetail(bike_idx);
+        return ResponseDto.<MyBikeResponse>builder()
+                .response(bikeService.bikeDetail(bike_idx))
+                .build();
+//        return bikeService.bikeDetail(bike_idx);
     }
 
     @PutMapping("/add")
@@ -160,11 +179,12 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void addBikeRequest(
+    public ResponseDto addBikeRequest(
             @RequestHeader(value = "Authorization") String token,
             @RequestBody AddBikeRequest addBikeRequest
     ){
         bikeService.addBikeRequest(addBikeRequest);
+        return ResponseDto.builder().build();
     }
 
     @DeleteMapping("/delete/{bike_idx}")
@@ -174,11 +194,12 @@ public class BikeController {
             @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "int", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> deleteBike(
+    public ResponseDto deleteBike(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("bike_idx") Long bike_idx
     ){
-        return bikeService.deleteBike(bike_idx);
+        bikeService.deleteBike(bike_idx);
+        return ResponseDto.builder().build();
     }
 
 
