@@ -49,7 +49,7 @@ public class FuelService {
 
     //주유 기록 추가
    @Transactional
-    public ResponseEntity<ApiResponse> addFuel(AddFuelRequest addFuelRequest){
+    public void addFuel(AddFuelRequest addFuelRequest){
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(addFuelRequest.getBike_idx(), user).orElseThrow(()->
@@ -71,12 +71,12 @@ public class FuelService {
         bikeEntity.addFuel(fuelEntity.getRecentMileage(), totalFuelEfficiency.get(), totalCountOiling.get());
         bikeRepository.save(bikeEntity);
 
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
     //연비 초기화
     @Transactional
-    public ResponseEntity<ApiResponse> reset(long bikeIdx){
+    public void reset(long bikeIdx){
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
@@ -91,6 +91,6 @@ public class FuelService {
         bikeRepository.save(bikeEntity);
 
 
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 }

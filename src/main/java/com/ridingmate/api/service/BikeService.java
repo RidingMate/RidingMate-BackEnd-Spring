@@ -71,7 +71,7 @@ public class BikeService {
     //TODO : Multipart 추가해야함
     //바이크 등록
     @Transactional
-    public ResponseEntity<ApiResponse> insertBike(BikeInsertRequest request, MultipartFile file) throws Exception {
+    public void insertBike(BikeInsertRequest request, MultipartFile file) throws Exception {
         UserEntity user = authService.getUserEntityByAuthentication();
 
 
@@ -95,13 +95,13 @@ public class BikeService {
             fileRepository.save(fileEntity);
         }
 
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
     //TODO : Multipart 추가해야함
     //바이크 수정
     @Transactional
-    public ResponseEntity<ApiResponse> updateBike(BikeUpdateRequest request, MultipartFile file) throws Exception {
+    public void updateBike(BikeUpdateRequest request, MultipartFile file) throws Exception {
         UserEntity user = authService.getUserEntityByAuthentication();
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(request.getIdx(), user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
@@ -118,12 +118,12 @@ public class BikeService {
             fileRepository.save(fileEntity);
         }
 
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
     //바이크 권한 변경
     @Transactional
-    public ResponseEntity<ApiResponse> updateBikeRole(long idx){
+    public void updateBikeRole(long idx){
         UserEntity user = authService.getUserEntityByAuthentication();
 
         //이미 대표로 설정된 바이크 있으면 수정
@@ -138,7 +138,7 @@ public class BikeService {
 
         bikeRepository.save(bikeEntity);
 
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 
@@ -164,24 +164,24 @@ public class BikeService {
 
     //바이크 추가요청
     @Transactional
-    public ResponseEntity<ApiResponse> addBikeRequest(AddBikeRequest addBikeRequest){
+    public void addBikeRequest(AddBikeRequest addBikeRequest){
         UserEntity user = authService.getUserEntityByAuthentication();
         AddBikeEntity addBikeEntity = new AddBikeEntity().convertRequestToEntity(addBikeRequest, user);
         addBikeRepository.save(addBikeEntity);
 
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
     //내 바이크 삭제
     @Transactional
-    public ResponseEntity<ApiResponse> deleteBike(long bikeIdx){
+    public void deleteBike(long bikeIdx){
         UserEntity user = authService.getUserEntityByAuthentication();
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
         bikeRepository.delete(bikeEntity);
 
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
+//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 }
