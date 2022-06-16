@@ -1,6 +1,8 @@
 package com.ridingmate.api.controller.user;
 
 import com.ridingmate.api.payload.common.ApiResponse;
+import com.ridingmate.api.payload.common.ResponseDto;
+import com.ridingmate.api.payload.user.dto.BikeSearchDto;
 import com.ridingmate.api.payload.user.request.AddFuelRequest;
 import com.ridingmate.api.payload.user.response.FuelListResponse;
 import com.ridingmate.api.payload.user.response.MyBikeResponse;
@@ -41,11 +43,14 @@ public class FuelController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public FuelListResponse myBikeFuelList(
+    public ResponseDto<FuelListResponse> myBikeFuelList(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("bike_idx") Long bike_idx
     ){
-        return fuelService.list(bike_idx);
+        return ResponseDto.<FuelListResponse>builder()
+                .response(fuelService.list(bike_idx))
+                .build();
+//        return fuelService.list(bike_idx);
     }
 
     @PutMapping("/add/{bike_idx}")
@@ -54,11 +59,12 @@ public class FuelController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> myBikeFuelList(
+    public ResponseDto myBikeFuelList(
             @RequestHeader(value = "Authorization") String token,
             @RequestBody AddFuelRequest addFuelRequest
             ){
-        return fuelService.addFuel(addFuelRequest);
+        fuelService.addFuel(addFuelRequest);
+        return ResponseDto.builder().build();
     }
 
     @GetMapping("/reset/{bike_idx}")
@@ -67,11 +73,12 @@ public class FuelController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> resetFuel(
+    public ResponseDto resetFuel(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("bike_idx") Long bike_idx
     ){
-        return fuelService.reset(bike_idx);
+        fuelService.reset(bike_idx);
+        return ResponseDto.builder().build();
     }
 
 }
