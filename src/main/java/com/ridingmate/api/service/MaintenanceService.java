@@ -9,6 +9,7 @@ import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.payload.user.request.MaintenanceInsertRequest;
 import com.ridingmate.api.payload.user.request.MaintenanceUpdateRequest;
+import com.ridingmate.api.payload.user.response.MaintenanceCalcByYearResponse;
 import com.ridingmate.api.payload.user.response.MaintenanceResponse;
 import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.MaintenanceRepository;
@@ -32,7 +33,7 @@ public class MaintenanceService {
 
 
     @Transactional
-    public List<MaintenanceResponse> getMaintenanceList(Long bike_idx, int year) {
+    public MaintenanceCalcByYearResponse getMaintenanceList(Long bike_idx, int year) {
         UserEntity user = authService.getUserEntityByAuthentication();
 
         // bike idx와 user를 같이 검색
@@ -45,10 +46,20 @@ public class MaintenanceService {
         LocalDate endDate = LocalDate.of(year,12,31);
 
         List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBikeAndDateOfMaintenanceBetween(bike,startDate,endDate);
-
-        return maintenanceEntities.stream()
-                .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity, bikeDto))
+        List<MaintenanceResponse> maintenanceResponseList = maintenanceEntities.stream()
+                .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity))
                 .collect(Collectors.toList());
+
+        int totalAmount = maintenanceResponseList.stream()
+                .mapToInt(MaintenanceResponse::getAmount)
+                .sum();
+
+        return MaintenanceCalcByYearResponse.builder()
+                .maintenanceResponseList(maintenanceResponseList)
+                .countMaintenance(maintenanceResponseList.size())
+                .totalAmount(totalAmount)
+                .bikeDto(bikeDto)
+                .build();
     }
 
     @Transactional
@@ -58,11 +69,9 @@ public class MaintenanceService {
         BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx,user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
-        BikeDto bikeDto = BikeDto.convertEntityToDto(bike);
-
         MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx,bike);
 
-        return new MaintenanceResponse().convertEntityToResponse(maintenanceEntity, bikeDto);
+        return new MaintenanceResponse().convertEntityToResponse(maintenanceEntity);
     }
 
     @Transactional

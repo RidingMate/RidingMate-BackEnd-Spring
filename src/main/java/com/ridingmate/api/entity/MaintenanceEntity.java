@@ -54,7 +54,7 @@ public class MaintenanceEntity extends BaseTime {
 
     //정비 가격
     @Column(name = "amount", nullable = false)
-    private String amount;
+    private int amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bike_id")

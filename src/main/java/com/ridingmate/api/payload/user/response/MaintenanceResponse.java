@@ -5,15 +5,12 @@ import com.ridingmate.api.entity.BikeEntity;
 import com.ridingmate.api.entity.MaintenanceEntity;
 import com.ridingmate.api.payload.user.dto.BikeDto;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -36,18 +33,15 @@ public class MaintenanceResponse {
     private String location;
 
     @ApiModelProperty(value = "정비 가격")
-    private String amount;
+    private int amount;
 
     @ApiModelProperty(value = "정비 내용")
     private String content;
 
-    @ApiModelProperty(value = "내 바이크 Dto")
-    private BikeDto bikeDto;
-
     // TODO : 사진 기록해야함 -> 멀티파트를 이용한 썸네일 저장
     // TODO : BLOB같은거 이용해서 내용에 사진도 들어갈 수 있게 저장
 
-    public MaintenanceResponse convertEntityToResponse(MaintenanceEntity maintenanceEntity, BikeDto bikeDto){
+    public MaintenanceResponse convertEntityToResponse(MaintenanceEntity maintenanceEntity){
         return MaintenanceResponse.builder()
                 .idx(maintenanceEntity.getIdx())
                 .title(maintenanceEntity.getTitle())
@@ -56,7 +50,6 @@ public class MaintenanceResponse {
                 .location(maintenanceEntity.getLocation())
                 .amount(maintenanceEntity.getAmount())
                 .content(maintenanceEntity.getContent())
-                .bikeDto(bikeDto)
                 .build();
     }
 

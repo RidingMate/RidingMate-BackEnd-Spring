@@ -3,6 +3,7 @@ package com.ridingmate.api.controller.user;
 import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.request.MaintenanceInsertRequest;
 import com.ridingmate.api.payload.user.request.MaintenanceUpdateRequest;
+import com.ridingmate.api.payload.user.response.MaintenanceCalcByYearResponse;
 import com.ridingmate.api.payload.user.response.MaintenanceResponse;
 import com.ridingmate.api.service.MaintenanceService;
 import io.swagger.annotations.ApiImplicitParam;
@@ -12,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /*
     정비 관련 컨트롤러 등록 컨트롤러
@@ -41,7 +40,7 @@ public class MaintenanceController {
             @ApiImplicitParam(name = "year", value = "year", dataType = "int", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<MaintenanceResponse> maintenanceList(
+    public MaintenanceCalcByYearResponse maintenanceList(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("bike_idx") Long bike_idx,
             @PathVariable("year") int year
