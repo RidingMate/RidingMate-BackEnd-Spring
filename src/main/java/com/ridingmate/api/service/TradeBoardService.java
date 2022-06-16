@@ -1,6 +1,7 @@
 package com.ridingmate.api.service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +14,7 @@ import com.querydsl.core.types.Predicate;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.CommentEntity;
+import com.ridingmate.api.entity.FileEntity;
 import com.ridingmate.api.entity.LocationEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
@@ -51,6 +53,15 @@ public class TradeBoardService {
             location = locationService.getLocation(dto.getLocationCode());
         }
 
+        // 파일 저장
+        if (!dto.getFiles().isEmpty()) {
+            try {
+                List<FileEntity> files = fileService.uploadMultipleFile(dto.getFiles(), user);
+            } catch (Exception e) {
+                throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
+            }
+        }
+
         TradeBoardEntity tradeBoard = new TradeBoardEntity(
                 dto.getTitle(),
                 dto.getContent(),
@@ -73,6 +84,9 @@ public class TradeBoardService {
     @Transactional
     public void updateBoardContent(BoardDto.Request.TradeUpdate dto) {
         // TODO : 파일 관련 처리 추가
+        if (!dto.getFiles().isEmpty()) {
+
+        }
     }
 
     private Page<TradeBoardEntity> getBoardList(Pageable pageable, Predicate predicate) {
@@ -184,7 +198,7 @@ public class TradeBoardService {
 
     /**
      * 거래글 판매완료 처리
-     * @param boardId
+     * @param boardId 게시글 ID
      */
     @Transactional
     public void setTradeStatusToComplete(Long boardId, Long userIdx) {
