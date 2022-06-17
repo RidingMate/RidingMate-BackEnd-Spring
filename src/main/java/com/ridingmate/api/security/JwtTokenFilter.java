@@ -24,25 +24,25 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String token = jwtTokenProvider.resolveToken(request);
 
         try {
-            //토큰 발급 요청시에는 예외처리 안되게 처리
-            if(request.getRequestURI().startsWith("/token")) {
+            //토큰 발급 요청시에는 필터 통과 처리
+            if(!request.getRequestURI().startsWith("/token") ||
+               !request.getRequestURI().startsWith("/normal/join") ||
+               !request.getRequestURI().startsWith("/social/join") ||
+               !request.getRequestURI().startsWith("/normal/login") ||
+               !request.getRequestURI().startsWith("/social/login")
+            ) {
+                //정상토큰
+                if(token != null && jwtTokenProvider.validateToken(token)) {
+                    Authentication auth = jwtTokenProvider.getAuthentication(token);
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
+
+                //만료되거나 유효하지 않은 토큰
                 if(token != null && !jwtTokenProvider.validateToken(token)) {
                     SecurityContextHolder.clearContext();
-                    filterChain.doFilter(request, response);
-                    return;
                 }
             }
 
-            //정상토큰
-            if(token != null && jwtTokenProvider.validateToken(token)) {
-                Authentication auth = jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
-
-            //만료되거나 유효하지 않은 토큰
-            if(token != null && !jwtTokenProvider.validateToken(token)) {
-                SecurityContextHolder.clearContext();
-            }
         } catch (CustomException e) {
             SecurityContextHolder.clearContext();
             return;
