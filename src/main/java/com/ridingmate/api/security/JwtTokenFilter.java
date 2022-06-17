@@ -1,53 +1,91 @@
 package com.ridingmate.api.security;
 
-import com.ridingmate.api.exception.CustomException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ridingmate.api.consts.ResponseCode;
+import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.common.ResponseDto;
+import com.ridingmate.api.payload.user.dto.JwtDto;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    private final CustomUserDetailsService userDetailsService;
+
+    private final CustomOAuth2UserService oAuth2UserService;
+
+    private final ObjectMapper objectMapper;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtTokenProvider.resolveToken(request);
 
         try {
-            //토큰 발급 요청시에는 예외처리 안되게 처리
-            if(request.getRequestURI().startsWith("/token")) {
-                if(token != null && !jwtTokenProvider.validateToken(token)) {
-                    SecurityContextHolder.clearContext();
-                    filterChain.doFilter(request, response);
-                    return;
+            //토큰 발급 요청시에는 필터 통과 처리
+            if (!request.getRequestURI().startsWith("/token") ||
+                !request.getRequestURI().startsWith("/normal/join") ||
+                !request.getRequestURI().startsWith("/social/join") ||
+                !request.getRequestURI().startsWith("/normal/login") ||
+                !request.getRequestURI().startsWith("/social/login")
+            ) {
+                JwtDto jwtDto = jwtTokenProvider.parseToken(token);
+                if (jwtDto != null) {
+                    Authentication auth = getAuthentication(jwtDto);
+                    SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             }
-
-            //정상토큰
-            if(token != null && jwtTokenProvider.validateToken(token)) {
-                Authentication auth = jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
-
-            //만료되거나 유효하지 않은 토큰
-            if(token != null && !jwtTokenProvider.validateToken(token)) {
-                SecurityContextHolder.clearContext();
-            }
+            filterChain.doFilter(request, response);
         } catch (CustomException e) {
-            SecurityContextHolder.clearContext();
-            return;
+            errorResponse(response, e.getErrorCode());
+        } catch (Exception e) {
+            errorResponse(response, ResponseCode.INTERNAL_SERVER_ERROR);
         }
+    }
 
-        filterChain.doFilter(request, response);
+    private Authentication getAuthentication(JwtDto dto) {
+        UserDetails userDetails = null;
+        if (dto.isSocialUser()) {
+            // TODO : 소셜 로그인 로직
+        } else {
+            userDetails = userDetailsService.loadUserByUsername(dto.getSubject());
+        }
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    private void errorResponse(HttpServletResponse response, ResponseCode responseCode) throws IOException {
+        try {
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setStatus(responseCode.getResponseCode());
+            response.getWriter()
+                    .write(objectMapper.writeValueAsString(ResponseDto.builder()
+                                                                      .responseCode(responseCode)
+                                                                      .build()));
+        } catch (IOException e) {
+            response.sendError(responseCode.getResponseCode(), responseCode.getResponseMessage());
+        } finally {
+            SecurityContextHolder.clearContext();
+        }
     }
 }

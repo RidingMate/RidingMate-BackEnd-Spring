@@ -1,8 +1,5 @@
 package com.ridingmate.api.config;
 
-import com.ridingmate.api.security.CustomOAuth2UserService;
-import com.ridingmate.api.security.CustomUserDetailsService;
-import com.ridingmate.api.security.JwtAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.ridingmate.api.security.CustomOAuth2UserService;
+import com.ridingmate.api.security.CustomUserDetailsService;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -25,8 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
+//    @Autowired
+//    private JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
@@ -61,7 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf().disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(unauthorizedHandler)
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**").permitAll()
