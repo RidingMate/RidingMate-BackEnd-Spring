@@ -55,6 +55,10 @@ public class FileEntity extends BaseTime {
     @JoinColumn(name = "bike_id")
     private BikeEntity bike;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private BoardEntity board;
+
     public FileEntity createEntity(FileResult fileResult){
         return FileEntity.builder()
                 .originalName(fileResult.getOriginalFileName())
@@ -64,5 +68,9 @@ public class FileEntity extends BaseTime {
 
     public void connectBike(BikeEntity bikeEntity){
         this.bike = bikeEntity;
+    }
+
+    public void connectBoard(BoardEntity board) {
+        this.board = board;
     }
 }

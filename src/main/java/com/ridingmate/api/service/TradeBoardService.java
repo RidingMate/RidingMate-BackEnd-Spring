@@ -53,15 +53,6 @@ public class TradeBoardService {
             location = locationService.getLocation(dto.getLocationCode());
         }
 
-        // 파일 저장
-        if (!dto.getFiles().isEmpty()) {
-            try {
-                List<FileEntity> files = fileService.uploadMultipleFile(dto.getFiles(), user);
-            } catch (Exception e) {
-                throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
-            }
-        }
-
         TradeBoardEntity tradeBoard = new TradeBoardEntity(
                 dto.getTitle(),
                 dto.getContent(),
@@ -78,6 +69,17 @@ public class TradeBoardService {
                 dto.getPurchaseMonth(),
                 user,
                 location);
+        // 파일 저장
+        if (!dto.getFiles().isEmpty()) {
+            try {
+                List<FileEntity> files = fileService.uploadMultipleFile(dto.getFiles(), user);
+                for (FileEntity file : files) {
+                    file.connectBoard(tradeBoard);
+                }
+            } catch (Exception e) {
+                throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
+            }
+        }
         tradeBoardRepository.save(tradeBoard);
     }
 
