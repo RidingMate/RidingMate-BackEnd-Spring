@@ -43,6 +43,17 @@ public class JwtTokenProvider {
 				.compact();
 	}
 
+	public String generateToken(String username) {
+		Date now = new Date();
+		Date validity = new Date(now.getTime() + VALIDITY_IN_MILLISECONDS);
+		return Jwts.builder()
+				   .setSubject(username)
+				   .setIssuedAt(now)
+				   .setExpiration(validity)
+				   .signWith(SignatureAlgorithm.HS512, secretKey)
+				   .compact();
+	}
+
 	public String resolveToken(HttpServletRequest request) {
 		String bearerToken = request.getHeader("Authorization");
 		if(bearerToken != null && bearerToken.startsWith("Bearer ")) {

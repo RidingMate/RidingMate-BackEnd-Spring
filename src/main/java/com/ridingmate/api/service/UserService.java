@@ -8,16 +8,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.NormalUserEntity;
 import com.ridingmate.api.entity.SocialUserEntity;
 import com.ridingmate.api.entity.value.UserRole;
+import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.AuthResponse;
 import com.ridingmate.api.payload.user.dto.NormalUserDto;
 import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.security.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -30,7 +34,7 @@ public class UserService {
     @Transactional
     public AuthResponse normalJoin(NormalUserDto.Request.Join request) {
         if (userRepository.findByUserId(request.getUserId()).isPresent()) {
-            throw new IllegalStateException("해당 아이디는 이미 존재합니다.");
+            throw new CustomException(ResponseCode.DUPLICATE_USER);
         }
 
         NormalUserEntity normalUser = new NormalUserEntity(
@@ -40,7 +44,7 @@ public class UserService {
                 UserRole.ROLE_USER);
         userRepository.save(normalUser);
 
-        return new AuthResponse(getNormalUserToken(normalUser.getUserId(), request.getPassword()));
+        return new AuthResponse(getNormalUserToken(normalUser.getUserId()));
     }
 
     @Transactional
@@ -61,8 +65,11 @@ public class UserService {
     @Transactional
     public AuthResponse normalLogin(NormalUserDto.Request.Login request) {
         NormalUserEntity normalUser = userRepository.findByUserId(request.getUserId()).orElseThrow(()
-                -> new NullPointerException("유저를 찾지 못하였습니다."));
-        return new AuthResponse(getNormalUserToken(normalUser.getUserId(), request.getPassword()));
+                -> new CustomException(ResponseCode.NOT_FOUND_USER));
+        if (!passwordEncoder.matches(request.getPassword(), normalUser.getPassword())) {
+            throw new CustomException(ResponseCode.NOT_MATCH_USER_INFO);
+        }
+        return new AuthResponse(getNormalUserToken(normalUser.getUserId()));
     }
 
     @Transactional
@@ -73,13 +80,7 @@ public class UserService {
         return new AuthResponse(token);
     }
 
-    private String getNormalUserToken(String userId, String password) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userId, password);
-
-        Authentication authenticate = authenticationManager.authenticate(token);
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
-        String jwtToken = jwtTokenProvider.generateToken(authenticate);
-
-        return jwtToken;
+    private String getNormalUserToken(String userId) {
+        return jwtTokenProvider.generateToken(userId);
     }
 }
