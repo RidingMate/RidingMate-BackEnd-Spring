@@ -26,6 +26,8 @@ public enum ResponseCode {
     // 인증 관련 에러
     NOT_FOUND_USER(HttpStatus.UNAUTHORIZED, 2000, "유저를 찾지 못하였습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 2001, "잘못된 토큰입니다"),
+    DUPLICATE_USER(HttpStatus.UNAUTHORIZED, 2002, "해당 아이디는 이미 존재합니다."),
+    NOT_MATCH_USER_INFO(HttpStatus.UNAUTHORIZED, 2003, "계정 정보가 일치하지 않습니다."),
 
     // 데이터 관련
     NOT_FOUND_COMPANY(HttpStatus.NOT_FOUND, 3000, "제조사를 찾을 수 없습니다."),
