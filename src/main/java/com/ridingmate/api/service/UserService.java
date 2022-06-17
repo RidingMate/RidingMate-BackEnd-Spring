@@ -32,14 +32,13 @@ public class UserService {
             throw new CustomException(ResponseCode.DUPLICATE_USER);
         }
 
-        NormalUserEntity normalUser = new NormalUserEntity(
+        NormalUserEntity normalUser = userRepository.save(new NormalUserEntity(
                 request.getUserId(),
                 passwordEncoder.encode(request.getPassword()),
                 request.getNickname(),
-                UserRole.ROLE_USER);
-        userRepository.save(normalUser);
+                UserRole.ROLE_USER));
 
-        return new AuthResponse(getNormalUserToken(normalUser.getUserId()));
+        return new AuthResponse(getNormalUserToken(normalUser.getUserId(), normalUser.getIdx()));
     }
 
     @Transactional
@@ -64,7 +63,7 @@ public class UserService {
         if (!passwordEncoder.matches(request.getPassword(), normalUser.getPassword())) {
             throw new CustomException(ResponseCode.NOT_MATCH_USER_INFO);
         }
-        return new AuthResponse(getNormalUserToken(normalUser.getUserId()));
+        return new AuthResponse(getNormalUserToken(normalUser.getUserId(), normalUser.getIdx()));
     }
 
     @Transactional
@@ -75,7 +74,7 @@ public class UserService {
         return new AuthResponse(token);
     }
 
-    private String getNormalUserToken(String userId) {
-        return jwtTokenProvider.generateToken(userId);
+    private String getNormalUserToken(String userId, Long userIdx) {
+        return jwtTokenProvider.generateToken(userId, userIdx, false);
     }
 }

@@ -22,6 +22,7 @@ public enum ResponseCode {
     METHOD_ARGUMENT_NOT_VALID(HttpStatus.BAD_REQUEST, 1000, "파라미터 값이 잘못되었습니다"),
     METHOD_ARGUMENT_TYPE_MISMATCH(HttpStatus.BAD_REQUEST, 1001, "파라미터 타입이 잘못되었습니다"),
     HTTP_REQUEST_METHOD_NOT_SUPPORTED(HttpStatus.METHOD_NOT_ALLOWED, 1002, "이 요청은 해당 메소드를 지원하지 않습니다."),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 1999, "내부 오류입니다. 개발자에게 문의 바랍니다."),
 
     // 인증 관련 에러
     NOT_FOUND_USER(HttpStatus.UNAUTHORIZED, 2000, "유저를 찾지 못하였습니다."),
@@ -43,21 +44,19 @@ public enum ResponseCode {
     INVALID_PARAMETER(HttpStatus.BAD_REQUEST, 3999, "파라미터 값이 잘못되었습니다"),
 
 
-
+    //파일 관련,
+    NOT_FOUND_FILE(HttpStatus.NOT_FOUND, 5001, "파일을 찾을 수 없습니다."),
     DONT_SAVE_S3_FILE(HttpStatus.BAD_REQUEST, 5000, "파일을 저장할 수 없습니다."),
-    NOT_FOUND_FILE(HttpStatus.NOT_FOUND, 5001, "파일을 찾을 수 없습니다.")
-    //파일 관련
-
     ;
 
     @JsonIgnore
-    private HttpStatus status;
+    private final HttpStatus status;
 
-    @JsonProperty(value = "code")
-    @ApiModelProperty(value = "응답 코드")
-    private int responseCode;
+    @JsonProperty("code")
+    @ApiModelProperty("응답 코드")
+    private final int responseCode;
 
-    @JsonProperty(value = "message")
-    @ApiModelProperty(value = "응답 메시지")
-    private String responseMessage;
+    @JsonProperty("message")
+    @ApiModelProperty("응답 메시지")
+    private final String responseMessage;
 }
