@@ -1,8 +1,13 @@
 package com.ridingmate.api.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ridingmate.api.entity.value.TradeStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,8 +15,10 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
 @DiscriminatorValue("TRADE")
 @NoArgsConstructor
+@AllArgsConstructor
 public class TradeBoardEntity extends BoardEntity {
 
     /**
@@ -72,6 +79,11 @@ public class TradeBoardEntity extends BoardEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_code")
     private LocationEntity location;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "board")
+    private List<FileEntity> files = new ArrayList<>();
+
 
     // TODO : 썸네일 컬럼 추가
     // TODO : 썸네일 저장을 위한 location 저장 컬럼
