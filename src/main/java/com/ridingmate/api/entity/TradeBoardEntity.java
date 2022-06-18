@@ -111,8 +111,7 @@ public class TradeBoardEntity extends BoardEntity {
                             String isOpenToBuyer,
                             Integer purchaseYear,
                             Integer purchaseMonth,
-                            UserEntity user,
-                            LocationEntity location
+                            UserEntity user
     ) {
 
         this.company = company;
@@ -122,7 +121,6 @@ public class TradeBoardEntity extends BoardEntity {
         this.year = year;
         this.mileage = mileage;
         this.price = price;
-        this.location = location;
         this.isOpenToBuyer = isOpenToBuyer;
         this.phoneNumber = phoneNumber;
         if (purchaseYear != null && purchaseMonth != null) {
@@ -140,5 +138,15 @@ public class TradeBoardEntity extends BoardEntity {
     // 판매완료 상태
     public void setCompletedStatus() {
         status = TradeStatus.COMPLETED;
+    }
+
+    // 내 바이크 등록
+    public void setMyBike(BikeEntity myBike) {
+        this.myBike = myBike;
+    }
+
+    // 거래 지역 등록
+    public void setLocation(LocationEntity location) {
+        this.location = location;
     }
 }

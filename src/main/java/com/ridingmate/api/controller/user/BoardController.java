@@ -1,5 +1,7 @@
 package com.ridingmate.api.controller.user;
 
+import static com.ridingmate.api.payload.user.dto.CommentDto.Response.*;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
@@ -14,18 +16,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.ridingmate.api.annotation.CurrentUser;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.BoardDto.Response.NoticeInfo;
+import com.ridingmate.api.payload.user.dto.BoardDto.Response.TradeInfo;
+import com.ridingmate.api.payload.user.dto.BoardDto.Response.TradeList;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
-import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
+import com.ridingmate.api.payload.user.dto.CommentDto.Response;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
@@ -86,7 +90,7 @@ public class BoardController {
     @SneakyThrows
     @GetMapping("/trade/list")
     @ApiOperation("거래글 리스트 조회")
-    public ResponseDto<PageDto<BoardDto.Response.TradeList>> getTradeBoardList(
+    public ResponseDto<PageDto<TradeList>> getTradeBoardList(
             @Valid BoardDto.Request.TradeList dto,
             Pageable pageable,
             BindingResult result
@@ -94,7 +98,7 @@ public class BoardController {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        return ResponseDto.<PageDto<BoardDto.Response.TradeList>>builder()
+        return ResponseDto.<PageDto<TradeList>>builder()
                           .response(new PageDto<>(tradeBoardService.getTradeBoardList(pageable, dto)))
                           .build();
     }
@@ -102,8 +106,8 @@ public class BoardController {
     @SneakyThrows
     @PostMapping("/notice")
     @ApiOperation("공지사항 등록")
-    public ResponseDto insertNoticeBoard(
-            @RequestHeader(value = "Authorization") String token,
+    public ResponseDto<?> insertNoticeBoard(
+            @RequestHeader("Authorization") String token,
             @RequestBody @Valid BoardDto.Request.NoticeInsert request,
             @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
@@ -118,8 +122,8 @@ public class BoardController {
     @SneakyThrows
     @PostMapping(value = "/trade", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation("거래글 등록")
-    public ResponseDto insertTradeBoard(
-            @RequestHeader(value = "Authorization") String token,
+    public ResponseDto<?> insertTradeBoard(
+            @RequestHeader("Authorization") String token,
             @Valid BoardDto.Request.TradeInsert dto,
             @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
@@ -134,8 +138,8 @@ public class BoardController {
     @ApiOperation("공지사항 상세 조회")
     @GetMapping("/notice/{boardId}")
     @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
-    public ResponseDto<BoardDto.Response.NoticeContent> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseDto.<BoardDto.Response.NoticeContent>builder()
+    public ResponseDto<NoticeInfo> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
+        return ResponseDto.<NoticeInfo>builder()
                           .response(noticeBoardService.getNoticeBoardContent(boardId))
                           .build();
     }
@@ -143,15 +147,15 @@ public class BoardController {
     @ApiOperation("거래글 상세 조회")
     @GetMapping("/trade/{boardId}")
     @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
-    public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(
-            @RequestHeader(value = "Authorization") String token,
+    public ResponseDto<TradeInfo> getTradeBoardContent(
+            @RequestHeader("Authorization") String token,
             @ApiIgnore @CurrentUser UserPrincipal user,
             @PathVariable("boardId") Long boardId
     ) {
         if (user == null) {
             throw new CustomException(ResponseCode.INVALID_TOKEN);
         }
-        return ResponseDto.<BoardDto.Response.TradeContent>builder()
+        return ResponseDto.<TradeInfo>builder()
                 .response(tradeBoardService.getTradeBoardContent(boardId, user.getIdx()))
                 .build();
     }
@@ -159,7 +163,7 @@ public class BoardController {
     @ApiOperation("거래글 댓글 등록")
     @PostMapping("/trade/comment")
     public ResponseDto<?> insertComment(
-            @RequestHeader(value = "Authorization") String token,
+            @RequestHeader("Authorization") String token,
             @RequestBody InsertComment dto,
             @ApiIgnore @CurrentUser UserPrincipal user
     ) {
@@ -172,7 +176,7 @@ public class BoardController {
     @ApiOperation("거래글 대댓글 등록")
     @PostMapping("/trade/reply")
     public ResponseDto<?> insertReply(
-            @RequestHeader(value = "Authorization") String token,
+            @RequestHeader("Authorization") String token,
             @RequestBody InsertReply dto,
             @ApiIgnore @CurrentUser UserPrincipal user
     ) {
@@ -207,7 +211,7 @@ public class BoardController {
     @ApiOperation("거래글 상태 판매완료로 변경")
     @PutMapping("/trade/{boardId}/status/complete")
     public ResponseDto<?> setTradeStatusToComplete(
-            @RequestHeader(value = "Authorization") String token,
+            @RequestHeader("Authorization") String token,
             @ApiIgnore @CurrentUser UserPrincipal user,
             @PathVariable Long boardId
     ) {
