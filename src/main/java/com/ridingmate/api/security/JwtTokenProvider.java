@@ -4,15 +4,10 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
-import java.util.Date;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -30,28 +25,18 @@ public class JwtTokenProvider {
 
     private final long VALIDITY_IN_MILLISECONDS = 1000L * 60 * 60 * 24 * 90; //90일
 
-    @Autowired
-    private CustomUserDetailsService customUserDetails;
-
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-//    public String generateToken(Authentication authentication) {
-//        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-//
-//        Date now = new Date();
-//        Date validity = new Date(now.getTime() + VALIDITY_IN_MILLISECONDS);
-//
-//        return Jwts.builder()
-//                   .setSubject(userPrincipal.getUsername())
-//                   .setIssuedAt(now)
-//                   .setExpiration(validity)
-//                   .signWith(SignatureAlgorithm.HS512, secretKey)
-//                   .compact();
-//    }
-
+    /**
+     * 토큰 생성
+     * @param username 유저 구분자(ex. 유저 아이디)
+     * @param userIdx 유저 번호
+     * @param isSocialUser 소셜 유저 여부
+     * @return token
+     */
     public String generateToken(String username, Long userIdx, Boolean isSocialUser) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime validity = now.plus(VALIDITY_IN_MILLISECONDS, ChronoUnit.MILLIS);
@@ -65,6 +50,11 @@ public class JwtTokenProvider {
                    .compact();
     }
 
+    /**
+     * Header에서 토큰값 분리
+     * @param request
+     * @return token
+     */
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -94,12 +84,4 @@ public class JwtTokenProvider {
         return null;
     }
 
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = customUserDetails.loadUserByUsername(getUsername(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
-    }
-
-    public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
 }

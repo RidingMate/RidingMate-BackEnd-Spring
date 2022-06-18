@@ -14,6 +14,7 @@ import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.BoardDto.Response.NoticeInfo;
 import com.ridingmate.api.repository.NoticeBoardRepository;
 import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
@@ -58,11 +59,11 @@ public class NoticeBoardService {
     }
 
     @Transactional
-    public BoardDto.Response.NoticeContent getNoticeBoardContent(Long boardId) {
+    public NoticeInfo getNoticeBoardContent(Long boardId) {
         NoticeBoardEntity board = getBoardContent(boardId);
-        return BoardDto.Response.NoticeContent.builder()
-                                              .title(board.getTitle())
-                                              .build();
+        return NoticeInfo.builder()
+                         .title(board.getTitle())
+                         .build();
     }
 
     @Transactional

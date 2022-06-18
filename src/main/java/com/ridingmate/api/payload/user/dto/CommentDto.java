@@ -1,5 +1,9 @@
 package com.ridingmate.api.payload.user.dto;
 
+import java.time.format.DateTimeFormatter;
+
+import com.ridingmate.api.entity.CommentEntity;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -67,6 +71,15 @@ public class CommentDto {
 
             @ApiModelProperty("댓글 작성 날짜")
             private String date;
+
+            public static Info of(CommentEntity comment) {
+                return builder()
+                        .commentId(comment.getIdx())
+                        .content(comment.getContent())
+                        .date(comment.getCreateAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        .username(comment.getUser().getNickname())
+                        .build();
+            }
         }
     }
 }

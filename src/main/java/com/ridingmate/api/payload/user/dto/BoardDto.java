@@ -1,12 +1,16 @@
 package com.ridingmate.api.payload.user.dto;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.ridingmate.api.entity.TradeBoardEntity;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -23,40 +27,40 @@ public class BoardDto {
         @Data
         @ApiModel(description = "거래글 리스트 요청 dto")
         public static class TradeList {
-            @ApiModelProperty(value = "제조사")
+            @ApiModelProperty("제조사")
             private String company;
 
-            @ApiModelProperty(value = "모델명")
+            @ApiModelProperty("모델명")
             private String modelName;
 
-            @ApiModelProperty(value = "지역코드")
+            @ApiModelProperty("지역코드")
             private String locationCode;
 
-            @ApiModelProperty(value = "주행거리 최소값")
-            private int minMileage = 0;
+            @ApiModelProperty("주행거리 최소값")
+            private int minMileage;
 
-            @ApiModelProperty(value = "주행거리 최대값")
+            @ApiModelProperty("주행거리 최대값")
             private int maxMileage = 999999999;
 
-            @ApiModelProperty(value = "가격 최소값")
-            private int minPrice = 0;
+            @ApiModelProperty("가격 최소값")
+            private int minPrice;
 
-            @ApiModelProperty(value = "가격 최대값")
+            @ApiModelProperty("가격 최대값")
             private int maxPrice = 999999999;
 
-            @ApiModelProperty(value = "연식 최소값")
-            private int minYear = 0;
+            @ApiModelProperty("연식 최소값")
+            private int minYear;
 
-            @ApiModelProperty(value = "연식 최대값")
+            @ApiModelProperty("연식 최대값")
             private int maxYear = 999999999;
 
-            @ApiModelProperty(value = "배기량 최소값")
-            private int minCc = 0;
+            @ApiModelProperty("배기량 최소값")
+            private int minCc;
 
-            @ApiModelProperty(value = "배기량 최대값")
+            @ApiModelProperty("배기량 최대값")
             private int maxCc = 999999999;
 
-            @ApiModelProperty(value = "거래 완료 안보기 체크 Y / N")
+            @ApiModelProperty("거래 완료 안보기 체크 Y / N")
             @Pattern(regexp = "^[Y|N]{1}$", message = "Y와 N만 입력 가능합니다.")
             private String hideComplete = "N";
         }
@@ -68,50 +72,53 @@ public class BoardDto {
             @ApiModelProperty(value = "거래글 제목", required = true)
             private String title;
 
-            @ApiModelProperty(value = "가격")
-            @Min(0)
+            @ApiModelProperty("가격")
+            @Min(value = 0, message = "가격은 0원 이상만 가능합니다.")
             private int price;
 
-            @ApiModelProperty(value = "업체명")
+            @ApiModelProperty("업체명")
             private String company;
 
-            @ApiModelProperty(value = "모델명")
+            @ApiModelProperty("모델명")
             private String modelName;
 
-            @ApiModelProperty(value = "연비")
+            @ApiModelProperty("연비")
             private double fuelEfficiency;
 
-            @ApiModelProperty(value = "cc")
+            @ApiModelProperty("cc")
             private int cc;
 
-            @ApiModelProperty(value = "연식")
+            @ApiModelProperty("연식")
             private int year;
 
-            @ApiModelProperty(value = "주행거리")
-            @Min(0)
+            @ApiModelProperty("주행거리")
+            @Min(value = 0, message = "주행거리는 0이상만 가능합니다.")
             private int mileage;
 
-            @ApiModelProperty(value = "지역 코드")
+            @ApiModelProperty("지역 코드")
             private String locationCode;
 
-            @ApiModelProperty(value = "구매 일자 연도")
+            @ApiModelProperty("구매 일자 연도")
             private Integer purchaseYear;
 
-            @ApiModelProperty(value = "구매 일자 월")
+            @ApiModelProperty("구매 일자 월")
             private Integer purchaseMonth;
 
-            @ApiModelProperty(value = "상세 내용")
+            @ApiModelProperty("상세 내용")
             private String content;
 
-            @ApiModelProperty(value = "연락처")
+            @ApiModelProperty("연락처")
             private String phoneNumber;
 
-            @ApiModelProperty(value = "구매자에게 주유/정비 정보 공개하기 Y/N")
+            @ApiModelProperty("구매자에게 주유/정비 정보 공개하기 Y/N")
             @Pattern(regexp = "^[Y|N]{1}$", message = "Y와 N만 입력 가능합니다.")
             private String isOpenToBuyer;
             
-            @ApiModelProperty(value = "거래글 파일")
+            @ApiModelProperty("거래글 파일")
             private List<MultipartFile> files;
+
+            @ApiModelProperty("내 바이크 Idx")
+            private Long bikeIdx;
         }
 
         @Data
@@ -125,49 +132,49 @@ public class BoardDto {
             @ApiModelProperty(value = "거래글 제목", required = true)
             private String title;
 
-            @ApiModelProperty(value = "가격")
+            @ApiModelProperty("가격")
             @Min(0)
             private int price;
 
-            @ApiModelProperty(value = "업체명")
+            @ApiModelProperty("업체명")
             private String company;
 
-            @ApiModelProperty(value = "모델명")
+            @ApiModelProperty("모델명")
             private String modelName;
 
-            @ApiModelProperty(value = "연비")
+            @ApiModelProperty("연비")
             private double fuelEfficiency;
 
-            @ApiModelProperty(value = "cc")
+            @ApiModelProperty("cc")
             private int cc;
 
-            @ApiModelProperty(value = "연식")
+            @ApiModelProperty("연식")
             private int year;
 
-            @ApiModelProperty(value = "주행거리")
+            @ApiModelProperty("주행거리")
             @Min(0)
             private int mileage;
 
-            @ApiModelProperty(value = "지역 코드")
+            @ApiModelProperty("지역 코드")
             private String locationCode;
 
-            @ApiModelProperty(value = "구매 일자 연도")
+            @ApiModelProperty("구매 일자 연도")
             private Integer purchaseYear;
 
-            @ApiModelProperty(value = "구매 일자 월")
+            @ApiModelProperty("구매 일자 월")
             private Integer purchaseMonth;
 
-            @ApiModelProperty(value = "상세 내용")
+            @ApiModelProperty("상세 내용")
             private String content;
 
-            @ApiModelProperty(value = "연락처")
+            @ApiModelProperty("연락처")
             private String phoneNumber;
 
-            @ApiModelProperty(value = "구매자에게 주유/정비 정보 공개하기 Y/N")
+            @ApiModelProperty("구매자에게 주유/정비 정보 공개하기 Y/N")
             @Pattern(regexp = "^[Y|N]{1}$", message = "Y와 N만 입력 가능합니다.")
             private String isOpenToBuyer;
 
-            @ApiModelProperty(value = "거래글 파일")
+            @ApiModelProperty("거래글 파일")
             private List<MultipartFile> files;
         }
 
@@ -186,90 +193,121 @@ public class BoardDto {
         @Builder
         @ApiModel(description = "거래글 리스트 dto")
         public static class TradeList {
-            @ApiModelProperty(value = "게시글 ID")
+            @ApiModelProperty("게시글 ID")
             private Long id;
 
-            @ApiModelProperty(value = "게시글 제목")
+            @ApiModelProperty("게시글 제목")
             private String title;
 
-            @ApiModelProperty(value = "모델명")
+            @ApiModelProperty("모델명")
             private String modelName;
 
-            @ApiModelProperty(value = "업체명")
+            @ApiModelProperty("업체명")
             private String company;
 
-            @ApiModelProperty(value = "주행거리")
+            @ApiModelProperty("주행거리")
             private int mileage;
 
-            @ApiModelProperty(value = "CC")
+            @ApiModelProperty("CC")
             private int cc;
 
-            @ApiModelProperty(value = "연식")
+            @ApiModelProperty("연식")
             private int year;
 
-            @ApiModelProperty(value = "가격")
+            @ApiModelProperty("가격")
             private int price;
+
+            public static TradeList of(TradeBoardEntity tradeBoard) {
+                return builder()
+                        .id(tradeBoard.getIdx())
+                        .title(tradeBoard.getTitle())
+                        .company(tradeBoard.getCompany())
+                        .modelName(tradeBoard.getModelName())
+                        .price(tradeBoard.getPrice())
+                        .cc(tradeBoard.getCc())
+                        .mileage(tradeBoard.getMileage())
+                        .year(tradeBoard.getYear())
+                        .build();
+            }
         }
 
         @Getter
         @Builder
         @ApiModel(description = "거래글 상세 dto")
-        public static class TradeContent {
-            @ApiModelProperty(value = "게시글 ID")
+        public static class TradeInfo {
+            @ApiModelProperty("게시글 ID")
             private Long boardId;
 
-            @ApiModelProperty(value = "게시글 제목")
+            @ApiModelProperty("게시글 제목")
             private String title;
 
-            @ApiModelProperty(value = "모델명")
+            @ApiModelProperty("모델명")
             private String modelName;
 
-            @ApiModelProperty(value = "업체명")
+            @ApiModelProperty("업체명")
             private String company;
 
-            @ApiModelProperty(value = "주행거리")
+            @ApiModelProperty("주행거리")
             private int mileage;
 
-            @ApiModelProperty(value = "CC")
+            @ApiModelProperty("CC")
             private int cc;
 
-            @ApiModelProperty(value = "연식")
+            @ApiModelProperty("연식")
             private int year;
 
-            @ApiModelProperty(value = "가격")
+            @ApiModelProperty("가격")
             private int price;
 
-            @ApiModelProperty(value = "거래지역명")
+            @ApiModelProperty("거래지역명")
             private String location;
 
-            @ApiModelProperty(value = "구매 일자")
+            @ApiModelProperty("구매 일자")
             private String dateOfPurchase;
 
-            @ApiModelProperty(value = "내 게시글 여부")
+            @ApiModelProperty("내 게시글 여부")
             private Boolean isMyPost;
 
             private PageDto<CommentDto.Response.Info> comments;
+
+            public static TradeInfo of(TradeBoardEntity board, Page<CommentDto.Response.Info> comments, Long userIdx) {
+                return builder().boardId(board.getIdx())
+                                .title(board.getTitle())
+                                .company(board.getCompany())
+                                .modelName(board.getModelName())
+                                .price(board.getPrice())
+                                .cc(board.getCc())
+                                .mileage(board.getMileage())
+                                .year(board.getYear())
+                                .dateOfPurchase(board.getDateOfPurchase() != null ? board.getDateOfPurchase().toString() : null)
+                                .location(board.getLocation() != null ?
+                                          board.getLocation().getName() : "")
+                                .comments(new PageDto<>(comments))
+                                .isMyPost(board.getUser() != null && Objects.equals(board.getUser().getIdx(),
+                                                                                    userIdx))
+                                .build();
+            }
         }
 
         @Getter
         @Builder
         @ApiModel(description = "공지사항 리스트 dto")
         public static class NoticeList {
-            @ApiModelProperty(value = "게시글 ID")
+            @ApiModelProperty("게시글 ID")
             private Long id;
 
-            @ApiModelProperty(value = "게시글 제목")
+            @ApiModelProperty("게시글 제목")
             private String title;
 
-            @ApiModelProperty(value = "작성 일자")
+            @ApiModelProperty("작성 일자")
             private String date;
         }
 
         @Getter
         @Builder
         @ApiModel(description = "공지사항 상세 dto")
-        public static class NoticeContent {
-            @ApiModelProperty(value = "게시글 제목")
+        public static class NoticeInfo {
+            @ApiModelProperty("게시글 제목")
             private String title;
         }
 
