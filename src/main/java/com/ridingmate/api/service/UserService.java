@@ -38,7 +38,7 @@ public class UserService {
                 request.getNickname(),
                 UserRole.ROLE_USER));
 
-        return new AuthResponse(getNormalUserToken(normalUser.getUserId(), normalUser.getIdx()));
+        return new AuthResponse(getUserToken(normalUser.getUserId(), normalUser.getIdx(), false));
     }
 
     @Transactional
@@ -46,13 +46,8 @@ public class UserService {
 
         // TODO : 중복 체크
 
-        // TODO : DB에 회원정보 등록
-        SocialUserEntity socialUser = SocialUserEntity.builder().build();
-        userRepository.save(socialUser);
-
-        // TODO : 토큰 발급
-        String token = null;
-
+        SocialUserEntity socialUser = userRepository.save(SocialUserEntity.builder().build());
+        String token = getUserToken(socialUser.getOAuth2Code(), socialUser.getIdx(), true);
         return new AuthResponse(token);
     }
 
@@ -63,7 +58,7 @@ public class UserService {
         if (!passwordEncoder.matches(request.getPassword(), normalUser.getPassword())) {
             throw new CustomException(ResponseCode.NOT_MATCH_USER_INFO);
         }
-        return new AuthResponse(getNormalUserToken(normalUser.getUserId(), normalUser.getIdx()));
+        return new AuthResponse(getUserToken(normalUser.getUserId(), normalUser.getIdx(), false));
     }
 
     @Transactional
@@ -74,7 +69,7 @@ public class UserService {
         return new AuthResponse(token);
     }
 
-    private String getNormalUserToken(String userId, Long userIdx) {
-        return jwtTokenProvider.generateToken(userId, userIdx, false);
+    private String getUserToken(String userId, Long userIdx, Boolean isSocialUser) {
+        return jwtTokenProvider.generateToken(userId, userIdx, isSocialUser);
     }
 }

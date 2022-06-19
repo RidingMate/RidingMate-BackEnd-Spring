@@ -23,7 +23,7 @@ public class JwtTokenProvider {
 
     private String secretKey = "SECRET_KEY";
 
-    private final long VALIDITY_IN_MILLISECONDS = 1000L * 60 * 60 * 24 * 90; //90일
+    private static final long VALIDITY_IN_MILLISECONDS = 1000L * 60 * 60 * 24 * 90; //90일
 
     @PostConstruct
     protected void init() {
@@ -32,18 +32,18 @@ public class JwtTokenProvider {
 
     /**
      * 토큰 생성
-     * @param username 유저 구분자(ex. 유저 아이디)
+     * @param subject 유저 구분자(ex. 유저 아이디)
      * @param userIdx 유저 번호
      * @param isSocialUser 소셜 유저 여부
      * @return token
      */
-    public String generateToken(String username, Long userIdx, Boolean isSocialUser) {
+    public String generateToken(String subject, Long userIdx, Boolean isSocialUser) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime validity = now.plus(VALIDITY_IN_MILLISECONDS, ChronoUnit.MILLIS);
         return Jwts.builder()
                    .claim("userIdx", userIdx)
                    .claim("isSocialUser", isSocialUser)
-                   .setSubject(username)
+                   .setSubject(subject)
                    .setIssuedAt(Timestamp.valueOf(now))
                    .setExpiration(Timestamp.valueOf(validity))
                    .signWith(SignatureAlgorithm.HS512, secretKey)
@@ -51,8 +51,8 @@ public class JwtTokenProvider {
     }
 
     /**
-     * Header에서 토큰값 분리
-     * @param request
+     * Header 토큰값 분리
+     * @param request 요청 객체
      * @return token
      */
     public String resolveToken(HttpServletRequest request) {

@@ -2,6 +2,7 @@ package com.ridingmate.api.payload.user.dto;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -10,6 +11,7 @@ import javax.validation.constraints.Pattern;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ridingmate.api.entity.FileEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
 
 import io.swagger.annotations.ApiModel;
@@ -217,6 +219,9 @@ public class BoardDto {
             @ApiModelProperty("가격")
             private int price;
 
+            @ApiModelProperty("썸네일 url")
+            private String thumbnailUrl;
+
             public static TradeList of(TradeBoardEntity tradeBoard) {
                 return builder()
                         .id(tradeBoard.getIdx())
@@ -227,6 +232,7 @@ public class BoardDto {
                         .cc(tradeBoard.getCc())
                         .mileage(tradeBoard.getMileage())
                         .year(tradeBoard.getYear())
+                        .thumbnailUrl(tradeBoard.getFiles().isEmpty() ? null : tradeBoard.getFiles().get(0).getLocation())
                         .build();
             }
         }
@@ -268,6 +274,9 @@ public class BoardDto {
             @ApiModelProperty("내 게시글 여부")
             private Boolean isMyPost;
 
+            @ApiModelProperty("파일 url")
+            private List<String> files;
+
             private PageDto<CommentDto.Response.Info> comments;
 
             public static TradeInfo of(TradeBoardEntity board, Page<CommentDto.Response.Info> comments, Long userIdx) {
@@ -279,12 +288,15 @@ public class BoardDto {
                                 .cc(board.getCc())
                                 .mileage(board.getMileage())
                                 .year(board.getYear())
-                                .dateOfPurchase(board.getDateOfPurchase() != null ? board.getDateOfPurchase().toString() : null)
+                                .dateOfPurchase(board.getDateOfPurchase() != null ?
+                                                board.getDateOfPurchase().toString() : null)
                                 .location(board.getLocation() != null ?
                                           board.getLocation().getName() : "")
                                 .comments(new PageDto<>(comments))
                                 .isMyPost(board.getUser() != null && Objects.equals(board.getUser().getIdx(),
                                                                                     userIdx))
+                                .files(board.getFiles().stream().map(FileEntity::getLocation)
+                                            .collect(Collectors.toList()))
                                 .build();
             }
         }
