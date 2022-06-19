@@ -24,13 +24,13 @@ public class BikeInsertRequest {
     @ApiModelProperty(value = "대표 바이크 체크 - representative(대표 바이크), normal(대표 바이크 x)", required = true)
     private String bikeRole;
 
-    @ApiModelProperty(value = "바이크 닉네임")
+    @ApiModelProperty(value = "바이크 닉네임", required = true)
     private String bikeNickName;
 
     @ApiModelProperty(value = "현재 주행거리", required = true)
     private int mileage;
 
-    @ApiModelProperty(value = "구입 날짜")
+    @ApiModelProperty(value = "구입 날짜", required = true)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfPurchase;
 }
