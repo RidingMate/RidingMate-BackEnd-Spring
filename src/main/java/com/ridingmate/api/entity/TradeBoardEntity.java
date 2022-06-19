@@ -84,11 +84,6 @@ public class TradeBoardEntity extends BoardEntity {
     @OneToMany(mappedBy = "board")
     private List<FileEntity> files = new ArrayList<>();
 
-
-    // TODO : 썸네일 컬럼 추가
-    // TODO : 썸네일 저장을 위한 location 저장 컬럼
-    // File에 대한 entity 필요할거같음 생성해서 연관관계 연결
-
     // 작성자, 내바이크, 지역 생성자
     public TradeBoardEntity(String title, String content, UserEntity user, BikeEntity bike,
                             LocationEntity location) {
