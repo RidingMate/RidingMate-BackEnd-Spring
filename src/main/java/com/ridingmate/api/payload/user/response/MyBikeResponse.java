@@ -35,6 +35,10 @@ public class MyBikeResponse {
     private String image;
 
     public MyBikeResponse convertEntityToResponse(BikeEntity bikeEntity){
+        String image = "";
+        if(bikeEntity.getFileEntity() != null){
+            image = bikeEntity.getFileEntity().getLocation();
+        }
         return MyBikeResponse.builder()
                 .idx(bikeEntity.getIdx())
                 .milage(bikeEntity.getMileage())
@@ -44,7 +48,7 @@ public class MyBikeResponse {
                 .countMaintenance(bikeEntity.getCountMaintenance())
                 .bikeNickname(bikeEntity.getBikeNickname())
                 .bikeRole(bikeEntity.getBikeRole())
-                .image(bikeEntity.getFileEntity().getLocation())
+                .image(image)
                 .build();
     }
 }
