@@ -27,7 +27,7 @@ public class BikeInsertRequest {
     @ApiModelProperty(value = "바이크 닉네임")
     private String bikeNickName;
 
-    @ApiModelProperty(value = "현재 주행거리")
+    @ApiModelProperty(value = "현재 주행거리", required = true)
     private int mileage;
 
     @ApiModelProperty(value = "구입 날짜")
