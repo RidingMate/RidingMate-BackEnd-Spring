@@ -1,5 +1,6 @@
 package com.ridingmate.api.payload.user.dto;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ridingmate.api.entity.FileEntity;
+import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
 
 import io.swagger.annotations.ApiModel;
@@ -313,6 +315,15 @@ public class BoardDto {
 
             @ApiModelProperty("작성 일자")
             private String date;
+
+            public static NoticeList of(NoticeBoardEntity noticeBoard) {
+                return builder()
+                        .id(noticeBoard.getIdx())
+                        .title(noticeBoard.getTitle())
+                        .date(noticeBoard.getCreateAt().format(
+                                DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                        .build();
+            }
         }
 
         @Getter
@@ -321,6 +332,12 @@ public class BoardDto {
         public static class NoticeInfo {
             @ApiModelProperty("게시글 제목")
             private String title;
+
+            public static NoticeInfo of(NoticeBoardEntity noticeBoard) {
+                return builder()
+                        .title(noticeBoard.getTitle())
+                        .build();
+            }
         }
 
     }
