@@ -137,13 +137,10 @@ public class TradeBoardService {
     @Transactional
     public TradeInfo getTradeBoardContent(Long boardId, Long userIdx) {
         TradeBoardEntity board = getBoardContent(boardId);
-        Page<Response.Info> comments = commentRepository.findAll(CommentPredicate.getComment(board, null), PageRequest.of(0, 7, Sort.by("createAt").descending()))
-                                                        .map(comment -> Response.Info.builder()
-                                                                                                                                                                                   .commentId(comment.getIdx())
-                                                                                                                                                                                   .content(comment.getContent())
-                                                                                                                                                                                   .date(comment.getCreateAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
-                                                                                                                                                                                   .username(comment.getUser().getNickname())
-                                                                                                                                                                                   .build());
+        Page<Response.Info> comments = commentRepository.findAll(CommentPredicate.getComment(board, null),
+                                                                 PageRequest.of(0, 7, Sort.by("createAt")
+                                                                                          .descending()))
+                                                        .map(comment -> Response.Info.of(comment));
         return TradeInfo.of(board, comments, userIdx);
     }
 
