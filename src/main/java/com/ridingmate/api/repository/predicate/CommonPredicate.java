@@ -10,7 +10,7 @@ public class CommonPredicate {
         return column.eq(text);
     }
 
-    public static Predicate isBetween(NumberPath column, Number from, Number to) {
+    public static Predicate isNumberBetween(NumberPath column, Number from, Number to) {
         return column.between(from, to);
     }
 
