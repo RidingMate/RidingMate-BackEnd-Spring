@@ -58,9 +58,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
         } catch (CustomException e) {
-            errorResponse(response, e.getErrorCode());
+            errorResponse(response, e.getErrorCode(), null);
         } catch (Exception e) {
-            errorResponse(response, ResponseCode.INTERNAL_SERVER_ERROR);
+            errorResponse(response, ResponseCode.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -74,12 +74,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
-    private void errorResponse(HttpServletResponse response, ResponseCode responseCode) throws IOException {
+    private void errorResponse(HttpServletResponse response, ResponseCode responseCode, Object message) throws IOException {
         try {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(responseCode.getResponseCode());
             response.getWriter()
                     .write(objectMapper.writeValueAsString(ResponseDto.builder()
+                                                                      .response(message)
                                                                       .responseCode(responseCode)
                                                                       .build()));
         } catch (IOException e) {
