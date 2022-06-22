@@ -14,20 +14,20 @@ public class BoardPredicate extends CommonPredicate {
     public static Predicate tradeBoardPredicate(BoardDto.Request.TradeList dto) {
         BooleanBuilder builder = new BooleanBuilder();
         if (StringUtils.hasText(dto.getCompany())) {
-            builder.and(isEq(tradeBoardEntity.company, dto.getCompany()));
+            builder.and(isStringEq(tradeBoardEntity.company, dto.getCompany()));
         }
         if (StringUtils.hasText(dto.getModelName())) {
-            builder.and(isEq(tradeBoardEntity.modelName, dto.getModelName()));
+            builder.and(isStringEq(tradeBoardEntity.modelName, dto.getModelName()));
         }
         if (StringUtils.hasText(dto.getLocationCode())) {
-            builder.and(isEq(tradeBoardEntity.location().locationCode, dto.getLocationCode()));
+            builder.and(isStringEq(tradeBoardEntity.location().locationCode, dto.getLocationCode()));
         }
         builder.and(isNumberBetween(tradeBoardEntity.mileage, dto.getMinMileage(), dto.getMaxMileage()));
         builder.and(isNumberBetween(tradeBoardEntity.price, dto.getMinPrice(), dto.getMaxPrice()));
         builder.and(isNumberBetween(tradeBoardEntity.year, dto.getMinYear(), dto.getMaxYear()));
         builder.and(isNumberBetween(tradeBoardEntity.cc, dto.getMinCc(), dto.getMaxCc()));
         if (dto.getHideComplete().equals("Y")) {
-            builder.and(tradeBoardEntity.status.ne(TradeStatus.COMPLETED));
+            builder.and(isEnumNe(tradeBoardEntity.status, TradeStatus.COMPLETED));
         }
         return builder;
     }
