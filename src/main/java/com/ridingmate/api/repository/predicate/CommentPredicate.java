@@ -12,7 +12,7 @@ public class CommentPredicate extends CommonPredicate {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(commentEntity.board().eq(board));
         if (parentCommentId != null) {
-            builder.and(isNumberEq(commentEntity.parentCommentIdx, parentCommentId));
+            builder.and(isEq(commentEntity.parentCommentIdx, parentCommentId));
         } else {
             builder.and(isNull(commentEntity.parentCommentIdx));
         }
