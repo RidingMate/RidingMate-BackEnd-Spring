@@ -8,6 +8,7 @@ import com.ridingmate.api.entity.MaintenanceEntity;
 import com.ridingmate.api.payload.user.dto.BikeDto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -31,7 +32,7 @@ public class MaintenanceResponse {
     private String area;
 
     @ApiModelProperty(value = "정비 날짜")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfMaintenance;
 
     @ApiModelProperty(value = "정비 항목")

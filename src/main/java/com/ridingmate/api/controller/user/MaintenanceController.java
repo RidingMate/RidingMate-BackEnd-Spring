@@ -83,7 +83,7 @@ public class MaintenanceController {
         return maintenanceService.insertMaintenance(request, files);
     }
 
-    @PutMapping("/update")
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value="정비 기록 수정")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
@@ -91,7 +91,7 @@ public class MaintenanceController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> updateMaintenance(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody @Valid MaintenanceUpdateRequest request,
+            @ModelAttribute @Valid MaintenanceUpdateRequest request,
             @RequestPart(required = false) List<MultipartFile> files){
 
         return maintenanceService.updateMaintenance(request, files);
