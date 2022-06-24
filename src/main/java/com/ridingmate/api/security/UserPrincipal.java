@@ -8,13 +8,15 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 @Getter
 @Setter
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails, OAuth2User {
 
     private long idx;
     private String userId;
@@ -25,6 +27,8 @@ public class UserPrincipal implements UserDetails {
     private boolean enabled;
 
     private UserEntity user;
+
+    private Map<String, Object> attributes;
 
     public UserPrincipal(long idx, String userId, String password, String uuid, String authority, UserEntity user) {
         this.idx = idx;
@@ -40,6 +44,11 @@ public class UserPrincipal implements UserDetails {
         this.userId = userId;
         this.password = password;
         this.authority = authority;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     @Override
@@ -88,5 +97,10 @@ public class UserPrincipal implements UserDetails {
                 user.getRole().toString(),
                 user
         );
+    }
+
+    @Override
+    public String getName() {
+        return userId;
     }
 }
