@@ -10,9 +10,14 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /*
     정비 관련 컨트롤러 등록 컨트롤러
@@ -65,7 +70,7 @@ public class MaintenanceController {
         return maintenanceService.getMaintenanceDetail(bike_idx,maintenance_idx);
     }
 
-    @PostMapping("/insert")
+    @PostMapping(value = "/insert", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value="정비 기록 등록")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
@@ -73,8 +78,9 @@ public class MaintenanceController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> insertMaintenance(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody MaintenanceInsertRequest request){
-        return maintenanceService.insertMaintenance(request);
+            @ModelAttribute @Valid MaintenanceInsertRequest request,
+            @RequestPart(required = false) List<MultipartFile> files){
+        return maintenanceService.insertMaintenance(request, files);
     }
 
     @PutMapping("/update")
@@ -85,9 +91,10 @@ public class MaintenanceController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> updateMaintenance(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody MaintenanceUpdateRequest request){
+            @RequestBody @Valid MaintenanceUpdateRequest request,
+            @RequestPart(required = false) List<MultipartFile> files){
 
-        return maintenanceService.updateMaintenance(request);
+        return maintenanceService.updateMaintenance(request, files);
     }
 
     @DeleteMapping("/delete/{bike_idx}/{maintenance_idx}")
