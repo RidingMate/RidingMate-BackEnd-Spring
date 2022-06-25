@@ -65,12 +65,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private Authentication getAuthentication(JwtDto dto) {
-        UserDetails userDetails = null;
-        if (dto.isSocialUser()) {
-            // TODO : 소셜 로그인 로직
-        } else {
-            userDetails = userDetailsService.loadUserByUsername(dto.getSubject());
-        }
+        UserDetails userDetails = userDetailsService.loadUserByUsername(dto.getSubject());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 

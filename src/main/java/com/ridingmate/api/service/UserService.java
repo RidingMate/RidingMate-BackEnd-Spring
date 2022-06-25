@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.NormalUserEntity;
-import com.ridingmate.api.entity.SocialUserEntity;
 import com.ridingmate.api.entity.value.UserRole;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.AuthResponse;
@@ -42,16 +41,6 @@ public class UserService {
     }
 
     @Transactional
-    public AuthResponse socialJoin() {
-
-        // TODO : 중복 체크
-
-        SocialUserEntity socialUser = userRepository.save(SocialUserEntity.builder().build());
-        String token = getUserToken(socialUser.getOAuth2Code(), socialUser.getIdx(), true);
-        return new AuthResponse(token);
-    }
-
-    @Transactional
     public AuthResponse normalLogin(NormalUserDto.Request.Login request) {
         NormalUserEntity normalUser = userRepository.findByUserId(request.getUserId()).orElseThrow(()
                 -> new CustomException(ResponseCode.NOT_FOUND_USER));
@@ -59,14 +48,6 @@ public class UserService {
             throw new CustomException(ResponseCode.NOT_MATCH_USER_INFO);
         }
         return new AuthResponse(getUserToken(normalUser.getUserId(), normalUser.getIdx(), false));
-    }
-
-    @Transactional
-    public AuthResponse socialLogin() {
-        // TODO : 소셜유저 조회
-
-        String token = null;
-        return new AuthResponse(token);
     }
 
     private String getUserToken(String userId, Long userIdx, Boolean isSocialUser) {

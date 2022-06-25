@@ -40,14 +40,6 @@ public class UserController {
                           .build();
     }
 
-    @PostMapping("/social/join")
-    @ApiOperation("소셜 회원가입")
-    public ResponseDto<AuthResponse> socialJoin() {
-        return ResponseDto.<AuthResponse>builder()
-                          .response(userService.socialJoin())
-                          .build();
-    }
-
     @SneakyThrows
     @PostMapping("/normal/login")
     @ApiOperation("일반유저(아이디, 패스워드) 로그인")
@@ -60,14 +52,6 @@ public class UserController {
         }
         return ResponseDto.<AuthResponse>builder()
                           .response(userService.normalLogin(request))
-                          .build();
-    }
-
-    @PostMapping("/social/login")
-    @ApiOperation("소셜 로그인")
-    public ResponseDto<AuthResponse> socialLogin() {
-        return ResponseDto.<AuthResponse>builder()
-                          .response(userService.socialLogin())
                           .build();
     }
 }
