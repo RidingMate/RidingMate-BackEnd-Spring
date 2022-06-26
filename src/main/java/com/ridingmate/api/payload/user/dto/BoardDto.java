@@ -189,6 +189,15 @@ public class BoardDto {
             @ApiModelProperty(value = "공지사항 게시글 제목", required = true)
             private String title;
         }
+
+        @Data
+        @ApiModel(description = "공지사항 수정 dto")
+        public static class NoticeUpdate {
+            @ApiModelProperty("게시글 번호")
+            private Long boardId;
+            @ApiModelProperty("공지사항 게시글 제목")
+            private String title;
+        }
     }
 
     public static class Response {

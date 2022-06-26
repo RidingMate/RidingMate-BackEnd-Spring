@@ -21,4 +21,7 @@ public class NoticeBoardEntity extends BoardEntity {
         createBoardEntity(title, user);
     }
 
+    public void updateInfo(String title) {
+        updateBoard(title);
+    }
 }

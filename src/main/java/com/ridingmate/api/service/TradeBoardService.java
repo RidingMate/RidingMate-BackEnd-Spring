@@ -1,6 +1,5 @@
 package com.ridingmate.api.service;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -14,7 +13,6 @@ import org.springframework.util.StringUtils;
 import com.querydsl.core.types.Predicate;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BikeEntity;
-import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.CommentEntity;
 import com.ridingmate.api.entity.FileEntity;
 import com.ridingmate.api.entity.LocationEntity;
@@ -29,6 +27,7 @@ import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Response;
+import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
 import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.CommentRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
@@ -53,10 +52,9 @@ public class TradeBoardService {
     }
 
     private TradeBoardEntity getBoardContent(Long boardId) {
-        BoardEntity board = tradeBoardRepository.findById(boardId).orElseThrow(() ->
-                                                                                       new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        TradeBoardEntity board = tradeBoardRepository.findById(boardId).orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
         board.increaseHitCount();
-        return (TradeBoardEntity) board;
+        return board;
     }
 
     /**
@@ -112,9 +110,13 @@ public class TradeBoardService {
      * @param dto 수정 정보
      */
     @Transactional
-    public void updateBoardContent(BoardDto.Request.TradeUpdate dto) {
+    public void updateBoardContent(BoardDto.Request.TradeUpdate dto, UserEntity user) {
         if (!dto.getFiles().isEmpty()) {
-
+            try {
+                fileService.uploadMultipleFile(dto.getFiles(), user);
+            } catch (Exception e) {
+                throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
+            }
         }
     }
 
@@ -140,7 +142,7 @@ public class TradeBoardService {
         Page<Response.Info> comments = commentRepository.findAll(CommentPredicate.getComment(board, null),
                                                                  PageRequest.of(0, 7, Sort.by("createAt")
                                                                                           .descending()))
-                                                        .map(comment -> Response.Info.of(comment));
+                                                        .map(Info::of);
         return TradeInfo.of(board, comments, userIdx);
     }
 

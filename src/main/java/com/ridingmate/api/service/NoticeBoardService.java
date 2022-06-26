@@ -7,11 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.querydsl.core.types.Predicate;
 import com.ridingmate.api.consts.ResponseCode;
-import com.ridingmate.api.entity.BoardEntity;
 import com.ridingmate.api.entity.NoticeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.BoardDto.Request.NoticeUpdate;
 import com.ridingmate.api.payload.user.dto.BoardDto.Response.NoticeInfo;
 import com.ridingmate.api.payload.user.dto.BoardDto.Response.NoticeList;
 import com.ridingmate.api.repository.NoticeBoardRepository;
@@ -26,7 +26,10 @@ public class NoticeBoardService {
     private final NoticeBoardRepository noticeBoardRepository;
 
     @Transactional
-    public void updateBoardContent(BoardEntity board) {
+    public void updateBoardContent(NoticeUpdate dto) {
+        NoticeBoardEntity noticeBoard = noticeBoardRepository.findById(dto.getBoardId()).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        noticeBoard.updateInfo(dto.getTitle());
     }
 
     private Page<NoticeBoardEntity> getBoardList(Predicate predicate, Pageable page) {
@@ -45,10 +48,10 @@ public class NoticeBoardService {
     }
 
     private NoticeBoardEntity getBoardContent(Long boardId) {
-        BoardEntity board = noticeBoardRepository.findById(boardId).orElseThrow(() ->
+        NoticeBoardEntity board = noticeBoardRepository.findById(boardId).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BOARD));
         board.increaseHitCount();
-        return (NoticeBoardEntity) board;
+        return board;
     }
 
     @Transactional
