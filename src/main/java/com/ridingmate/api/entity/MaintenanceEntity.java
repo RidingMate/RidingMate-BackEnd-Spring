@@ -87,7 +87,12 @@ public class MaintenanceEntity extends BaseTime {
         this.dateOfMaintenance = request.getDateOfMaintenance();
         this.location = request.getLocation();
         this.amount = request.getAmount();
+        this.content = request.getContent();
 
+    }
+
+    public void setFileEntities(List<FileEntity> files){
+        this.fileEntities = files;
     }
 
 }

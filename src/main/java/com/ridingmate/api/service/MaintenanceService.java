@@ -23,12 +23,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,9 +35,6 @@ public class MaintenanceService {
     private final BikeRepository bikeRepository;
     private final AuthService authService;
     private final FileService fileService;
-
-    private final FileNameGenerator fileNameGenerator;
-
 
     @Transactional
     public MaintenanceCalcByYearResponse getMaintenanceList(Long bike_idx, int year) {
@@ -85,6 +78,7 @@ public class MaintenanceService {
         return new MaintenanceResponse().convertEntityToResponse(maintenanceEntity);
     }
 
+
     @Transactional
     public ResponseEntity<ApiResponse> insertMaintenance(MaintenanceInsertRequest request, List<MultipartFile> files) {
         UserEntity user = authService.getUserEntityByAuthentication();
@@ -95,15 +89,25 @@ public class MaintenanceService {
         bike.countUpMaintenance();
 
         MaintenanceEntity maintenanceEntity = MaintenanceEntity.createMaintenance(request, bike);
-
-        maintenanceRepository.save(maintenanceEntity);
+        MaintenanceEntity savedMaintenance = maintenanceRepository.save(maintenanceEntity);
 
         if (!files.isEmpty()) {
-            uploadMultiPartFilesToMaintenanceEntity(files,maintenanceEntity,user);
+            try {
+                List<FileEntity> fileEntities = fileService.uploadMultipleFile(files, user);
+                savedMaintenance.setFileEntities(fileEntities);
+                for (FileEntity file : fileEntities) {
+                    file.connectMaintenance(savedMaintenance);
+                }
+            } catch (Exception e) {
+                throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
+            }
         }
+
+        System.out.println(savedMaintenance.getFileEntities());
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
+
 
     @Transactional
     public ResponseEntity<ApiResponse> updateMaintenance(MaintenanceUpdateRequest request, List<MultipartFile> files) {
@@ -115,14 +119,22 @@ public class MaintenanceService {
         MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(request.getIdx(), bike);
         maintenanceEntity.updateMaintenance(request);
 
-        maintenanceRepository.save(maintenanceEntity);
+        MaintenanceEntity updatedMaintenance = maintenanceRepository.save(maintenanceEntity);
 
         // 원래 사진 전체 삭제
-        fileService.deleteMultipleFileEntity(maintenanceEntity.getFileEntities());
+        fileService.deleteMultipleFileEntity(updatedMaintenance.getFileEntities());
 
         // 새로 들어온 사진 전체 추가
         if (!files.isEmpty()) {
-            uploadMultiPartFilesToMaintenanceEntity(files,maintenanceEntity,user);
+            try {
+                List<FileEntity> fileEntities = fileService.uploadMultipleFile(files, user);
+                updatedMaintenance.setFileEntities(fileEntities);
+                for (FileEntity file : fileEntities) {
+                    file.connectMaintenance(updatedMaintenance);
+                }
+            } catch (Exception e) {
+                throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
+            }
         }
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
@@ -146,14 +158,7 @@ public class MaintenanceService {
     }
 
     private void uploadMultiPartFilesToMaintenanceEntity(List<MultipartFile> files, MaintenanceEntity maintenance, UserEntity user) {
-        try {
-            List<FileEntity> fileEntities = fileService.uploadMultipleFile(files, user);
-            for (FileEntity file : fileEntities) {
-                file.connectMaintenance(maintenance);
-            }
-        } catch (Exception e) {
-            throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
-        }
+
     }
 
 }

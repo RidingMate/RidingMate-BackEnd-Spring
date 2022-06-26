@@ -6,12 +6,12 @@ import com.ridingmate.api.entity.FileEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Getter
 @Data
 public class MaintenanceInsertRequest {
 
@@ -25,7 +25,7 @@ public class MaintenanceInsertRequest {
     private String area;
 
     @ApiModelProperty(value = "정비 날짜", required = true)
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfMaintenance;
 
     @ApiModelProperty(value = "정비 위치", required = true)
@@ -36,6 +36,6 @@ public class MaintenanceInsertRequest {
 
     // TODO : 사진 기록해야함 -> 멀티파트를 이용한 썸네일 저장
 
-    @ApiModelProperty(value = "제목")
+    @ApiModelProperty(value = "내용")
     private String content;
 }
