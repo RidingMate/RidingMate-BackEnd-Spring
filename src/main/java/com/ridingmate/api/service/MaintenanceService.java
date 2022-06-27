@@ -6,18 +6,16 @@ import com.ridingmate.api.entity.FileEntity;
 import com.ridingmate.api.entity.MaintenanceEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
-import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.user.dto.BikeDto;
-import com.ridingmate.api.payload.user.request.MaintenanceInsertRequest;
-import com.ridingmate.api.payload.user.request.MaintenanceUpdateRequest;
-import com.ridingmate.api.payload.user.response.MaintenanceCalcByYearResponse;
-import com.ridingmate.api.payload.user.response.MaintenanceResponse;
+import com.ridingmate.api.payload.user.dto.MaintenanceDto.Response.MaintenanceResponse;
+import com.ridingmate.api.payload.user.dto.MaintenanceDto.Response.MaintenanceCalcByYearResponse;
+import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceInsertRequest;
+import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceUpdateRequest;
 import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.MaintenanceRepository;
 import com.ridingmate.api.service.common.AuthService;
 import com.ridingmate.api.service.common.FileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +37,6 @@ public class MaintenanceService {
     public MaintenanceCalcByYearResponse getMaintenanceList(Long bike_idx, int year) {
         UserEntity user = authService.getUserEntityByAuthentication();
 
-        // bike idx와 user를 같이 검색
         BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx, user).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
@@ -50,7 +47,7 @@ public class MaintenanceService {
 
         List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBikeAndDateOfMaintenanceBetween(bike, startDate, endDate);
         List<MaintenanceResponse> maintenanceResponseList = maintenanceEntities.stream()
-                .map(maintenanceEntity -> new MaintenanceResponse().convertEntityToResponse(maintenanceEntity))
+                .map(MaintenanceResponse::convertEntityToResponse)
                 .collect(Collectors.toList());
 
         int totalAmount = maintenanceResponseList.stream()
@@ -74,12 +71,12 @@ public class MaintenanceService {
 
         MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx, bike);
 
-        return new MaintenanceResponse().convertEntityToResponse(maintenanceEntity);
+        return MaintenanceResponse.convertEntityToResponse(maintenanceEntity);
     }
 
 
     @Transactional
-    public ResponseEntity<ApiResponse> insertMaintenance(MaintenanceInsertRequest request) {
+    public void insertMaintenance(MaintenanceInsertRequest request) {
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bike = bikeRepository.findByIdxAndUser(request.getBike_idx(), user).orElseThrow(() ->
@@ -91,15 +88,13 @@ public class MaintenanceService {
         MaintenanceEntity savedMaintenance = maintenanceRepository.save(maintenanceEntity);
 
         if (!request.getFiles().isEmpty()) {
-            uploadMultipartFile(request.getFiles(),savedMaintenance,user);
+            uploadMultipartFile(request.getFiles(), savedMaintenance, user);
         }
-
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 
     @Transactional
-    public ResponseEntity<ApiResponse> updateMaintenance(MaintenanceUpdateRequest request) {
+    public void updateMaintenance(MaintenanceUpdateRequest request) {
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bike = bikeRepository.findByIdxAndUser(request.getBike_idx(), user).orElseThrow(() ->
@@ -111,27 +106,25 @@ public class MaintenanceService {
         MaintenanceEntity updatedMaintenance = maintenanceRepository.save(maintenanceEntity);
 
         // 프론트에서 삭제된 파일 이름 리스트 넘겨주면 그 이름 삭제
-        if (!request.getDeletedFileNameList().isEmpty()){
-           try {
-               for(String fileName: request.getDeletedFileNameList()){
-                   fileService.deleteFile(fileName);
-               }
-           } catch (Exception e){
-               throw new CustomException(ResponseCode.DONT_DELETE_S3_FILE);
+        if (!request.getDeletedFileNameList().isEmpty()) {
+            try {
+                for (String fileName : request.getDeletedFileNameList()) {
+                    fileService.deleteFile(fileName);
+                }
+            } catch (Exception e) {
+                throw new CustomException(ResponseCode.DONT_DELETE_S3_FILE);
 
-           }
+            }
         }
         // 새로 들어온 사진만 추가
         if (!request.getFiles().isEmpty()) {
-            uploadMultipartFile(request.getFiles(),updatedMaintenance,user);
+            uploadMultipartFile(request.getFiles(), updatedMaintenance, user);
         }
-
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 
     @Transactional
-    public ResponseEntity<ApiResponse> deleteMaintenance(Long bike_idx, Long maintenance_idx) {
+    public void deleteMaintenance(Long bike_idx, Long maintenance_idx) {
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx, user).orElseThrow(() ->
@@ -140,15 +133,12 @@ public class MaintenanceService {
         bike.countDownMaintenance();
 
         MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx, bike);
-
         maintenanceRepository.delete(maintenanceEntity);
-
-        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 
     @Transactional
-    void uploadMultipartFile(List<MultipartFile> files, MaintenanceEntity maintenance, UserEntity user){
+    void uploadMultipartFile(List<MultipartFile> files, MaintenanceEntity maintenance, UserEntity user) {
         try {
             List<FileEntity> fileEntities = fileService.uploadMultipleFile(files, user);
             for (FileEntity file : fileEntities) {

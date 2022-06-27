@@ -1,9 +1,7 @@
 package com.ridingmate.api.entity;
 
-import com.ridingmate.api.entity.value.BikeRole;
-import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
-import com.ridingmate.api.payload.user.request.MaintenanceInsertRequest;
-import com.ridingmate.api.payload.user.request.MaintenanceUpdateRequest;
+import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceInsertRequest;
+import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceUpdateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,7 +35,7 @@ public class MaintenanceEntity extends BaseTime {
     private Long idx;
 
     // 제목
-    @Column(name="title", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
     // 서비스센터 /기관명
@@ -64,10 +62,10 @@ public class MaintenanceEntity extends BaseTime {
     private List<FileEntity> fileEntities = new ArrayList<>();
 
     // 상세내용
-    @Column(name="content")
+    @Column(name = "content")
     private String content;
 
-    public static MaintenanceEntity createMaintenance(MaintenanceInsertRequest request, BikeEntity bike){
+    public static MaintenanceEntity createMaintenance(MaintenanceInsertRequest request, BikeEntity bike) {
 
         return MaintenanceEntity.builder()
                 .title(request.getTitle())
@@ -80,7 +78,7 @@ public class MaintenanceEntity extends BaseTime {
                 .build();
     }
 
-    public void updateMaintenance(MaintenanceUpdateRequest request){
+    public void updateMaintenance(MaintenanceUpdateRequest request) {
         this.title = request.getTitle();
         this.area = request.getArea();
         this.dateOfMaintenance = request.getDateOfMaintenance();
@@ -88,10 +86,6 @@ public class MaintenanceEntity extends BaseTime {
         this.amount = request.getAmount();
         this.content = request.getContent();
 
-    }
-
-    public void setFileEntities(List<FileEntity> files){
-        this.fileEntities = files;
     }
 
 }
