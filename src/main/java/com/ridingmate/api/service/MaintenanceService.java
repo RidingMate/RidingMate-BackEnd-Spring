@@ -16,7 +16,6 @@ import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.MaintenanceRepository;
 import com.ridingmate.api.service.common.AuthService;
 import com.ridingmate.api.service.common.FileService;
-import com.ridingmate.api.util.FileNameGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -80,7 +79,7 @@ public class MaintenanceService {
 
 
     @Transactional
-    public ResponseEntity<ApiResponse> insertMaintenance(MaintenanceInsertRequest request, List<MultipartFile> files) {
+    public ResponseEntity<ApiResponse> insertMaintenance(MaintenanceInsertRequest request) {
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bike = bikeRepository.findByIdxAndUser(request.getBike_idx(), user).orElseThrow(() ->
@@ -91,26 +90,16 @@ public class MaintenanceService {
         MaintenanceEntity maintenanceEntity = MaintenanceEntity.createMaintenance(request, bike);
         MaintenanceEntity savedMaintenance = maintenanceRepository.save(maintenanceEntity);
 
-        if (!files.isEmpty()) {
-            try {
-                List<FileEntity> fileEntities = fileService.uploadMultipleFile(files, user);
-                savedMaintenance.setFileEntities(fileEntities);
-                for (FileEntity file : fileEntities) {
-                    file.connectMaintenance(savedMaintenance);
-                }
-            } catch (Exception e) {
-                throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
-            }
+        if (!request.getFiles().isEmpty()) {
+            uploadMultipartFile(request.getFiles(),savedMaintenance,user);
         }
-
-        System.out.println(savedMaintenance.getFileEntities());
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 
     @Transactional
-    public ResponseEntity<ApiResponse> updateMaintenance(MaintenanceUpdateRequest request, List<MultipartFile> files) {
+    public ResponseEntity<ApiResponse> updateMaintenance(MaintenanceUpdateRequest request) {
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bike = bikeRepository.findByIdxAndUser(request.getBike_idx(), user).orElseThrow(() ->
@@ -121,20 +110,20 @@ public class MaintenanceService {
 
         MaintenanceEntity updatedMaintenance = maintenanceRepository.save(maintenanceEntity);
 
-        // 원래 사진 전체 삭제
-        fileService.deleteMultipleFileEntity(updatedMaintenance.getFileEntities());
+        // 프론트에서 삭제된 파일 이름 리스트 넘겨주면 그 이름 삭제
+        if (!request.getDeletedFileNameList().isEmpty()){
+           try {
+               for(String fileName: request.getDeletedFileNameList()){
+                   fileService.deleteFile(fileName);
+               }
+           } catch (Exception e){
+               throw new CustomException(ResponseCode.DONT_DELETE_S3_FILE);
 
-        // 새로 들어온 사진 전체 추가
-        if (!files.isEmpty()) {
-            try {
-                List<FileEntity> fileEntities = fileService.uploadMultipleFile(files, user);
-                updatedMaintenance.setFileEntities(fileEntities);
-                for (FileEntity file : fileEntities) {
-                    file.connectMaintenance(updatedMaintenance);
-                }
-            } catch (Exception e) {
-                throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
-            }
+           }
+        }
+        // 새로 들어온 사진만 추가
+        if (!request.getFiles().isEmpty()) {
+            uploadMultipartFile(request.getFiles(),updatedMaintenance,user);
         }
 
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
@@ -157,8 +146,17 @@ public class MaintenanceService {
         return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
-    private void uploadMultiPartFilesToMaintenanceEntity(List<MultipartFile> files, MaintenanceEntity maintenance, UserEntity user) {
 
+    @Transactional
+    void uploadMultipartFile(List<MultipartFile> files, MaintenanceEntity maintenance, UserEntity user){
+        try {
+            List<FileEntity> fileEntities = fileService.uploadMultipleFile(files, user);
+            for (FileEntity file : fileEntities) {
+                file.connectMaintenance(maintenance);
+            }
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
+        }
     }
 
 }

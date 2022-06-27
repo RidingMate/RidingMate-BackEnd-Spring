@@ -60,8 +60,7 @@ public class MaintenanceEntity extends BaseTime {
     @JoinColumn(name = "bike_id")
     private BikeEntity bike;
 
-    // TODO : 사진 기록해야함 -> 멀티파트를 이용한 썸네일 저장
-    @OneToMany(mappedBy = "maintenance")
+    @OneToMany(mappedBy = "maintenance", cascade = CascadeType.ALL)
     private List<FileEntity> fileEntities = new ArrayList<>();
 
     // 상세내용

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -50,7 +51,6 @@ public class MaintenanceController {
             @PathVariable("bike_idx") Long bike_idx,
             @PathVariable("year") int year
     ) {
-        // 연도별로 취합해서 보내줘야하는디 return 타입을 어케해야하나~~
         return maintenanceService.getMaintenanceList(bike_idx, year);
     }
 
@@ -78,12 +78,11 @@ public class MaintenanceController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> insertMaintenance(
             @RequestHeader(value = "Authorization") String token,
-            @ModelAttribute @Valid MaintenanceInsertRequest request,
-            @RequestPart(required = false) List<MultipartFile> files){
-        return maintenanceService.insertMaintenance(request, files);
+            @ModelAttribute @Valid MaintenanceInsertRequest request){
+        return maintenanceService.insertMaintenance(request);
     }
 
-    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value="정비 기록 수정")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
@@ -91,10 +90,8 @@ public class MaintenanceController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> updateMaintenance(
             @RequestHeader(value = "Authorization") String token,
-            @ModelAttribute @Valid MaintenanceUpdateRequest request,
-            @RequestPart(required = false) List<MultipartFile> files){
-
-        return maintenanceService.updateMaintenance(request, files);
+            @ModelAttribute @Valid MaintenanceUpdateRequest request){
+        return maintenanceService.updateMaintenance(request);
     }
 
     @DeleteMapping("/delete/{bike_idx}/{maintenance_idx}")

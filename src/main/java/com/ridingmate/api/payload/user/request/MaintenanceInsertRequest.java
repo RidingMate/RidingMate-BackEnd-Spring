@@ -1,15 +1,14 @@
 package com.ridingmate.api.payload.user.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ridingmate.api.entity.BikeEntity;
-import com.ridingmate.api.entity.FileEntity;
+
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -34,7 +33,8 @@ public class MaintenanceInsertRequest {
     @ApiModelProperty(value = "가격", required = true)
     private int amount;
 
-    // TODO : 사진 기록해야함 -> 멀티파트를 이용한 썸네일 저장
+    @ApiModelProperty(value = "사진")
+    private List<MultipartFile> files = new ArrayList<>();
 
     @ApiModelProperty(value = "내용")
     private String content;
