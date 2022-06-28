@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.springframework.data.domain.Page;
@@ -78,7 +79,8 @@ public class BoardDto {
 
             @ApiModelProperty("가격")
             @Min(value = 0, message = "가격은 0원 이상만 가능합니다.")
-            private int price;
+            @NotNull(message = "가격에는 null이 올 수 없습니다.")
+            private Integer price;
 
             @ApiModelProperty("업체명")
             private String company;
@@ -123,6 +125,20 @@ public class BoardDto {
 
             @ApiModelProperty("내 바이크 Idx")
             private Long bikeIdx;
+
+            public static TradeBoardEntity of(TradeInsert dto) {
+                return TradeBoardEntity.builder()
+                                       .company(dto.getCompany())
+                                       .modelName(dto.getModelName())
+                                       .fuelEfficiency(dto.getFuelEfficiency())
+                                       .cc(dto.getCc())
+                                       .year(dto.getYear())
+                                       .mileage(dto.getMileage())
+                                       .price(dto.getPrice())
+                                       .phoneNumber(dto.getPhoneNumber())
+                                       .isOpenToBuyer(dto.getIsOpenToBuyer())
+                                       .build();
+            }
         }
 
         @Data

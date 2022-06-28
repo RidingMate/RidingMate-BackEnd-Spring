@@ -20,6 +20,7 @@ import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.BoardDto.Request.TradeInsert;
 import com.ridingmate.api.payload.user.dto.BoardDto.Response.TradeInfo;
 import com.ridingmate.api.payload.user.dto.BoardDto.Response.TradeList;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
@@ -64,21 +65,11 @@ public class TradeBoardService {
      */
     @Transactional
     public void insertTradeBoardContent(BoardDto.Request.TradeInsert dto, UserEntity user) {
-        TradeBoardEntity tradeBoard = new TradeBoardEntity(
-                dto.getTitle(),
-                dto.getContent(),
-                dto.getCompany(),
-                dto.getModelName(),
-                dto.getFuelEfficiency(),
-                dto.getCc(),
-                dto.getYear(),
-                dto.getMileage(),
-                dto.getPrice(),
-                dto.getPhoneNumber(),
-                dto.getIsOpenToBuyer(),
-                dto.getPurchaseYear(),
-                dto.getPurchaseMonth(),
-                user);
+        TradeBoardEntity tradeBoard = TradeInsert.of(dto);
+        tradeBoard.setBoardInfo(dto.getTitle(), dto.getContent(), user);
+        tradeBoard.setDateOfPurchase(dto.getPurchaseYear(), dto.getPurchaseMonth());
+        tradeBoard.setForSaleStatus();
+
         // 내 바이크
         if (dto.getBikeIdx() != null) {
             BikeEntity myBike = bikeRepository.findById(dto.getBikeIdx()).orElseThrow(
