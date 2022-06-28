@@ -89,7 +89,7 @@ public class TradeBoardEntity extends BoardEntity {
                             LocationEntity location) {
         myBike = bike;
         this.location = location;
-        createBoardEntity(title, content, user);
+        setBoardInfo(title, content, user);
     }
 
     // 작성자 + 내용 + 지역 + 구매일자 + 연락처 + 공개여부 생성자
@@ -122,7 +122,12 @@ public class TradeBoardEntity extends BoardEntity {
             dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
         }
         status = TradeStatus.FOR_SALE;
-        createBoardEntity(title, content, user);
+        setBoardInfo(title, content, user);
+    }
+
+    // 판매중 상태
+    public void setForSaleStatus() {
+        status = TradeStatus.FOR_SALE;
     }
 
     // 예약중 상태
@@ -143,5 +148,11 @@ public class TradeBoardEntity extends BoardEntity {
     // 거래 지역 등록
     public void setLocation(LocationEntity location) {
         this.location = location;
+    }
+
+    public void setDateOfPurchase(Integer purchaseYear, Integer purchaseMonth) {
+        if (purchaseYear != null && purchaseMonth != null) {
+            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        }
     }
 }

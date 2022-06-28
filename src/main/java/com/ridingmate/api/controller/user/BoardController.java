@@ -1,6 +1,6 @@
 package com.ridingmate.api.controller.user;
 
-import static com.ridingmate.api.payload.user.dto.CommentDto.Response.*;
+import static com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
 
 import javax.validation.Valid;
 
@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,6 @@ import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
-import com.ridingmate.api.payload.user.dto.CommentDto.Response;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
@@ -62,7 +62,7 @@ import springfox.documentation.annotations.ApiIgnore;
     디테일 : 이미지, title, content, 거래지역, 연락처, 제조사, 모델, 연식, 구매일자, 누적주행거리, 가격, 댓글 , 주유/정비정보 표출
 
 
-    판매글작성 : 내 바이크 선택시 또는 직접입력이 존재하는데 이부분은 bikecontroller 쪽에서 처리하겠습니다.
+    판매글작성 : 내 바이크 선택시 또는 직접입력이 존재하는데 이부분은 bikeController 쪽에서 처리하겠습니다.
         제조사, 모델명, 연식, 주행거리, 구매일자, title, content, 연락처, 거래지역, 가격, 이미지 (최대 20), 주유/정비정보 공개 동의
 
    예약중, 판매완료 컬럼 필요함 -> 바이크 글 들어왔을때 글쓴 유저라면 상태 변경 가능하게 해야할것 같습니다.
@@ -124,7 +124,7 @@ public class BoardController {
     @ApiOperation("거래글 등록")
     public ResponseDto<?> insertTradeBoard(
             @RequestHeader("Authorization") String token,
-            @Valid BoardDto.Request.TradeInsert dto,
+            @Validated BoardDto.Request.TradeInsert dto,
             @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
     ) {
