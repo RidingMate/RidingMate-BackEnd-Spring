@@ -66,7 +66,7 @@ public class BoardDto {
             private int maxCc = 999999999;
 
             @ApiModelProperty("거래 완료 안보기 체크 Y / N")
-            @Pattern(regexp = "^[Y|N]{1}$", message = "Y와 N만 입력 가능합니다.")
+            @Pattern(regexp = "^[Y|N]$", message = "Y와 N만 입력 가능합니다.")
             private String hideComplete = "N";
         }
 
@@ -117,7 +117,7 @@ public class BoardDto {
             private String phoneNumber;
 
             @ApiModelProperty("구매자에게 주유/정비 정보 공개하기 Y/N")
-            @Pattern(regexp = "^[Y|N]{1}$", message = "Y와 N만 입력 가능합니다.")
+            @Pattern(regexp = "^[Y|N]$", message = "Y와 N만 입력 가능합니다.")
             private String isOpenToBuyer;
             
             @ApiModelProperty("거래글 파일")
@@ -191,7 +191,7 @@ public class BoardDto {
             private String phoneNumber;
 
             @ApiModelProperty("구매자에게 주유/정비 정보 공개하기 Y/N")
-            @Pattern(regexp = "^[Y|N]{1}$", message = "Y와 N만 입력 가능합니다.")
+            @Pattern(regexp = "^[Y|N]$", message = "Y와 N만 입력 가능합니다.")
             private String isOpenToBuyer;
 
             @ApiModelProperty("거래글 파일")
