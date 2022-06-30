@@ -224,4 +224,15 @@ public class TradeBoardService {
         tradeBoard.setCompletedStatus();
     }
 
+    /**
+     * 내가 작성한 거래글 리스트
+     * @param pageable  page
+     * @param user      현재 로그인된 유저
+     * @return          TradeList
+     */
+    public Page<TradeList> getMyTradeBoardList(Pageable pageable, UserEntity user) {
+        return tradeBoardRepository.findAll(BoardPredicate.myTradeBoardPredicate(user), pageable)
+                .map(TradeList::of);
+    }
+
 }

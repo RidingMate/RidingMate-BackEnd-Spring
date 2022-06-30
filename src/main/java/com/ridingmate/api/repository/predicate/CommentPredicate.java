@@ -5,6 +5,7 @@ import static com.ridingmate.api.entity.QCommentEntity.commentEntity;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.ridingmate.api.entity.BoardEntity;
+import com.ridingmate.api.entity.UserEntity;
 
 public class CommentPredicate extends CommonPredicate {
 
@@ -17,5 +18,9 @@ public class CommentPredicate extends CommonPredicate {
             builder.and(isNull(commentEntity.parentCommentIdx));
         }
         return builder;
+    }
+
+    public static Predicate getMyComment(UserEntity user) {
+        return commentEntity.user().eq(user);
     }
 }

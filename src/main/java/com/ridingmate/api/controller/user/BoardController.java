@@ -220,4 +220,20 @@ public class BoardController {
                           .responseCode(ResponseCode.SUCCESS)
                           .build();
     }
+
+    // TODO : 게시글 북마크
+
+    // TODO : 내가 쓴 글
+    @ApiOperation("내가 쓴 글 조회")
+    @GetMapping("/trade/list/my")
+    public ResponseDto<PageDto<TradeList>> getMyTradeBoardList(
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            Pageable pageable
+    ) {
+        return ResponseDto.<PageDto<TradeList>>builder()
+                          .response(new PageDto<>(tradeBoardService.getMyTradeBoardList(pageable, user.getUser())))
+                          .build();
+    }
+
+    // TODO : 댓글 단 글
 }
