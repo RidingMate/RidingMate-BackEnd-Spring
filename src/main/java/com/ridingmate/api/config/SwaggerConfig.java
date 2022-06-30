@@ -118,7 +118,7 @@ public class SwaggerConfig {
         // jwt authorization
         contexts.add(SecurityContext.builder()
                         .securityReferences(Collections.singletonList(
-                            new SecurityReference("JWT",
+                            new SecurityReference("JWT : Bearer <token>",
                                 new AuthorizationScope[] {
                                     new AuthorizationScope(
                                         "global",

@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
+import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.entity.value.TradeStatus;
 import com.ridingmate.api.payload.user.dto.BoardDto;
 
@@ -36,4 +37,9 @@ public class BoardPredicate extends CommonPredicate {
         BooleanBuilder builder = new BooleanBuilder();
         return builder;
     }
+
+    public static Predicate myTradeBoardPredicate(UserEntity user) {
+        return tradeBoardEntity.user().eq(user);
+    }
+
 }
