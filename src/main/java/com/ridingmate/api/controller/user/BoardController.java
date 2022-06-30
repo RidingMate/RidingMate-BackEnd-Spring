@@ -223,7 +223,6 @@ public class BoardController {
 
     // TODO : 게시글 북마크
 
-    // TODO : 내가 쓴 글
     @ApiOperation("내가 쓴 글 조회")
     @GetMapping("/trade/list/my")
     public ResponseDto<PageDto<TradeList>> getMyTradeBoardList(
@@ -231,9 +230,18 @@ public class BoardController {
             Pageable pageable
     ) {
         return ResponseDto.<PageDto<TradeList>>builder()
-                          .response(new PageDto<>(tradeBoardService.getMyTradeBoardList(pageable, user.getUser())))
+                          .response(new PageDto<>(tradeBoardService.getMyTradeBoardList(user.getUser(), pageable)))
                           .build();
     }
 
-    // TODO : 댓글 단 글
+    @ApiOperation("내가 댓글 단 글 조회")
+    @GetMapping("/trade/comment/my")
+    public ResponseDto<PageDto<TradeList>> getMyCommentBoardList(
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            Pageable pageable
+    ) {
+        return ResponseDto.<PageDto<TradeList>>builder()
+                          .response(new PageDto<>(tradeBoardService.getMyCommentBoardList(user.getUser(), pageable)))
+                          .build();
+    }
 }

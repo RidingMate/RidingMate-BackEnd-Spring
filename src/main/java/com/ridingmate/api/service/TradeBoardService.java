@@ -30,6 +30,7 @@ import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Response;
 import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
 import com.ridingmate.api.repository.BikeRepository;
+import com.ridingmate.api.repository.BoardCustomRepository;
 import com.ridingmate.api.repository.CommentRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
@@ -47,6 +48,7 @@ public class TradeBoardService {
     private final CommentRepository commentRepository;
     private final FileService fileService;
     private final BikeRepository bikeRepository;
+    private final BoardCustomRepository boardCustomRepository;
 
     private Page<TradeBoardEntity> getBoardList(Pageable pageable, Predicate predicate) {
         return tradeBoardRepository.findAll(predicate, pageable);
@@ -226,13 +228,18 @@ public class TradeBoardService {
 
     /**
      * 내가 작성한 거래글 리스트
-     * @param pageable  page
      * @param user      현재 로그인된 유저
+     * @param pageable  page
      * @return          TradeList
      */
-    public Page<TradeList> getMyTradeBoardList(Pageable pageable, UserEntity user) {
+    public Page<TradeList> getMyTradeBoardList(UserEntity user, Pageable pageable) {
         return tradeBoardRepository.findAll(BoardPredicate.myTradeBoardPredicate(user), pageable)
                 .map(TradeList::of);
+    }
+
+    public Page<TradeList> getMyCommentBoardList(UserEntity user, Pageable pageable) {
+        return boardCustomRepository.getMyCommentBoardList(user, pageable)
+                                    .map(board -> TradeList.of((TradeBoardEntity) board));
     }
 
 }
