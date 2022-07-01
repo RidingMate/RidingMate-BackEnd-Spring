@@ -301,12 +301,15 @@ public class BoardDto {
             @ApiModelProperty("내 게시글 여부")
             private Boolean isMyPost;
 
+            @ApiModelProperty("북마크 여부")
+            private Boolean isBookmark;
+
             @ApiModelProperty("파일 url")
             private List<String> files;
 
             private PageDto<CommentDto.Response.Info> comments;
 
-            public static TradeInfo of(TradeBoardEntity board, Page<CommentDto.Response.Info> comments, Long userIdx) {
+            public static TradeInfo of(TradeBoardEntity board, Page<CommentDto.Response.Info> comments, Long userIdx, Boolean isBookmark) {
                 return builder().boardId(board.getIdx())
                                 .title(board.getTitle())
                                 .company(board.getCompany())
@@ -322,6 +325,7 @@ public class BoardDto {
                                 .comments(new PageDto<>(comments))
                                 .isMyPost(board.getUser() != null && Objects.equals(board.getUser().getIdx(),
                                                                                     userIdx))
+                                .isBookmark(isBookmark)
                                 .files(board.getFiles().stream().map(FileEntity::getLocation)
                                             .collect(Collectors.toList()))
                                 .build();

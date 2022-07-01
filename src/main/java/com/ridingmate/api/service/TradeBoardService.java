@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 import com.querydsl.core.types.Predicate;
 import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.BikeEntity;
+import com.ridingmate.api.entity.BookmarkEntity;
 import com.ridingmate.api.entity.CommentEntity;
 import com.ridingmate.api.entity.FileEntity;
 import com.ridingmate.api.entity.LocationEntity;
@@ -31,6 +32,7 @@ import com.ridingmate.api.payload.user.dto.CommentDto.Response;
 import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
 import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.BoardCustomRepository;
+import com.ridingmate.api.repository.BookmarkRepository;
 import com.ridingmate.api.repository.CommentRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
@@ -49,6 +51,7 @@ public class TradeBoardService {
     private final FileService fileService;
     private final BikeRepository bikeRepository;
     private final BoardCustomRepository boardCustomRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     private Page<TradeBoardEntity> getBoardList(Pageable pageable, Predicate predicate) {
         return tradeBoardRepository.findAll(predicate, pageable);
@@ -125,18 +128,17 @@ public class TradeBoardService {
 
     /**
      * 거래글 상세 조회
-     * @param boardId 거래글 ID
-     * @param userIdx 현재 로그인된 유저 ID
-     * @return 거래글 상세
+     * @param boardId   거래글 ID
+     * @param user      현재 로그인된 유저
+     * @return          거래글 상세
      */
     @Transactional
-    public TradeInfo getTradeBoardContent(Long boardId, Long userIdx) {
+    public TradeInfo getTradeBoardContent(Long boardId, UserEntity user) {
         TradeBoardEntity board = getBoardContent(boardId);
         Page<Response.Info> comments = commentRepository.findAll(CommentPredicate.getComment(board, null),
                                                                  PageRequest.of(0, 7, Sort.by("createAt")
-                                                                                          .descending()))
-                                                        .map(Info::of);
-        return TradeInfo.of(board, comments, userIdx);
+                                                                                          .descending())).map(Info::of);
+        return TradeInfo.of(board, comments, user.getIdx(), bookmarkRepository.existsByBoardAndUser(board, user));
     }
 
     /**
@@ -237,9 +239,33 @@ public class TradeBoardService {
                 .map(TradeList::of);
     }
 
+    /**
+     * 내가 댓글 남긴 거래글 리스트
+     * @param user      현재 로그인된 유저
+     * @param pageable  page
+     * @return          TradeList
+     */
     public Page<TradeList> getMyCommentBoardList(UserEntity user, Pageable pageable) {
         return boardCustomRepository.getMyCommentBoardList(user, pageable)
                                     .map(board -> TradeList.of((TradeBoardEntity) board));
+    }
+
+    /**
+     * 북마크 등록, 제거<br>
+     * 북마크 있으면 해제, 없으면 등록
+     * @param boardId   선택한 거래글 ID
+     * @param user      현재 로그인된 사용자
+     */
+    @Transactional
+    public void switchBookmark(Long boardId, UserEntity user) {
+        TradeBoardEntity board = tradeBoardRepository.findById(boardId).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        bookmarkRepository.findByBoardAndUser(board, user).ifPresentOrElse(
+                bookmarkRepository::delete,
+                () -> bookmarkRepository.save(BookmarkEntity.builder()
+                                                            .board(board)
+                                                            .user(user)
+                                                            .build()));
     }
 
 }

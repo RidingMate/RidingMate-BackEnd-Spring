@@ -18,7 +18,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import com.ridingmate.api.entity.value.UserRole;
@@ -72,10 +71,13 @@ public abstract class UserEntity extends BaseTime {
     @OneToMany(mappedBy = "user")
     private List<CommentEntity> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<BookmarkEntity> bookmarks = new ArrayList<>();
+
 
     // 비즈니스 로직
     public void createUserEntity(String nickname, UserRole role) {
-        this.userUuid = UUID.randomUUID().toString();
+        userUuid = UUID.randomUUID().toString();
         this.nickname = nickname;
         this.role = role;
     }
