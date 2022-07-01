@@ -156,7 +156,7 @@ public class BoardController {
             throw new CustomException(ResponseCode.INVALID_TOKEN);
         }
         return ResponseDto.<TradeInfo>builder()
-                .response(tradeBoardService.getTradeBoardContent(boardId, user.getIdx()))
+                .response(tradeBoardService.getTradeBoardContent(boardId, user.getUser()))
                 .build();
     }
 
@@ -221,8 +221,6 @@ public class BoardController {
                           .build();
     }
 
-    // TODO : 게시글 북마크
-
     @ApiOperation("내가 쓴 글 조회")
     @GetMapping("/trade/list/my")
     public ResponseDto<PageDto<TradeList>> getMyTradeBoardList(
@@ -242,6 +240,18 @@ public class BoardController {
     ) {
         return ResponseDto.<PageDto<TradeList>>builder()
                           .response(new PageDto<>(tradeBoardService.getMyCommentBoardList(user.getUser(), pageable)))
+                          .build();
+    }
+
+    @ApiOperation("북마크 등록, 제거")
+    @PostMapping("/trade/bookmark/{boardId}")
+    public ResponseDto<?> switchBookmark(
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            @PathVariable Long boardId
+    ) {
+        tradeBoardService.switchBookmark(boardId, user.getUser());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
                           .build();
     }
 }
