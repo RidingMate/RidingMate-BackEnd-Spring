@@ -30,6 +30,7 @@ import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
+import com.ridingmate.api.payload.user.dto.ScrollPageDto;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
@@ -100,6 +101,22 @@ public class BoardController {
         }
         return ResponseDto.<PageDto<TradeList>>builder()
                           .response(new PageDto<>(tradeBoardService.getTradeBoardList(pageable, dto)))
+                          .build();
+    }
+
+    @SneakyThrows
+    @GetMapping("/trade/list/scroll")
+    @ApiOperation("거래글 리스트 무한 스크롤 조회")
+    public ResponseDto<ScrollPageDto<TradeList>> getTradeBoardListInfinityScroll(
+            @Valid BoardDto.Request.TradeList dto,
+            Pageable pageable,
+            BindingResult result
+    ) {
+        if (result.hasErrors()) {
+            throw new BindException(result);
+        }
+        return ResponseDto.<ScrollPageDto<TradeList>>builder()
+                          .response(new ScrollPageDto<>(tradeBoardService.getTradeBoardSlice(pageable, dto)))
                           .build();
     }
 

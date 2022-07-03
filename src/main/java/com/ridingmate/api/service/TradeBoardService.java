@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,7 +54,11 @@ public class TradeBoardService {
     private final BoardCustomRepository boardCustomRepository;
     private final BookmarkRepository bookmarkRepository;
 
-    private Page<TradeBoardEntity> getBoardList(Pageable pageable, Predicate predicate) {
+    private Page<TradeBoardEntity> getBoardListPage(Pageable pageable, Predicate predicate) {
+        return tradeBoardRepository.findAll(predicate, pageable);
+    }
+
+    private Slice<TradeBoardEntity> getBoardListSlice(Pageable pageable, Predicate predicate) {
         return tradeBoardRepository.findAll(predicate, pageable);
     }
 
@@ -123,7 +128,11 @@ public class TradeBoardService {
      * @return 거래글 리스트
      */
     public Page<TradeList> getTradeBoardList(Pageable pageable, BoardDto.Request.TradeList dto) {
-        return getBoardList(pageable, BoardPredicate.tradeBoardPredicate(dto)).map(TradeList::of);
+        return getBoardListPage(pageable, BoardPredicate.tradeBoardPredicate(dto)).map(TradeList::of);
+    }
+
+    public Slice<TradeList> getTradeBoardSlice(Pageable pageable, BoardDto.Request.TradeList dto) {
+        return getBoardListSlice(pageable, BoardPredicate.tradeBoardPredicate(dto)).map(TradeList::of);
     }
 
     /**
