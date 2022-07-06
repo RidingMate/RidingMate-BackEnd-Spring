@@ -8,11 +8,13 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ridingmate.api.consts.SocialType;
 import com.ridingmate.api.entity.SocialUserEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.repository.UserRepository;
+import com.ridingmate.api.repository.predicate.UserPredicate;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +65,19 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
-    private UserEntity saveOrUpdate() {
-        return null;
+    private SocialUserEntity saveOrUpdate(OAuth2UserInfo oAuth2UserInfo) {
+        SocialUserEntity user =
+                (SocialUserEntity) userRepository.findOne(UserPredicate.isEqualOAuth2Code(oAuth2UserInfo.getId())).get();
+        if (user != null) {
+            // 수정되는 내용 추가
+            userRepository.save(user);
+        } else {
+            // 소셜유저 신규 등록
+            user = SocialUserEntity.builder()
+                                                    .oAuth2Code(oAuth2UserInfo.getId())
+                                                    .build();
+            userRepository.save(user);
+        }
+        return user;
     }
 }
