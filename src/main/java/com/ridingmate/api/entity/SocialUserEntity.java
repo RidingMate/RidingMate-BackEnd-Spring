@@ -25,7 +25,7 @@ public class SocialUserEntity extends UserEntity {
     private SocialType socialType;
 
     // 소셜 리소스 서버에서 넘겨주는 식별자
-    @Column(name = "oAuth2_code")
+    @Column(name = "o_auth2_code")
     private String oAuth2Code;
 
 }

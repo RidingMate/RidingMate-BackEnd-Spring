@@ -1,8 +1,10 @@
 package com.ridingmate.api.security;
 
 import com.ridingmate.api.entity.NormalUserEntity;
+import com.ridingmate.api.entity.SocialUserEntity;
 import com.ridingmate.api.entity.UserEntity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,6 +18,7 @@ import java.util.Map;
 
 @Getter
 @Setter
+@Builder
 public class UserPrincipal implements UserDetails, OAuth2User {
 
     private long idx;
@@ -53,7 +56,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        ArrayList<GrantedAuthority> auth = new ArrayList<GrantedAuthority>();
+        ArrayList<GrantedAuthority> auth = new ArrayList<>();
         auth.add(new SimpleGrantedAuthority(authority));
         return auth;
     }
@@ -97,6 +100,15 @@ public class UserPrincipal implements UserDetails, OAuth2User {
                 user.getRole().toString(),
                 user
         );
+    }
+
+    public static UserPrincipal create(SocialUserEntity user) {
+        return builder()
+                .idx(user.getIdx())
+                .uuid(user.getUserUuid())
+                .authority(user.getRole().toString())
+                .user(user)
+                .build();
     }
 
     @Override
