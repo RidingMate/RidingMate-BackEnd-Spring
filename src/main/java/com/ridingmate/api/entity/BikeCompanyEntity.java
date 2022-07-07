@@ -1,6 +1,6 @@
 package com.ridingmate.api.entity;
 
-import com.ridingmate.api.payload.user.dto.BikeSearchDto;
+import com.ridingmate.api.payload.user.dto.BikeDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,8 +45,8 @@ public class BikeCompanyEntity {
         return bikeCompany;
     }
 
-    public BikeSearchDto getBikeCompanyDto(){
-        return BikeSearchDto.builder()
+    public BikeDto.Request.BikeSearch getBikeCompanyDto(){
+        return BikeDto.Request.BikeSearch.builder()
                 .content(company)
                 .build();
     }

@@ -1,6 +1,6 @@
 package com.ridingmate.api.entity;
 
-import com.ridingmate.api.payload.user.request.AddFuelRequest;
+import com.ridingmate.api.payload.user.dto.FuelDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -72,7 +72,7 @@ public class FuelEntity extends BaseTime {
     private BikeEntity bike;
 
 
-    public FuelEntity createEntity(BikeEntity bikeEntity, AddFuelRequest addFuelRequest){
+    public FuelEntity createEntity(BikeEntity bikeEntity, FuelDto.Request.AddFuel addFuelRequest){
         this.previousMileage = bikeEntity.getMileage();
         this.recentMileage = addFuelRequest.getMileage();
         this.fuelVolume = addFuelRequest.getFuelVolume();

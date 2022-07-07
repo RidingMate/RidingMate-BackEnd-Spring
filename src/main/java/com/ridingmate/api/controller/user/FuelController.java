@@ -1,22 +1,14 @@
 package com.ridingmate.api.controller.user;
 
-import com.ridingmate.api.payload.common.ApiResponse;
 import com.ridingmate.api.payload.common.ResponseDto;
-import com.ridingmate.api.payload.user.dto.BikeSearchDto;
-import com.ridingmate.api.payload.user.request.AddFuelRequest;
-import com.ridingmate.api.payload.user.response.FuelListResponse;
-import com.ridingmate.api.payload.user.response.MyBikeResponse;
-import com.ridingmate.api.service.BikeService;
+import com.ridingmate.api.payload.user.dto.FuelDto;
 import com.ridingmate.api.service.FuelService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /*
     연비 관련 컨트롤러 등록 컨트롤러
@@ -43,11 +35,11 @@ public class FuelController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseDto<FuelListResponse> myBikeFuelList(
+    public ResponseDto<FuelDto.Response.FuelList> myBikeFuelList(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("bike_idx") Long bike_idx
     ){
-        return ResponseDto.<FuelListResponse>builder()
+        return ResponseDto.<FuelDto.Response.FuelList>builder()
                 .response(fuelService.list(bike_idx))
                 .build();
 //        return fuelService.list(bike_idx);
@@ -61,7 +53,7 @@ public class FuelController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto myBikeFuelList(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody AddFuelRequest addFuelRequest
+            @RequestBody FuelDto.Request.AddFuel addFuelRequest
             ){
         fuelService.addFuel(addFuelRequest);
         return ResponseDto.builder().build();

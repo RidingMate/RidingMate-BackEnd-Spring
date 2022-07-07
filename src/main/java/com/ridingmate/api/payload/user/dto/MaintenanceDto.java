@@ -154,7 +154,7 @@ public class MaintenanceDto {
             private int totalAmount;
 
             @ApiModelProperty(value = "내 바이크 Dto")
-            private BikeDto bikeDto;
+            private BikeDto.Request.BikeInfo bikeDto;
         }
 
     }

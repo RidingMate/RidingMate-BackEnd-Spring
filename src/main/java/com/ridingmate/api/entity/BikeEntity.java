@@ -1,8 +1,7 @@
 package com.ridingmate.api.entity;
 
 import com.ridingmate.api.entity.value.BikeRole;
-import com.ridingmate.api.payload.user.request.BikeInsertRequest;
-import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
+import com.ridingmate.api.payload.user.dto.BikeDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +12,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +95,7 @@ public class BikeEntity extends BaseTime{
 
 
     //바이크 등록
-    public BikeEntity createBike(UserEntity userEntity, BikeRole bikeRole, BikeInsertRequest request){
+    public BikeEntity createBike(UserEntity userEntity, BikeRole bikeRole, BikeDto.Request.BikeInsert request){
 
         //바이크 별명을 입력하지 않았을 경우
         String nickname = null;
@@ -122,7 +120,7 @@ public class BikeEntity extends BaseTime{
     }
 
     //바이크 업데이트
-    public void updateBike(BikeUpdateRequest request, BikeRole bikeRole){
+    public void updateBike(BikeDto.Request.BikeUpdate request, BikeRole bikeRole){
         this.company = request.getCompany();
         this.model = request.getModel();
         this.year = request.getYear();
