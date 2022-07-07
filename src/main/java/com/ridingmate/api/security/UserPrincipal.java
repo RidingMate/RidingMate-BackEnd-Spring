@@ -1,27 +1,27 @@
 package com.ridingmate.api.security;
 
-import com.ridingmate.api.entity.NormalUserEntity;
-import com.ridingmate.api.entity.SocialUserEntity;
-import com.ridingmate.api.entity.UserEntity;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+import com.ridingmate.api.entity.NormalUserEntity;
+import com.ridingmate.api.entity.SocialUserEntity;
+import com.ridingmate.api.entity.UserEntity;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 public class UserPrincipal implements UserDetails, OAuth2User {
 
-    private long idx;
+    private static final long serialVersionUID = 6230446929653359457L;
+
     private String userId;
     private String password;
     private String username;
@@ -33,8 +33,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     private Map<String, Object> attributes;
 
-    public UserPrincipal(long idx, String userId, String password, String uuid, String authority, UserEntity user) {
-        this.idx = idx;
+    public UserPrincipal(String userId, String password, String uuid, String authority, UserEntity user) {
         this.userId = userId;
         this.password = password;
         this.uuid = uuid;
@@ -42,11 +41,17 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.user = user;
     }
 
-    public UserPrincipal(long idx, String userId, String password, String authority) {
-        this.idx = idx;
+    public UserPrincipal(String userId, String password, String authority) {
         this.userId = userId;
         this.password = password;
         this.authority = authority;
+    }
+
+    public UserPrincipal(String oAuth2Code, String authority, UserEntity user, Map<String, Object> attributes) {
+        userId = oAuth2Code;
+        this.authority = authority;
+        this.user = user;
+        this.attributes = attributes;
     }
 
     @Override
@@ -93,7 +98,6 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     public static UserPrincipal create(NormalUserEntity user) {
         return new UserPrincipal(
-                user.getIdx(),
                 user.getUserId(),
                 user.getPassword(),
                 user.getUserUuid(),
@@ -102,13 +106,8 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         );
     }
 
-    public static UserPrincipal create(SocialUserEntity user) {
-        return builder()
-                .idx(user.getIdx())
-                .uuid(user.getUserUuid())
-                .authority(user.getRole().toString())
-                .user(user)
-                .build();
+    public static UserPrincipal create(SocialUserEntity user, Map<String, Object> attributes) {
+        return new UserPrincipal(user.getOAuth2Code(), user.getRole().toString(), user, attributes);
     }
 
     @Override

@@ -228,10 +228,10 @@ public class TradeBoardService {
      * @param boardId 게시글 ID
      */
     @Transactional
-    public void setTradeStatusToComplete(Long boardId, Long userIdx) {
+    public void setTradeStatusToComplete(Long boardId, UserEntity user) {
         TradeBoardEntity tradeBoard = tradeBoardRepository.findById(boardId).orElseThrow(
                 () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
-        if (!tradeBoard.getUser().getIdx().equals(userIdx)) {
+        if (!tradeBoard.getUser().getIdx().equals(user.getIdx())) {
             throw new CustomException(ResponseCode.NOT_WRITER_OF_BOARD);
         }
         tradeBoard.setCompletedStatus();
