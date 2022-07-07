@@ -81,4 +81,12 @@ public abstract class UserEntity extends BaseTime {
         this.nickname = nickname;
         this.role = role;
     }
+
+    /**
+     * 유저 기본값 지정
+     */
+    public void createDefaultInfo() {
+        userUuid = UUID.randomUUID().toString();
+        role = UserRole.ROLE_USER;
+    }
 }

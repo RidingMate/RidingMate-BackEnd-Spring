@@ -232,7 +232,7 @@ public class BoardController {
             @ApiIgnore @CurrentUser UserPrincipal user,
             @PathVariable Long boardId
     ) {
-        tradeBoardService.setTradeStatusToComplete(boardId, user.getIdx());
+        tradeBoardService.setTradeStatusToComplete(boardId, user.getUser());
         return ResponseDto.builder()
                           .responseCode(ResponseCode.SUCCESS)
                           .build();
