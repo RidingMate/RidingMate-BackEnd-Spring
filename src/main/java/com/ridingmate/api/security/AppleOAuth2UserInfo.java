@@ -14,7 +14,8 @@ public class AppleOAuth2UserInfo extends OAuth2UserInfo {
     }
 
     @Override
-    public String getName() {
+    public String getImageUrl() {
         return null;
     }
+
 }
