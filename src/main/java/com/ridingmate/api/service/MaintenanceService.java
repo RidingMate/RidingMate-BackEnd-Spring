@@ -40,7 +40,7 @@ public class MaintenanceService {
         BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx, user).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
-        BikeDto bikeDto = BikeDto.convertEntityToDto(bike);
+        BikeDto.Request.BikeInfo bikeDto = BikeDto.Request.BikeInfo.convertEntityToDto(bike);
 
         LocalDate startDate = LocalDate.of(year, 1, 1);
         LocalDate endDate = LocalDate.of(year, 12, 31);

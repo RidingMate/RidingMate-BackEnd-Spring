@@ -5,14 +5,11 @@ import com.ridingmate.api.entity.BikeEntity;
 import com.ridingmate.api.entity.FuelEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
-import com.ridingmate.api.payload.common.ApiResponse;
-import com.ridingmate.api.payload.user.request.AddFuelRequest;
-import com.ridingmate.api.payload.user.response.FuelListResponse;
+import com.ridingmate.api.payload.user.dto.FuelDto;
 import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.FuelRepository;
 import com.ridingmate.api.service.common.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +32,7 @@ public class FuelService {
     private final BikeRepository bikeRepository;
 
     //연비 리스트
-    public FuelListResponse list(long bikeIdx){
+    public FuelDto.Response.FuelList list(long bikeIdx){
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
@@ -43,13 +40,13 @@ public class FuelService {
 
         List<FuelEntity> list = fuelRepository.findByBikeOrderByCreateAt(bikeEntity);
 
-        return new FuelListResponse().convertEntityToResponse(list, bikeEntity);
+        return FuelDto.Response.FuelList.convertEntityToResponse(list, bikeEntity);
     }
 
 
     //주유 기록 추가
    @Transactional
-    public void addFuel(AddFuelRequest addFuelRequest){
+    public void addFuel(FuelDto.Request.AddFuel addFuelRequest){
         UserEntity user = authService.getUserEntityByAuthentication();
 
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(addFuelRequest.getBike_idx(), user).orElseThrow(()->
