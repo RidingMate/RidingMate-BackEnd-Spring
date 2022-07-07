@@ -1,6 +1,6 @@
 package com.ridingmate.api.entity;
 
-import com.ridingmate.api.payload.user.request.AddBikeRequest;
+import com.ridingmate.api.payload.user.dto.BikeDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +39,7 @@ public class AddBikeEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public AddBikeEntity convertRequestToEntity(AddBikeRequest addBikeRequest, UserEntity user){
+    public AddBikeEntity convertRequestToEntity(BikeDto.Request.AddBike addBikeRequest, UserEntity user){
         return AddBikeEntity.builder()
                 .company(addBikeRequest.getCompany())
                 .model(addBikeRequest.getModel())

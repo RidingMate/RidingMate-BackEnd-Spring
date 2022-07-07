@@ -1,12 +1,28 @@
 package com.ridingmate.api.entity;
 
-import com.ridingmate.api.entity.value.UserRole;
-import lombok.Getter;
-
-import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.CreatedDate;
+
+import com.ridingmate.api.entity.value.UserRole;
+
+import lombok.Getter;
 
 @Entity
 @Getter
@@ -33,18 +49,35 @@ public abstract class UserEntity extends BaseTime {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    //TODO : 하나의 유저는 여러개의 바이크를 가질 수 있다.
+    /**
+     * 이용약관 체크여부
+     */
+    @Column(name = "is_check_terms", length = 1)
+    private String isCheckTerms;
+
+    /**
+     * 이용약관 체크 날짜
+     */
+    @Column(name = "check_terms_time")
+    @CreatedDate
+    private LocalDate checkTermsTime;
+
     @OneToMany(mappedBy = "user")
     private List<BikeEntity> bike = new ArrayList<>();
-    //TODO : 하나의 유저는 여러개의 중고거래 글을 쓸 수 있다.
-    //TODO : 하나의 유저는 여러개의 댓글을 달 수 있다.
 
-    //TODO : 이용약관 체크 있어야할듯
+    @OneToMany(mappedBy = "user")
+    private List<TradeBoardEntity> tradePosts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<CommentEntity> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<BookmarkEntity> bookmarks = new ArrayList<>();
 
 
     // 비즈니스 로직
     public void createUserEntity(String nickname, UserRole role) {
-        this.userUuid = UUID.randomUUID().toString();
+        userUuid = UUID.randomUUID().toString();
         this.nickname = nickname;
         this.role = role;
     }

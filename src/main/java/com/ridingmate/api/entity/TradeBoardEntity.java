@@ -1,8 +1,13 @@
 package com.ridingmate.api.entity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.ridingmate.api.entity.value.TradeStatus;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,8 +15,10 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
 @DiscriminatorValue("TRADE")
 @NoArgsConstructor
+@AllArgsConstructor
 public class TradeBoardEntity extends BoardEntity {
 
     /**
@@ -73,16 +80,16 @@ public class TradeBoardEntity extends BoardEntity {
     @JoinColumn(name = "location_code")
     private LocationEntity location;
 
-    // TODO : 썸네일 컬럼 추가
-    // TODO : 썸네일 저장을 위한 location 저장 컬럼
-    // File에 대한 entity 필요할거같음 생성해서 연관관계 연결
+    @Builder.Default
+    @OneToMany(mappedBy = "board")
+    private List<FileEntity> files = new ArrayList<>();
 
     // 작성자, 내바이크, 지역 생성자
     public TradeBoardEntity(String title, String content, UserEntity user, BikeEntity bike,
                             LocationEntity location) {
         myBike = bike;
         this.location = location;
-        createBoardEntity(title, content, user);
+        setBoardInfo(title, content, user);
     }
 
     // 작성자 + 내용 + 지역 + 구매일자 + 연락처 + 공개여부 생성자
@@ -99,8 +106,7 @@ public class TradeBoardEntity extends BoardEntity {
                             String isOpenToBuyer,
                             Integer purchaseYear,
                             Integer purchaseMonth,
-                            UserEntity user,
-                            LocationEntity location
+                            UserEntity user
     ) {
 
         this.company = company;
@@ -110,14 +116,18 @@ public class TradeBoardEntity extends BoardEntity {
         this.year = year;
         this.mileage = mileage;
         this.price = price;
-        this.location = location;
         this.isOpenToBuyer = isOpenToBuyer;
         this.phoneNumber = phoneNumber;
         if (purchaseYear != null && purchaseMonth != null) {
             dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
         }
         status = TradeStatus.FOR_SALE;
-        createBoardEntity(title, content, user);
+        setBoardInfo(title, content, user);
+    }
+
+    // 판매중 상태
+    public void setForSaleStatus() {
+        status = TradeStatus.FOR_SALE;
     }
 
     // 예약중 상태
@@ -128,5 +138,21 @@ public class TradeBoardEntity extends BoardEntity {
     // 판매완료 상태
     public void setCompletedStatus() {
         status = TradeStatus.COMPLETED;
+    }
+
+    // 내 바이크 등록
+    public void setMyBike(BikeEntity myBike) {
+        this.myBike = myBike;
+    }
+
+    // 거래 지역 등록
+    public void setLocation(LocationEntity location) {
+        this.location = location;
+    }
+
+    public void setDateOfPurchase(Integer purchaseYear, Integer purchaseMonth) {
+        if (purchaseYear != null && purchaseMonth != null) {
+            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
+        }
     }
 }

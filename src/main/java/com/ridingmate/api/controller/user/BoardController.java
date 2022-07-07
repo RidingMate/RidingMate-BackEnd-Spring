@@ -1,21 +1,36 @@
 package com.ridingmate.api.controller.user;
 
+import static com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
+
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ridingmate.api.annotation.CurrentUser;
+import com.ridingmate.api.consts.ResponseCode;
+import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.BoardDto;
+import com.ridingmate.api.payload.user.dto.BoardDto.Response.NoticeInfo;
+import com.ridingmate.api.payload.user.dto.BoardDto.Response.TradeInfo;
+import com.ridingmate.api.payload.user.dto.BoardDto.Response.TradeList;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
+import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
+import com.ridingmate.api.payload.user.dto.ScrollPageDto;
 import com.ridingmate.api.payload.user.dto.PageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
@@ -48,7 +63,7 @@ import springfox.documentation.annotations.ApiIgnore;
     디테일 : 이미지, title, content, 거래지역, 연락처, 제조사, 모델, 연식, 구매일자, 누적주행거리, 가격, 댓글 , 주유/정비정보 표출
 
 
-    판매글작성 : 내 바이크 선택시 또는 직접입력이 존재하는데 이부분은 bikecontroller 쪽에서 처리하겠습니다.
+    판매글작성 : 내 바이크 선택시 또는 직접입력이 존재하는데 이부분은 bikeController 쪽에서 처리하겠습니다.
         제조사, 모델명, 연식, 주행거리, 구매일자, title, content, 연락처, 거래지역, 가격, 이미지 (최대 20), 주유/정비정보 공개 동의
 
    예약중, 판매완료 컬럼 필요함 -> 바이크 글 들어왔을때 글쓴 유저라면 상태 변경 가능하게 해야할것 같습니다.
@@ -76,7 +91,7 @@ public class BoardController {
     @SneakyThrows
     @GetMapping("/trade/list")
     @ApiOperation("거래글 리스트 조회")
-    public ResponseDto<PageDto<BoardDto.Response.TradeList>> getTradeBoardList(
+    public ResponseDto<PageDto<TradeList>> getTradeBoardList(
             @Valid BoardDto.Request.TradeList dto,
             Pageable pageable,
             BindingResult result
@@ -84,16 +99,32 @@ public class BoardController {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        return ResponseDto.<PageDto<BoardDto.Response.TradeList>>builder()
+        return ResponseDto.<PageDto<TradeList>>builder()
                           .response(new PageDto<>(tradeBoardService.getTradeBoardList(pageable, dto)))
+                          .build();
+    }
+
+    @SneakyThrows
+    @GetMapping("/trade/list/scroll")
+    @ApiOperation("거래글 리스트 무한 스크롤 조회")
+    public ResponseDto<ScrollPageDto<TradeList>> getTradeBoardListInfinityScroll(
+            @Valid BoardDto.Request.TradeList dto,
+            Pageable pageable,
+            BindingResult result
+    ) {
+        if (result.hasErrors()) {
+            throw new BindException(result);
+        }
+        return ResponseDto.<ScrollPageDto<TradeList>>builder()
+                          .response(new ScrollPageDto<>(tradeBoardService.getTradeBoardSlice(pageable, dto)))
                           .build();
     }
 
     @SneakyThrows
     @PostMapping("/notice")
     @ApiOperation("공지사항 등록")
-    public ResponseDto insertNoticeBoard(
-            @RequestHeader(value = "Authorization") String token,
+    public ResponseDto<?> insertNoticeBoard(
+            @RequestHeader("Authorization") String token,
             @RequestBody @Valid BoardDto.Request.NoticeInsert request,
             @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
@@ -101,31 +132,31 @@ public class BoardController {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        noticeBoardService.insertNoticeBoard(request, user.getIdx());
+        noticeBoardService.insertNoticeBoard(request, user.getUser());
         return ResponseDto.builder().build();
     }
 
     @SneakyThrows
-    @PostMapping("/trade")
+    @PostMapping(value = "/trade", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation("거래글 등록")
-    public ResponseDto insertTradeBoard(
-            @RequestHeader(value = "Authorization") String token,
-            @RequestBody @Valid BoardDto.Request.TradeInsert dto,
+    public ResponseDto<?> insertTradeBoard(
+            @RequestHeader("Authorization") String token,
+            @Validated BoardDto.Request.TradeInsert dto,
             @ApiIgnore @CurrentUser UserPrincipal user,
             BindingResult result
     ) {
         if (result.hasErrors()) {
             throw new BindException(result);
         }
-        tradeBoardService.insertTradeBoardContent(dto, user.getIdx());
+        tradeBoardService.insertTradeBoardContent(dto, user.getUser());
         return ResponseDto.builder().build();
     }
 
     @ApiOperation("공지사항 상세 조회")
     @GetMapping("/notice/{boardId}")
     @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
-    public ResponseDto<BoardDto.Response.NoticeContent> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseDto.<BoardDto.Response.NoticeContent>builder()
+    public ResponseDto<NoticeInfo> getNoticeBoardContent(@PathVariable("boardId") Long boardId) {
+        return ResponseDto.<NoticeInfo>builder()
                           .response(noticeBoardService.getNoticeBoardContent(boardId))
                           .build();
     }
@@ -133,9 +164,111 @@ public class BoardController {
     @ApiOperation("거래글 상세 조회")
     @GetMapping("/trade/{boardId}")
     @ApiImplicitParam(name = "boardId", value = "게시글 ID", required = true)
-    public ResponseDto<BoardDto.Response.TradeContent> getTradeBoardContent(@PathVariable("boardId") Long boardId) {
-        return ResponseDto.<BoardDto.Response.TradeContent>builder()
-                .response(tradeBoardService.getTradeBoardContent(boardId))
+    public ResponseDto<TradeInfo> getTradeBoardContent(
+            @RequestHeader("Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            @PathVariable("boardId") Long boardId
+    ) {
+        if (user == null) {
+            throw new CustomException(ResponseCode.INVALID_TOKEN);
+        }
+        return ResponseDto.<TradeInfo>builder()
+                .response(tradeBoardService.getTradeBoardContent(boardId, user.getUser()))
                 .build();
+    }
+
+    @ApiOperation("거래글 댓글 등록")
+    @PostMapping("/trade/comment")
+    public ResponseDto<?> insertComment(
+            @RequestHeader("Authorization") String token,
+            @RequestBody InsertComment dto,
+            @ApiIgnore @CurrentUser UserPrincipal user
+    ) {
+        tradeBoardService.insertComment(dto, user.getUser());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
+    @ApiOperation("거래글 대댓글 등록")
+    @PostMapping("/trade/reply")
+    public ResponseDto<?> insertReply(
+            @RequestHeader("Authorization") String token,
+            @RequestBody InsertReply dto,
+            @ApiIgnore @CurrentUser UserPrincipal user
+    ) {
+        tradeBoardService.insertReply(dto, user.getUser());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
+    @ApiOperation("거래글 댓글만 조회")
+    @GetMapping("/trade/comment")
+    public ResponseDto<PageDto<Info>> getCommentList(
+            Comment dto,
+            Pageable commentPageable
+    ) {
+        return ResponseDto.<PageDto<Info>>builder()
+                          .response(new PageDto<>(tradeBoardService.getCommentList(dto, commentPageable)))
+                          .build();
+    }
+
+    @ApiOperation("거래글 대댓글 조회")
+    @GetMapping("/trade/reply")
+    public ResponseDto<PageDto<Info>> getReplyList(
+            Reply dto,
+            Pageable commentPageable
+    ) {
+        return ResponseDto.<PageDto<Info>>builder()
+                          .response(new PageDto<>(tradeBoardService.getReplyList(dto, commentPageable)))
+                          .build();
+    }
+
+    @ApiOperation("거래글 상태 판매완료로 변경")
+    @PutMapping("/trade/{boardId}/status/complete")
+    public ResponseDto<?> setTradeStatusToComplete(
+            @RequestHeader("Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            @PathVariable Long boardId
+    ) {
+        tradeBoardService.setTradeStatusToComplete(boardId, user.getIdx());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
+    @ApiOperation("내가 쓴 글 조회")
+    @GetMapping("/trade/list/my")
+    public ResponseDto<PageDto<TradeList>> getMyTradeBoardList(
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            Pageable pageable
+    ) {
+        return ResponseDto.<PageDto<TradeList>>builder()
+                          .response(new PageDto<>(tradeBoardService.getMyTradeBoardList(user.getUser(), pageable)))
+                          .build();
+    }
+
+    @ApiOperation("내가 댓글 단 글 조회")
+    @GetMapping("/trade/comment/my")
+    public ResponseDto<PageDto<TradeList>> getMyCommentBoardList(
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            Pageable pageable
+    ) {
+        return ResponseDto.<PageDto<TradeList>>builder()
+                          .response(new PageDto<>(tradeBoardService.getMyCommentBoardList(user.getUser(), pageable)))
+                          .build();
+    }
+
+    @ApiOperation("북마크 등록, 제거")
+    @PostMapping("/trade/bookmark/{boardId}")
+    public ResponseDto<?> switchBookmark(
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            @PathVariable Long boardId
+    ) {
+        tradeBoardService.switchBookmark(boardId, user.getUser());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
     }
 }

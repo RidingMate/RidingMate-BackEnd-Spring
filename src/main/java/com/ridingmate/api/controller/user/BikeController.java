@@ -1,17 +1,13 @@
 package com.ridingmate.api.controller.user;
 
-import com.ridingmate.api.payload.common.ApiResponse;
-import com.ridingmate.api.payload.user.request.AddBikeRequest;
-import com.ridingmate.api.payload.user.request.BikeInsertRequest;
-import com.ridingmate.api.payload.user.dto.BikeSearchDto;
-import com.ridingmate.api.payload.user.request.BikeUpdateRequest;
-import com.ridingmate.api.payload.user.response.MyBikeResponse;
+import com.ridingmate.api.payload.common.ResponseDto;
+import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.service.BikeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -48,10 +44,13 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<BikeSearchDto> searchCompany(
+    public ResponseDto<List<BikeDto.Request.BikeSearch>> searchCompany(
             @RequestHeader(value = "Authorization") String token
     ){
-        return bikeService.searchCompany();
+        return ResponseDto.<List<BikeDto.Request.BikeSearch>>builder()
+                .response(bikeService.searchCompany())
+                .build();
+//        return bikeService.searchCompany();
     }
 
     @GetMapping("/search/model")
@@ -61,11 +60,14 @@ public class BikeController {
             @ApiImplicitParam(name = "company", value = "company name", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<BikeSearchDto> searchModel(
+    public ResponseDto<List<BikeDto.Request.BikeSearch>> searchModel(
             @RequestHeader(value = "Authorization") String token,
             @RequestParam(value = "company") String company
     ){
-        return bikeService.searchModel(company);
+        return ResponseDto.<List<BikeDto.Request.BikeSearch>>builder()
+                .response(bikeService.searchModel(company))
+                .build();
+//        return bikeService.searchModel(company);
     }
 
     @GetMapping("/search/year")
@@ -76,38 +78,45 @@ public class BikeController {
             @ApiImplicitParam(name = "model", value = "model name", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<BikeSearchDto> searchYear(
+    public ResponseDto<List<BikeDto.Request.BikeSearch>> searchYear(
             @RequestHeader(value = "Authorization") String token,
             @RequestParam(value = "company") String company,
             @RequestParam(value = "model") String model
     ){
-        return bikeService.searchYear(company, model);
+        return ResponseDto.<List<BikeDto.Request.BikeSearch>>builder()
+                .response(bikeService.searchYear(company, model))
+                .build();
+//        return bikeService.searchYear(company, model);
     }
 
-    @PostMapping
+    @PostMapping(value = "/insert")
     @ApiOperation(value = "바이크 등록")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> insertBike(
+    public ResponseDto insertBike(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody BikeInsertRequest bikeInsertRequest
-            ){
-        return bikeService.insertBike(bikeInsertRequest);
+            @ModelAttribute BikeDto.Request.BikeInsert bikeInsertRequest,
+            @RequestPart(value = "file", required = false) MultipartFile file
+            ) throws Exception {
+        bikeService.insertBike(bikeInsertRequest, file);
+        return ResponseDto.builder().build();
     }
 
-    @PutMapping
+    @PutMapping("/update")
     @ApiOperation(value = "바이크 수정")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void updateBike(
+    public ResponseDto updateBike(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody BikeUpdateRequest request
-            ){
-        bikeService.updateBike(request);
+            @ModelAttribute BikeDto.Request.BikeUpdate request,
+            @RequestPart(value = "file", required = false) MultipartFile file
+            ) throws Exception {
+        bikeService.updateBike(request, file);
+        return ResponseDto.builder().build();
     }
 
     @GetMapping("/role/{bike_idx}")
@@ -117,11 +126,12 @@ public class BikeController {
             @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "int", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void updateBikeRole(
+    public ResponseDto updateBikeRole(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("bike_idx") Long bike_idx
     ){
         bikeService.updateBikeRole(bike_idx);
+        return ResponseDto.builder().build();
     }
 
     @GetMapping("/list")
@@ -130,10 +140,13 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<MyBikeResponse> myBikeList(
+    public ResponseDto<List<BikeDto.Response.MyBike>> myBikeList(
             @RequestHeader(value = "Authorization") String token
     ){
-        return bikeService.bikeList();
+        return ResponseDto.<List<BikeDto.Response.MyBike>>builder()
+                .response(bikeService.bikeList())
+                .build();
+//        return bikeService.bikeList();
     }
 
     @GetMapping("/detail/{bike_idx}")
@@ -143,11 +156,14 @@ public class BikeController {
             @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "int", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public MyBikeResponse bikeDetail(
+    public ResponseDto<BikeDto.Response.MyBike> bikeDetail(
             @RequestHeader(value = "Authorization") String token,
             @PathVariable("bike_idx") Long bike_idx
     ){
-        return bikeService.bikeDetail(bike_idx);
+        return ResponseDto.<BikeDto.Response.MyBike>builder()
+                .response(bikeService.bikeDetail(bike_idx))
+                .build();
+//        return bikeService.bikeDetail(bike_idx);
     }
 
     @PutMapping("/add")
@@ -156,11 +172,28 @@ public class BikeController {
             @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
-    public void addBikeRequest(
+    public ResponseDto addBikeRequest(
             @RequestHeader(value = "Authorization") String token,
-            @RequestBody AddBikeRequest addBikeRequest
+            @RequestBody BikeDto.Request.AddBike addBikeRequest
     ){
         bikeService.addBikeRequest(addBikeRequest);
+        return ResponseDto.builder().build();
     }
+
+    @DeleteMapping("/delete/{bike_idx}")
+    @ApiOperation(value = "바이크 삭제")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
+            @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "int", required = true),
+    })
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseDto deleteBike(
+            @RequestHeader(value = "Authorization") String token,
+            @PathVariable("bike_idx") Long bike_idx
+    ){
+        bikeService.deleteBike(bike_idx);
+        return ResponseDto.builder().build();
+    }
+
 
 }

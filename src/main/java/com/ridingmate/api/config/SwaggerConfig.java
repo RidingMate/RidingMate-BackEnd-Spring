@@ -1,11 +1,14 @@
 package com.ridingmate.api.config;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 
 import com.fasterxml.classmate.TypeResolver;
 
@@ -18,7 +21,12 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
@@ -43,6 +51,22 @@ public class SwaggerConfig {
                 .paths(PathSelectors.ant("/v1/**"))
                 .build()
                 .apiInfo(apiInfo())
+                .alternateTypeRules(alternateTypeRuleForPageable());
+    }
+
+    @Bean
+    public Docket v1GlobalAuthApi() {
+        groupName = "v1_global_auth";
+        return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
+                .groupName(groupName)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.ridingmate.api.controller"))
+                .paths(PathSelectors.ant("/v1/**"))
+                .build()
+                .apiInfo(apiInfo())
+                .securityContexts(securityContexts())
+                .securitySchemes(securitySchemes())
                 .alternateTypeRules(alternateTypeRuleForPageable());
     }
 
@@ -87,6 +111,25 @@ public class SwaggerConfig {
                              + "```")
                 .version("1.0")
                 .build();
+    }
+
+    public List<SecurityContext> securityContexts() {
+        List<SecurityContext> contexts = new ArrayList<>();
+        // jwt authorization
+        contexts.add(SecurityContext.builder()
+                        .securityReferences(Collections.singletonList(
+                            new SecurityReference("JWT : Bearer <token>",
+                                new AuthorizationScope[] {
+                                    new AuthorizationScope(
+                                        "global",
+                                        "accessEveryThing")}))).build());
+        return contexts;
+    }
+
+    public List<SecurityScheme> securitySchemes() {
+        List<SecurityScheme> schemes = new ArrayList<>();
+        schemes.add(new ApiKey("JWT : Bearer <token>", HttpHeaders.AUTHORIZATION, "Header"));
+        return schemes;
     }
 
     @Bean

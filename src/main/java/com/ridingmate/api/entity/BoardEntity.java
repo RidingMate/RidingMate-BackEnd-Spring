@@ -44,12 +44,18 @@ public abstract class BoardEntity extends BaseTime {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    public void createBoardEntity(String title, UserEntity user) {
+    public void setBoardInfo(String title, UserEntity user) {
         this.title = title;
         this.user = user;
     }
 
-    public void createBoardEntity(String title, String content, UserEntity user) {
+    /**
+     * 게시글 정보 등록
+     * @param title     제목
+     * @param content   내용
+     * @param user      작성자
+     */
+    public void setBoardInfo(String title, String content, UserEntity user) {
         this.title = title;
         this.content = content;
         this.user = user;
@@ -61,12 +67,20 @@ public abstract class BoardEntity extends BaseTime {
 
     // 조회수 증가
     public void increaseHitCount() {
-        this.hit = hit + 1;
+        hit += 1;
     }
 
     // 댓글 추가
     public void addComment(CommentEntity comment) {
         comments.add(comment);
         comment.setBoard(this);
+    }
+
+    /**
+     * 게시글 정보만 수정
+     * @param title 게시글 제목
+     */
+    public void updateBoard(String title) {
+        this.title = title;
     }
 }
