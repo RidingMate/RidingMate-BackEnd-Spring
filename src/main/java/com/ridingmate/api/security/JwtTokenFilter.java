@@ -33,8 +33,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService userDetailsService;
 
-    private final CustomOAuth2UserService oAuth2UserService;
-
     private final ObjectMapper objectMapper;
 
 

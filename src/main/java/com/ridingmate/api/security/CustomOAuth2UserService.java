@@ -46,20 +46,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private OAuth2User process(OAuth2UserRequest request, OAuth2User user) {
         SocialType socialType = SocialType.valueOf(
                 request.getClientRegistration().getRegistrationId().toUpperCase());
-        OAuth2UserInfo oAuth2UserInfo = getOAuth2UserInfo(socialType, user.getAttributes());
+        OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(socialType, user.getAttributes());
         SocialUserEntity socialUser = saveOrUpdate(oAuth2UserInfo);
         return UserPrincipal.create(socialUser, user.getAttributes());
-    }
-
-    public static OAuth2UserInfo getOAuth2UserInfo(SocialType socialType, Map<String, Object> attributes) {
-        switch (socialType) {
-            case GOOGLE:
-                return new GoogleOAuth2UserInfo(attributes);
-            case KAKAO:
-                return new KakaoOAuth2UserInfo(attributes);
-            default:
-                throw new IllegalStateException("잘못된 소셜 타입입니다.");
-        }
     }
 
     private SocialUserEntity saveOrUpdate(OAuth2UserInfo oAuth2UserInfo) {
