@@ -2,6 +2,7 @@ package com.ridingmate.api.controller.user;
 
 import javax.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,6 +64,7 @@ public class UserController {
     @SneakyThrows
     @PostMapping("/info")
     @ApiOperation("유저 정보 조회")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto<UserDto.Response.Info> getUserInfo(
             @ApiIgnore @CurrentUser UserPrincipal user
     ) {
