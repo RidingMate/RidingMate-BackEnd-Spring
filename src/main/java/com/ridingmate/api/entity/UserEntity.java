@@ -46,6 +46,9 @@ public abstract class UserEntity extends BaseTime {
     @Column(name = "nickname")
     private String nickname;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
