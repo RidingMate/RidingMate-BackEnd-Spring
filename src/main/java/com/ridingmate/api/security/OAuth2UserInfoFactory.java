@@ -2,7 +2,7 @@ package com.ridingmate.api.security;
 
 import java.util.Map;
 
-import com.ridingmate.api.consts.SocialType;
+import com.ridingmate.api.entity.value.SocialType;
 
 public class OAuth2UserInfoFactory {
 

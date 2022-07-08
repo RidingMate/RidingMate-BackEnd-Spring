@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import com.ridingmate.api.entity.NormalUserEntity;
 import com.ridingmate.api.entity.SocialUserEntity;
 import com.ridingmate.api.entity.UserEntity;
+import com.ridingmate.api.entity.value.SocialType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,8 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     private String uuid;
     private String authority;
     private boolean enabled;
+
+    private SocialType socialType;
 
     private UserEntity user;
 
@@ -47,8 +50,9 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.authority = authority;
     }
 
-    public UserPrincipal(String oAuth2Code, String authority, UserEntity user, Map<String, Object> attributes) {
+    public UserPrincipal(String oAuth2Code, SocialType socialType, String authority, UserEntity user, Map<String, Object> attributes) {
         userId = oAuth2Code;
+        this.socialType = socialType;
         this.authority = authority;
         this.user = user;
         this.attributes = attributes;
@@ -107,7 +111,7 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     }
 
     public static UserPrincipal create(SocialUserEntity user, Map<String, Object> attributes) {
-        return new UserPrincipal(user.getOAuth2Code(), user.getRole().toString(), user, attributes);
+        return new UserPrincipal(user.getOAuth2Code(), user.getSocialType(), user.getRole().toString(), user, attributes);
     }
 
     @Override

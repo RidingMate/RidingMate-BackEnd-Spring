@@ -23,8 +23,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     /**
      * 유저 인증 객체 생성
-     * @param userId                        유저 구분자(일반 - 아이디, 소셜 - 소셜 코드)
-     * @return                              UserDetails
+     * @param userId    유저 구분자(일반 - 아이디, 소셜 - 소셜 코드)
+     * @return          UserDetails
      */
     @Override
     public UserDetails loadUserByUsername(String userId) {
