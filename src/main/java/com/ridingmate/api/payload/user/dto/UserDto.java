@@ -2,6 +2,7 @@ package com.ridingmate.api.payload.user.dto;
 
 import com.ridingmate.api.entity.NormalUserEntity;
 import com.ridingmate.api.entity.SocialUserEntity;
+import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.entity.value.SocialType;
 
 import io.swagger.annotations.ApiModel;
@@ -20,16 +21,9 @@ public class UserDto {
             private String nickname;
             private String phoneNumber;
 
-            public static Info of(NormalUserEntity user) {
+            public static Info of(UserEntity user, SocialType socialType) {
                 return builder()
-                        .nickname(user.getNickname())
-                        .phoneNumber(user.getPhoneNumber())
-                        .build();
-            }
-
-            public static Info of(SocialUserEntity user) {
-                return builder()
-                        .socialType(user.getSocialType())
+                        .socialType(socialType)
                         .nickname(user.getNickname())
                         .phoneNumber(user.getPhoneNumber())
                         .build();
