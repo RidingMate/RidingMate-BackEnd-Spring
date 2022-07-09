@@ -57,6 +57,11 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.uuid = uuid;
         this.authority = authority;
         this.user = user;
+        info = Info.builder()
+                   .socialType(socialType)
+                   .nickname(user.getNickname())
+                   .phoneNumber(user.getPhoneNumber())
+                   .build();
     }
 
     public UserPrincipal(String userId, String password, String authority) {
