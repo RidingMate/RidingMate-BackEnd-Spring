@@ -14,7 +14,10 @@ import com.ridingmate.api.entity.SocialUserEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.entity.value.SocialType;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -36,6 +39,18 @@ public class UserPrincipal implements UserDetails, OAuth2User {
 
     private Map<String, Object> attributes;
 
+    private Info info;
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Info {
+        private SocialType socialType;
+        private String nickname;
+        private String phoneNumber;
+    }
+
     public UserPrincipal(String userId, String password, String uuid, String authority, UserEntity user) {
         this.userId = userId;
         this.password = password;
@@ -56,6 +71,12 @@ public class UserPrincipal implements UserDetails, OAuth2User {
         this.authority = authority;
         this.user = user;
         this.attributes = attributes;
+        uuid = user.getUserUuid();
+        info = Info.builder()
+                   .socialType(socialType)
+                   .nickname(user.getNickname())
+                   .phoneNumber(user.getPhoneNumber())
+                   .build();
     }
 
     @Override
@@ -117,5 +138,9 @@ public class UserPrincipal implements UserDetails, OAuth2User {
     @Override
     public String getName() {
         return userId;
+    }
+
+    public Info getInfo() {
+        return info;
     }
 }

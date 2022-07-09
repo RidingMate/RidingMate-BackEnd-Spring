@@ -65,11 +65,11 @@ public class UserController {
     @PostMapping("/info")
     @ApiOperation("유저 정보 조회")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseDto<UserDto.Response.Info> getUserInfo(
+    public ResponseDto<UserPrincipal.Info> getUserInfo(
             @ApiIgnore @CurrentUser UserPrincipal user
     ) {
-        return ResponseDto.<Info>builder()
-                          .response(Info.of(user.getUser(), user.getSocialType()))
+        return ResponseDto.<UserPrincipal.Info>builder()
+                          .response(user.getInfo())
                           .build();
     }
 }
