@@ -15,7 +15,7 @@ import com.ridingmate.api.payload.common.AuthResponse;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.NormalUserDto;
 import com.ridingmate.api.payload.user.dto.UserDto;
-import com.ridingmate.api.payload.user.dto.UserDto.Response.Info;
+import com.ridingmate.api.payload.user.dto.UserDto.Response.Count;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.UserService;
 
@@ -65,11 +65,23 @@ public class UserController {
     @PostMapping("/info")
     @ApiOperation("유저 정보 조회")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseDto<UserDto.Response.Info> getUserInfo(
+    public ResponseDto<UserPrincipal.Info> getUserInfo(
             @ApiIgnore @CurrentUser UserPrincipal user
     ) {
-        return ResponseDto.<Info>builder()
-                          .response(Info.of(user.getUser(), user.getSocialType()))
+        return ResponseDto.<UserPrincipal.Info>builder()
+                          .response(user.getInfo())
+                          .build();
+    }
+
+    @SneakyThrows
+    @PostMapping("/board/count")
+    @ApiOperation("게시글, 댓글, 북마크 카운트")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseDto<UserDto.Response.Count> getMyBoardCount(
+            @ApiIgnore @CurrentUser UserPrincipal user
+    ) {
+        return ResponseDto.<Count>builder()
+                          .response(userService.getBoardCount(user.getUser()))
                           .build();
     }
 }
