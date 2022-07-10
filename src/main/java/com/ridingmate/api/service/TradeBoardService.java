@@ -1,6 +1,7 @@
 package com.ridingmate.api.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -155,9 +156,12 @@ public class TradeBoardService {
      * @param boardId 삭제할 게시글 ID
      */
     @Transactional
-    public void deleteBoardContent(Long boardId) {
+    public void deleteBoardContent(Long boardId, Long userId) {
         TradeBoardEntity tradeBoard = tradeBoardRepository.findById(boardId).orElseThrow(
                 () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        if (!Objects.equals(tradeBoard.getUser().getIdx(), userId)) {
+            throw new CustomException(ResponseCode.NOT_WRITER_OF_BOARD);
+        }
         fileService.deleteMultipleFile(tradeBoard.getFiles());
         tradeBoardRepository.delete(tradeBoard);
     }

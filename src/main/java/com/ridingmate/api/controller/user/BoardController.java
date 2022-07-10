@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -271,4 +272,17 @@ public class BoardController {
                           .responseCode(ResponseCode.SUCCESS)
                           .build();
     }
+
+    @ApiOperation("거래글 제거")
+    @DeleteMapping("/trade/{boardId}")
+    public ResponseDto<?> deleteBoardContent(
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            @PathVariable("boardId") Long boardId
+    ) {
+        tradeBoardService.deleteBoardContent(boardId, user.getUser().getIdx());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
 }
