@@ -31,8 +31,8 @@ import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
-import com.ridingmate.api.payload.user.dto.ScrollPageDto;
 import com.ridingmate.api.payload.user.dto.PageDto;
+import com.ridingmate.api.payload.user.dto.ScrollPageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
@@ -285,4 +285,13 @@ public class BoardController {
                           .build();
     }
 
+    @ApiOperation("거래글 신고")
+    @PostMapping("/trade/{boardId}/report")
+    public ResponseDto<?> reportTradeContent(
+            @PathVariable("boardId") Long boardId
+    ) {
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
 }
