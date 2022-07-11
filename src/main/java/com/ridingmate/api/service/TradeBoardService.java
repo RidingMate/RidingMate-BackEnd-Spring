@@ -42,7 +42,9 @@ import com.ridingmate.api.repository.predicate.CommentPredicate;
 import com.ridingmate.api.service.common.FileService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TradeBoardService {
@@ -279,6 +281,15 @@ public class TradeBoardService {
                                                             .board(board)
                                                             .user(user)
                                                             .build()));
+    }
+
+    /**
+     * 거래글 신고
+     * @param boardId   거래글 ID
+     */
+    public void reportContent(Long boardId) {
+        tradeBoardRepository.findById(boardId).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
     }
 
 }
