@@ -19,6 +19,7 @@ target/
 *.iml
 *.ipr
 application-aws.yml
+application-oauth2.yml
 
 ### NetBeans ###
 /nbproject/private/
