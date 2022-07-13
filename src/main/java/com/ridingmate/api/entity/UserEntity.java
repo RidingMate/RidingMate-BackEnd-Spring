@@ -46,6 +46,9 @@ public abstract class UserEntity extends BaseTime {
     @Column(name = "nickname")
     private String nickname;
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -66,7 +69,7 @@ public abstract class UserEntity extends BaseTime {
     private List<BikeEntity> bike = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<TradeBoardEntity> tradePosts = new ArrayList<>();
+    private List<BoardEntity> tradePosts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<CommentEntity> comments = new ArrayList<>();

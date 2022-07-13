@@ -1,6 +1,7 @@
 package com.ridingmate.api.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +42,9 @@ import com.ridingmate.api.repository.predicate.CommentPredicate;
 import com.ridingmate.api.service.common.FileService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TradeBoardService {
@@ -155,9 +158,12 @@ public class TradeBoardService {
      * @param boardId 삭제할 게시글 ID
      */
     @Transactional
-    public void deleteBoardContent(Long boardId) {
+    public void deleteBoardContent(Long boardId, Long userId) {
         TradeBoardEntity tradeBoard = tradeBoardRepository.findById(boardId).orElseThrow(
                 () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        if (!Objects.equals(tradeBoard.getUser().getIdx(), userId)) {
+            throw new CustomException(ResponseCode.NOT_WRITER_OF_BOARD);
+        }
         fileService.deleteMultipleFile(tradeBoard.getFiles());
         tradeBoardRepository.delete(tradeBoard);
     }
@@ -275,6 +281,15 @@ public class TradeBoardService {
                                                             .board(board)
                                                             .user(user)
                                                             .build()));
+    }
+
+    /**
+     * 거래글 신고
+     * @param boardId   거래글 ID
+     */
+    public void reportContent(Long boardId) {
+        tradeBoardRepository.findById(boardId).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
     }
 
 }

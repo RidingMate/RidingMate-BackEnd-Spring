@@ -2,6 +2,7 @@ package com.ridingmate.api.controller.user;
 
 import javax.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,14 +10,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ridingmate.api.annotation.CurrentUser;
 import com.ridingmate.api.payload.common.AuthResponse;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.NormalUserDto;
+import com.ridingmate.api.payload.user.dto.UserDto;
+import com.ridingmate.api.payload.user.dto.UserDto.Response.Count;
+import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import springfox.documentation.annotations.ApiIgnore;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,6 +58,30 @@ public class UserController {
         }
         return ResponseDto.<AuthResponse>builder()
                           .response(userService.normalLogin(request))
+                          .build();
+    }
+
+    @SneakyThrows
+    @PostMapping("/info")
+    @ApiOperation("유저 정보 조회")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseDto<UserPrincipal.Info> getUserInfo(
+            @ApiIgnore @CurrentUser UserPrincipal user
+    ) {
+        return ResponseDto.<UserPrincipal.Info>builder()
+                          .response(user.getInfo())
+                          .build();
+    }
+
+    @SneakyThrows
+    @PostMapping("/board/count")
+    @ApiOperation("게시글, 댓글, 북마크 카운트")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseDto<UserDto.Response.Count> getMyBoardCount(
+            @ApiIgnore @CurrentUser UserPrincipal user
+    ) {
+        return ResponseDto.<Count>builder()
+                          .response(userService.getBoardCount(user.getUser()))
                           .build();
     }
 }

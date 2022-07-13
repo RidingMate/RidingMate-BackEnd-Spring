@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,8 +31,8 @@ import com.ridingmate.api.payload.user.dto.CommentDto.Request.Comment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertComment;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
-import com.ridingmate.api.payload.user.dto.ScrollPageDto;
 import com.ridingmate.api.payload.user.dto.PageDto;
+import com.ridingmate.api.payload.user.dto.ScrollPageDto;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.NoticeBoardService;
 import com.ridingmate.api.service.TradeBoardService;
@@ -267,6 +268,28 @@ public class BoardController {
             @PathVariable Long boardId
     ) {
         tradeBoardService.switchBookmark(boardId, user.getUser());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
+    @ApiOperation("거래글 제거")
+    @DeleteMapping("/trade/{boardId}")
+    public ResponseDto<?> deleteBoardContent(
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            @PathVariable("boardId") Long boardId
+    ) {
+        tradeBoardService.deleteBoardContent(boardId, user.getUser().getIdx());
+        return ResponseDto.builder()
+                          .responseCode(ResponseCode.SUCCESS)
+                          .build();
+    }
+
+    @ApiOperation("거래글 신고")
+    @PostMapping("/trade/{boardId}/report")
+    public ResponseDto<?> reportTradeContent(
+            @PathVariable("boardId") Long boardId
+    ) {
         return ResponseDto.builder()
                           .responseCode(ResponseCode.SUCCESS)
                           .build();
