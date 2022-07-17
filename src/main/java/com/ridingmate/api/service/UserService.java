@@ -13,6 +13,7 @@ import com.ridingmate.api.payload.common.AuthResponse;
 import com.ridingmate.api.payload.user.dto.NormalUserDto;
 import com.ridingmate.api.payload.user.dto.UserDto;
 import com.ridingmate.api.payload.user.dto.UserDto.Response.Count;
+import com.ridingmate.api.payload.user.dto.UserDto.Response.Info;
 import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.security.JwtTokenProvider;
 
@@ -72,4 +73,12 @@ public class UserService {
     private String getUserToken(String userId, Long userIdx, Boolean isSocialUser) {
         return jwtTokenProvider.generateToken(userId, userIdx, isSocialUser);
     }
+
+    @Transactional
+    public UserDto.Response.Info updateUserInfo(UserDto.Request.Update dto, UserEntity user) {
+        user.updateInfo(dto.getNickname(), dto.getPhoneNumber());
+        UserEntity updateUser = userRepository.save(user);
+        return Info.of(updateUser);
+    }
+
 }
