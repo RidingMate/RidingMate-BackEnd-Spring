@@ -2,6 +2,7 @@ package com.ridingmate.api.controller.user;
 
 import javax.validation.Valid;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -89,7 +90,7 @@ public class UserController {
     }
 
     @SneakyThrows
-    @PostMapping("/info")
+    @PostMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation("회원 정보 수정")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto<UserDto.Response.Info> updateUserInfo(

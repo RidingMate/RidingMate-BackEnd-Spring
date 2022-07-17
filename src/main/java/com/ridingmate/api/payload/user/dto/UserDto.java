@@ -38,11 +38,13 @@ public class UserDto {
         public static class Info {
             private String nickName;
             private String phoneNumber;
+            private String profileImageUrl;
 
             public static Info of(UserEntity user) {
                 return builder()
                         .nickName(user.getNickname())
                         .phoneNumber(user.getPhoneNumber())
+                        .profileImageUrl(user.getProfileImageUrl())
                         .build();
             }
         }

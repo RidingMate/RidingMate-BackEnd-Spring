@@ -1,7 +1,5 @@
 package com.ridingmate.api.security;
 
-import java.util.Map;
-
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -61,8 +59,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user = SocialUserEntity.builder()
                                    .socialType(socialType)
                                    .oAuth2Code(oAuth2UserInfo.getId())
-                                   .profileImageUrl(oAuth2UserInfo.getImageUrl())
                                    .build();
+            user.setProfileImageUrl(oAuth2UserInfo.getImageUrl());
             user.createDefaultInfo();
             userRepository.save(user);
         }
