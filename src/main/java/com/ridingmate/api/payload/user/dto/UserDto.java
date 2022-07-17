@@ -1,5 +1,7 @@
 package com.ridingmate.api.payload.user.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.ridingmate.api.entity.UserEntity;
 
 import io.swagger.annotations.ApiModel;
@@ -15,6 +17,7 @@ public class UserDto {
         public static class Update {
             private String nickname;
             private String phoneNumber;
+            private MultipartFile profileFile;
         }
     }
 

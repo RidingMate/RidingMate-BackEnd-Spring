@@ -94,7 +94,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto<UserDto.Response.Info> updateUserInfo(
             @ApiIgnore @CurrentUser UserPrincipal user,
-            @RequestBody Update dto
+            Update dto
     ) {
         return ResponseDto.<Info>builder()
                           .response(userService.updateUserInfo(dto, user.getUser()))
