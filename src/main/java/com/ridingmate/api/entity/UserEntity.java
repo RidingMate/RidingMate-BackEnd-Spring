@@ -92,4 +92,9 @@ public abstract class UserEntity extends BaseTime {
         userUuid = UUID.randomUUID().toString();
         role = UserRole.ROLE_USER;
     }
+
+    public void updateInfo(String nickname, String phoneNumber) {
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+    }
 }
