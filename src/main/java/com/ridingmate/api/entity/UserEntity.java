@@ -65,6 +65,12 @@ public abstract class UserEntity extends BaseTime {
     @CreatedDate
     private LocalDate checkTermsTime;
 
+    /**
+     * 유저 프로필 경로
+     */
+    @Column(name = "profile_image_url")
+    private String profileImageUrl;
+
     @OneToMany(mappedBy = "user")
     private List<BikeEntity> bike = new ArrayList<>();
 
@@ -96,5 +102,9 @@ public abstract class UserEntity extends BaseTime {
     public void updateInfo(String nickname, String phoneNumber) {
         this.nickname = nickname;
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setProfileImageUrl(String url) {
+        profileImageUrl = url;
     }
 }

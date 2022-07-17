@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ridingmate.api.consts.ResponseCode;
+import com.ridingmate.api.entity.FileEntity;
 import com.ridingmate.api.entity.NormalUserEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.entity.value.UserRole;
@@ -16,6 +17,7 @@ import com.ridingmate.api.payload.user.dto.UserDto.Response.Count;
 import com.ridingmate.api.payload.user.dto.UserDto.Response.Info;
 import com.ridingmate.api.repository.UserRepository;
 import com.ridingmate.api.security.JwtTokenProvider;
+import com.ridingmate.api.service.common.FileService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final FileService fileService;
 
     @Transactional
     public AuthResponse normalJoin(NormalUserDto.Request.Join request) {
@@ -77,6 +80,15 @@ public class UserService {
     @Transactional
     public UserDto.Response.Info updateUserInfo(UserDto.Request.Update dto, UserEntity user) {
         user.updateInfo(dto.getNickname(), dto.getPhoneNumber());
+        if (dto.getProfileFile() != null) {
+            try {
+                FileEntity file = fileService.uploadFile(dto.getProfileFile(), user);
+                file.connectUser(user);
+                user.setProfileImageUrl(file.getLocation());
+            } catch (Exception e) {
+                throw new CustomException(ResponseCode.DONT_SAVE_S3_FILE);
+            }
+        }
         UserEntity updateUser = userRepository.save(user);
         return Info.of(updateUser);
     }
