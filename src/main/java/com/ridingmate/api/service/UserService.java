@@ -44,7 +44,7 @@ public class UserService {
                 request.getNickname(),
                 UserRole.ROLE_USER));
 
-        return new AuthResponse(getUserToken(normalUser.getUserId(), normalUser.getIdx(), false));
+        return new AuthResponse(jwtTokenProvider.generateToken(normalUser.getUserId(), normalUser.getIdx(), false));
     }
 
     @Transactional
@@ -54,7 +54,7 @@ public class UserService {
         if (!passwordEncoder.matches(request.getPassword(), normalUser.getPassword())) {
             throw new CustomException(ResponseCode.NOT_MATCH_USER_INFO);
         }
-        return new AuthResponse(getUserToken(normalUser.getUserId(), normalUser.getIdx(), false));
+        return new AuthResponse(jwtTokenProvider.generateToken(normalUser.getUserId(), normalUser.getIdx(), false));
     }
 
     /**
@@ -71,10 +71,6 @@ public class UserService {
                     .commentCount(user.getComments().size())
                     .bookmarkCount(user.getBookmarks().size())
                     .build();
-    }
-
-    private String getUserToken(String userId, Long userIdx, Boolean isSocialUser) {
-        return jwtTokenProvider.generateToken(userId, userIdx, isSocialUser);
     }
 
     @Transactional
