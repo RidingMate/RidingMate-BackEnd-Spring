@@ -107,4 +107,8 @@ public abstract class UserEntity extends BaseTime {
     public void setProfileImageUrl(String url) {
         profileImageUrl = url;
     }
+
+    public void changeNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
