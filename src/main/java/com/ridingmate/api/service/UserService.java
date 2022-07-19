@@ -8,7 +8,6 @@ import com.ridingmate.api.consts.ResponseCode;
 import com.ridingmate.api.entity.FileEntity;
 import com.ridingmate.api.entity.NormalUserEntity;
 import com.ridingmate.api.entity.UserEntity;
-import com.ridingmate.api.entity.value.UserRole;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.common.AuthResponse;
 import com.ridingmate.api.payload.user.dto.NormalUserDto;
@@ -37,13 +36,9 @@ public class UserService {
         if (userRepository.findByUserId(request.getUserId()).isPresent()) {
             throw new CustomException(ResponseCode.DUPLICATE_USER);
         }
-
-        NormalUserEntity normalUser = userRepository.save(new NormalUserEntity(
-                request.getUserId(),
-                passwordEncoder.encode(request.getPassword()),
-                request.getNickname(),
-                UserRole.ROLE_USER));
-
+        NormalUserEntity normalUser = userRepository.save(NormalUserEntity.createUser(request.getUserId(),
+                                            passwordEncoder.encode(request.getPassword()),
+                                            request.getNickname()));
         return new AuthResponse(jwtTokenProvider.generateToken(normalUser.getUserId(), normalUser.getIdx(), false));
     }
 
@@ -65,7 +60,8 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public UserDto.Response.Count getBoardCount(UserEntity user) {
-        user = userRepository.findById(user.getIdx()).get();
+        user = userRepository.findById(user.getIdx()).orElseThrow(
+                () -> new CustomException(ResponseCode.NOT_FOUND_USER));
         return Count.builder()
                     .tradeCount(user.getTradePosts().size())
                     .commentCount(user.getComments().size())
