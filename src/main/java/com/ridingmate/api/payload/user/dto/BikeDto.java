@@ -137,6 +137,7 @@ public class BikeDto {
         @Builder
         @Data
         @ApiModel(description = "바이크 검색 요청")
+        @AllArgsConstructor
         public static class BikeSearch{
             @ApiModelProperty(value = "검색 내용", required = true)
             private String content;
