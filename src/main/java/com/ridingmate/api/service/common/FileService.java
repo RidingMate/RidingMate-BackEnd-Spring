@@ -54,9 +54,7 @@ public class FileService {
 
     @Transactional
     public void deleteMultipleFileEntity(List<FileEntity> files){
-        files.forEach(file->{
-            deleteFileEntity(file);
-        });
+        files.forEach(this::deleteFileEntity);
     }
 
     @Transactional
@@ -70,9 +68,7 @@ public class FileService {
 
     @Transactional
     public void deleteMultipleFile(List<FileEntity> files){
-        files.forEach(file->{
-            deleteFile(file.getOriginalName());
-        });
+        files.forEach(file-> deleteFile(file.getOriginalName()));
     }
 
 }

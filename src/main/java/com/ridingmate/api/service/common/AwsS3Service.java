@@ -1,24 +1,23 @@
 package com.ridingmate.api.service.common;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.*;
-import com.ridingmate.api.consts.ResponseCode;
-import com.ridingmate.api.exception.CustomException;
-import com.ridingmate.api.payload.common.FileResult;
-import com.ridingmate.api.util.FileNameGenerator;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.ridingmate.api.consts.ResponseCode;
+import com.ridingmate.api.exception.CustomException;
+import com.ridingmate.api.payload.common.FileResult;
+import com.ridingmate.api.util.FileNameGenerator;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
