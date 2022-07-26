@@ -62,7 +62,7 @@ public class TradeBoardService {
     }
 
     private Slice<TradeBoardEntity> getBoardListSlice(Pageable pageable, Predicate predicate) {
-        return tradeBoardRepository.findAll(predicate, pageable);
+        return boardCustomRepository.getTradeList(predicate, pageable);
     }
 
     private TradeBoardEntity getBoardContent(Long boardId) {
