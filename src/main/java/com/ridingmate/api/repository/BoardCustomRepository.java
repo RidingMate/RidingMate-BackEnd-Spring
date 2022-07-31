@@ -1,6 +1,7 @@
 package com.ridingmate.api.repository;
 
 import static com.ridingmate.api.entity.QCommentEntity.commentEntity;
+import static com.ridingmate.api.entity.QReportEntity.reportEntity;
 import static com.ridingmate.api.entity.QTradeBoardEntity.tradeBoardEntity;
 
 import java.util.List;
@@ -60,6 +61,7 @@ public class BoardCustomRepository {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         List<TradeBoardEntity> list = queryFactory.select(tradeBoardEntity)
                                                   .from(tradeBoardEntity)
+                                                  .leftJoin(reportEntity).on(tradeBoardEntity.idx.eq(reportEntity.idx))
                                                   .where(predicate)
                                                   .offset(pageable.getOffset())
                                                   .limit(pageable.getPageSize() + 1)
