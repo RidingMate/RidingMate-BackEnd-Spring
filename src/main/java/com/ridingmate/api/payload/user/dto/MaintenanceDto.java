@@ -155,6 +155,7 @@ public class MaintenanceDto {
 
             @ApiModelProperty(value = "내 바이크 Dto")
             private BikeDto.Request.BikeInfo bikeDto;
+
         }
 
     }

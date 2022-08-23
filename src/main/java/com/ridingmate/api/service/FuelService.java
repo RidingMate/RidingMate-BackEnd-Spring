@@ -59,8 +59,6 @@ public class FuelService {
         });
         bikeEntity.addFuel(fuelEntity.getRecentMileage(), totalFuelEfficiency.get(), totalCountOiling.get());
         bikeRepository.save(bikeEntity);
-
-//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 
