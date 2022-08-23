@@ -11,7 +11,7 @@ import com.ridingmate.api.payload.user.dto.MaintenanceDto.Response.MaintenanceRe
 import com.ridingmate.api.payload.user.dto.MaintenanceDto.Response.MaintenanceCalcByYearResponse;
 import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceInsertRequest;
 import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceUpdateRequest;
-import com.ridingmate.api.repository.BikeRepository;
+import com.ridingmate.api.repository.bike.BikeRepository;
 import com.ridingmate.api.repository.MaintenanceRepository;
 import com.ridingmate.api.service.common.AuthService;
 import com.ridingmate.api.service.common.FileService;

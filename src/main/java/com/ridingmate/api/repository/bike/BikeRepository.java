@@ -1,4 +1,4 @@
-package com.ridingmate.api.repository;
+package com.ridingmate.api.repository.bike;
 
 import com.ridingmate.api.entity.BikeCompanyEntity;
 import com.ridingmate.api.entity.BikeEntity;
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface BikeRepository extends JpaRepository<BikeEntity, Long> {
+public interface BikeRepository extends JpaRepository<BikeEntity, Long>, BikeCustomRepository {
     Optional<BikeEntity> findByIdxAndUser(long idx, UserEntity user);
 
     List<BikeEntity> findByUserAndBikeRole(UserEntity userEntity, BikeRole bikeRole);

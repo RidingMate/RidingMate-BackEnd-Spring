@@ -6,6 +6,7 @@ import com.ridingmate.api.entity.value.BikeRole;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.BikeDto;
 import com.ridingmate.api.repository.*;
+import com.ridingmate.api.repository.bike.BikeRepository;
 import com.ridingmate.api.repository.bikeCompany.BikeCompanyRepository;
 import com.ridingmate.api.repository.bikeModel.BikeModelRepository;
 import com.ridingmate.api.repository.bikeYear.BikeYearRepository;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,15 +43,6 @@ public class BikeService {
 
     //바이크 모델 검색
     public List<BikeDto.Request.BikeSearch> searchModel(String company){
-//        BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(company).orElseThrow(()->
-//                new CustomException(ResponseCode.NOT_FOUND_COMPANY));
-//        BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.searchModel(company).orElseThrow(() ->
-//                new CustomException(ResponseCode.NOT_FOUND_COMPANY));
-//        return bikeCompanyEntity.getBikeModelSet()
-//                .stream()
-//                .sorted(Comparator.comparing(BikeModelEntity::getModel))
-//                .map(BikeModelEntity::getBikeModelDto)
-//                .collect(Collectors.toList());
         List<BikeModelEntity> bikeModelEntities = bikeModelRepository.searchModel(company);
         return bikeModelEntities
                 .stream()
@@ -61,23 +52,12 @@ public class BikeService {
 
     //바이크 연식 검색
     public List<BikeDto.Request.BikeSearch> searchYear(String company, String model){
-//        BikeCompanyEntity bikeCompanyEntity = bikeCompanyRepository.findByCompany(company).orElseThrow(()->
-//                new CustomException(ResponseCode.NOT_FOUND_COMPANY));
-//        BikeModelEntity bikeModelEntity = bikeModelRepository.findByModelAndBikeCompany(model, bikeCompanyEntity).orElseThrow(()->
-//                new CustomException(ResponseCode.NOT_FOUND_MODEL));
-//        return bikeModelEntity.getBikeYearSet()
-//                .stream()
-//                .sorted(Comparator.comparing(BikeYearEntity::getYear))
-//                .map(BikeYearEntity::getBikeYearDto)
-//                .collect(Collectors.toList());
-
         List<BikeYearEntity> bikeYearEntities = bikeYearRepository.searchYear(company, model);
         return bikeYearEntities.stream()
                 .map(BikeYearEntity::getBikeYearDto)
                 .collect(Collectors.toList());
     }
 
-    //TODO : Multipart 추가해야함
     //바이크 등록
     @Transactional
     public void insertBike(BikeDto.Request.BikeInsert request, MultipartFile file) throws Exception {
@@ -110,16 +90,13 @@ public class BikeService {
 
 
 
-    //TODO : 최적화 필요
     //바이크 수정
     @Transactional
-    public void updateBike(BikeDto.Request.BikeUpdate request, MultipartFile file) throws Exception {
-        UserEntity user = authService.getUserEntityByAuthentication();
-        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(request.getIdx(), user).orElseThrow(()->
+    public void updateBike(BikeDto.Request.BikeUpdate request, MultipartFile file, UserEntity user) throws Exception {
+        BikeEntity bikeEntity = bikeRepository.myBikeDetail(request.getIdx(), user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
         Enum<BikeRole> bikeRoleEnum = BikeRole.checkBikeRole(request.getBikeRole(), user);
         bikeEntity.updateBike(request, (BikeRole) bikeRoleEnum);
-        bikeRepository.save(bikeEntity);
 
         if(file != null){
             if(bikeEntity.getFileEntity() != null){
@@ -129,64 +106,47 @@ public class BikeService {
             fileEntity.connectBike(bikeEntity);
             fileRepository.save(fileEntity);
         }
-
-//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
-    //TODO : 최적화 필요
     //바이크 권한 변경
     @Transactional
     public void updateBikeRole(long idx){
         UserEntity user = authService.getUserEntityByAuthentication();
-
         //이미 대표로 설정된 바이크 있으면 수정
         bikeRepository.findByUserAndBikeRole(user, BikeRole.REPRESENTATIVE).forEach(data -> {
             data.changeBikeRole(BikeRole.NORMAL);
         });
-
         BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(idx, user).orElseThrow(()->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
-
         bikeEntity.changeBikeRole(BikeRole.REPRESENTATIVE);
-
         bikeRepository.save(bikeEntity);
-
-//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 
-    //TODO : 최적화 필요
     //내 바이크 리스트
-    public List<BikeDto.Response.MyBike> bikeList(){
-        UserEntity user = authService.getUserEntityByAuthentication();
-        List<BikeEntity> bikeEntities = bikeRepository.findByUserOrderByBikeRole(user);
-        return bikeEntities.stream().map(bikeEntity -> BikeDto.Response.MyBike.convertEntityToResponse(bikeEntity)).collect(Collectors.toList());
-
+    public List<BikeDto.Response.MyBike> bikeList(UserEntity user){
+        List<BikeEntity> bikeEntities = bikeRepository.myBikeList(user);
+        return bikeEntities.stream()
+                .map(BikeDto.Response.MyBike::convertEntityToResponse)
+                .collect(Collectors.toList());
     }
 
-    //TODO : 최적화 필요
     //TODO : Multipart 추가해야함
     //바이크 디테일
-    public BikeDto.Response.MyBike bikeDetail(long bikeIdx){
-        UserEntity user = authService.getUserEntityByAuthentication();
-        BikeEntity bikeEntity = bikeRepository.findByIdxAndUser(bikeIdx, user).orElseThrow(()->
+    public BikeDto.Response.MyBike bikeDetail(long bikeIdx, UserEntity user){
+        BikeEntity bikeEntity = bikeRepository.myBikeDetail(bikeIdx, user).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
         return BikeDto.Response.MyBike.convertEntityToResponse(bikeEntity);
     }
 
-    //TODO : 최적화 필요
     //바이크 추가요청
     @Transactional
-    public void addBikeRequest(BikeDto.Request.AddBike addBikeRequest){
-        UserEntity user = authService.getUserEntityByAuthentication();
+    public void addBikeRequest(BikeDto.Request.AddBike addBikeRequest, UserEntity user){
         AddBikeEntity addBikeEntity = new AddBikeEntity().convertRequestToEntity(addBikeRequest, user);
         addBikeRepository.save(addBikeEntity);
-
-//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
-    //TODO : 최적화 필요
     //내 바이크 삭제
     @Transactional
     public void deleteBike(long bikeIdx){
@@ -195,8 +155,6 @@ public class BikeService {
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
         bikeRepository.delete(bikeEntity);
-
-//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 }
