@@ -1,24 +1,24 @@
 package com.ridingmate.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ridingmate.api.entity.value.UserRole;
-import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.time.LocalDate;
+
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name = "RMC_USER")
 @DynamicInsert
 @DynamicUpdate
 @Getter
@@ -48,10 +48,14 @@ public class NormalUserEntity extends UserEntity {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    public NormalUserEntity(String userId, String password, String nickname, UserRole role) {
-        this.userId = userId;
-        this.password = password;
-        createUserEntity(nickname, role);
+    public static NormalUserEntity createUser(String userId, String password, String nickname) {
+        NormalUserEntity user = builder()
+                .userId(userId)
+                .password(password)
+                .build();
+        user.changeNickname(nickname);
+        user.createDefaultInfo();
+        return user;
     }
 
 }

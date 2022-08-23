@@ -1,15 +1,26 @@
 package com.ridingmate.api.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ridingmate.api.payload.common.FileResult;
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.*;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ridingmate.api.payload.common.FileResult;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "RMC_FILE")
@@ -63,15 +74,19 @@ public class FileEntity extends BaseTime {
     @JoinColumn(name = "maintenance_id")
     private MaintenanceEntity maintenance;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     public FileEntity createEntity(FileResult fileResult){
-        return FileEntity.builder()
+        return builder()
                 .originalName(fileResult.getOriginalFileName())
                 .location(fileResult.getUrl())
                 .build();
     }
 
     public void connectBike(BikeEntity bikeEntity){
-        this.bike = bikeEntity;
+        bike = bikeEntity;
     }
 
     public void connectBoard(BoardEntity board) {
@@ -79,4 +94,8 @@ public class FileEntity extends BaseTime {
     }
 
     public void connectMaintenance(MaintenanceEntity maintenance) {this.maintenance = maintenance;}
+
+    public void connectUser(UserEntity user) {
+        this.user = user;
+    }
 }

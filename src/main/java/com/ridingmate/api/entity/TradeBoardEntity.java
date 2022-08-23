@@ -84,47 +84,6 @@ public class TradeBoardEntity extends BoardEntity {
     @OneToMany(mappedBy = "board")
     private List<FileEntity> files = new ArrayList<>();
 
-    // 작성자, 내바이크, 지역 생성자
-    public TradeBoardEntity(String title, String content, UserEntity user, BikeEntity bike,
-                            LocationEntity location) {
-        myBike = bike;
-        this.location = location;
-        setBoardInfo(title, content, user);
-    }
-
-    // 작성자 + 내용 + 지역 + 구매일자 + 연락처 + 공개여부 생성자
-    public TradeBoardEntity(String title,
-                            String content,
-                            String company,
-                            String modelName,
-                            double fuelEfficiency,
-                            int cc,
-                            int year,
-                            int mileage,
-                            int price,
-                            String phoneNumber,
-                            String isOpenToBuyer,
-                            Integer purchaseYear,
-                            Integer purchaseMonth,
-                            UserEntity user
-    ) {
-
-        this.company = company;
-        this.modelName = modelName;
-        this.fuelEfficiency = fuelEfficiency;
-        this.cc = cc;
-        this.year = year;
-        this.mileage = mileage;
-        this.price = price;
-        this.isOpenToBuyer = isOpenToBuyer;
-        this.phoneNumber = phoneNumber;
-        if (purchaseYear != null && purchaseMonth != null) {
-            dateOfPurchase = LocalDate.of(purchaseYear, purchaseMonth, 1);
-        }
-        status = TradeStatus.FOR_SALE;
-        setBoardInfo(title, content, user);
-    }
-
     // 판매중 상태
     public void setForSaleStatus() {
         status = TradeStatus.FOR_SALE;

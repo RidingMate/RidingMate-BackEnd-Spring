@@ -2,9 +2,11 @@ package com.ridingmate.api.controller.user;
 
 import javax.validation.Valid;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +17,9 @@ import com.ridingmate.api.payload.common.AuthResponse;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.NormalUserDto;
 import com.ridingmate.api.payload.user.dto.UserDto;
+import com.ridingmate.api.payload.user.dto.UserDto.Request.Update;
 import com.ridingmate.api.payload.user.dto.UserDto.Response.Count;
+import com.ridingmate.api.payload.user.dto.UserDto.Response.Info;
 import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.UserService;
 
@@ -62,7 +66,7 @@ public class UserController {
     }
 
     @SneakyThrows
-    @PostMapping("/info")
+    @GetMapping("/info")
     @ApiOperation("유저 정보 조회")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto<UserPrincipal.Info> getUserInfo(
@@ -84,4 +88,18 @@ public class UserController {
                           .response(userService.getBoardCount(user.getUser()))
                           .build();
     }
+
+    @SneakyThrows
+    @PostMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ApiOperation("회원 정보 수정")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseDto<UserDto.Response.Info> updateUserInfo(
+            @ApiIgnore @CurrentUser UserPrincipal user,
+            Update dto
+    ) {
+        return ResponseDto.<Info>builder()
+                          .response(userService.updateUserInfo(dto, user.getUser()))
+                          .build();
+    }
+
 }

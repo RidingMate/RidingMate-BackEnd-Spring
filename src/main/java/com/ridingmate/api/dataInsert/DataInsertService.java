@@ -4,25 +4,21 @@ import com.ridingmate.api.entity.BikeCompanyEntity;
 import com.ridingmate.api.entity.BikeModelEntity;
 import com.ridingmate.api.entity.BikeSpecEntity;
 import com.ridingmate.api.entity.BikeYearEntity;
-import com.ridingmate.api.repository.BikeCompanyRepository;
-import com.ridingmate.api.repository.BikeModelRepository;
+import com.ridingmate.api.repository.bikeCompany.BikeCompanyRepository;
+import com.ridingmate.api.repository.bikeModel.BikeModelRepository;
 import com.ridingmate.api.repository.BikeSpecRepository;
-import com.ridingmate.api.repository.BikeYearRepository;
+import com.ridingmate.api.repository.bikeYear.BikeYearRepository;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class DataInsertService {

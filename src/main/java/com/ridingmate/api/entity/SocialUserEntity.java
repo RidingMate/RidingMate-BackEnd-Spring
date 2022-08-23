@@ -28,7 +28,4 @@ public class SocialUserEntity extends UserEntity {
     @Column(name = "o_auth2_code")
     private String oAuth2Code;
 
-    @Column(name = "profile_image_url")
-    private String profileImageUrl;
-
 }

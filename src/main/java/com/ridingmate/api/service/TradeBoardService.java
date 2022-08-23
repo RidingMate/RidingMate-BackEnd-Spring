@@ -19,6 +19,7 @@ import com.ridingmate.api.entity.BookmarkEntity;
 import com.ridingmate.api.entity.CommentEntity;
 import com.ridingmate.api.entity.FileEntity;
 import com.ridingmate.api.entity.LocationEntity;
+import com.ridingmate.api.entity.ReportEntity;
 import com.ridingmate.api.entity.TradeBoardEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
@@ -36,6 +37,7 @@ import com.ridingmate.api.repository.BikeRepository;
 import com.ridingmate.api.repository.BoardCustomRepository;
 import com.ridingmate.api.repository.BookmarkRepository;
 import com.ridingmate.api.repository.CommentRepository;
+import com.ridingmate.api.repository.ReportRepository;
 import com.ridingmate.api.repository.TradeBoardRepository;
 import com.ridingmate.api.repository.predicate.BoardPredicate;
 import com.ridingmate.api.repository.predicate.CommentPredicate;
@@ -56,13 +58,14 @@ public class TradeBoardService {
     private final BikeRepository bikeRepository;
     private final BoardCustomRepository boardCustomRepository;
     private final BookmarkRepository bookmarkRepository;
+    private final ReportRepository reportRepository;
 
     private Page<TradeBoardEntity> getBoardListPage(Pageable pageable, Predicate predicate) {
         return tradeBoardRepository.findAll(predicate, pageable);
     }
 
     private Slice<TradeBoardEntity> getBoardListSlice(Pageable pageable, Predicate predicate) {
-        return tradeBoardRepository.findAll(predicate, pageable);
+        return boardCustomRepository.getTradeList(predicate, pageable);
     }
 
     private TradeBoardEntity getBoardContent(Long boardId) {
@@ -287,9 +290,14 @@ public class TradeBoardService {
      * 거래글 신고
      * @param boardId   거래글 ID
      */
-    public void reportContent(Long boardId) {
-        tradeBoardRepository.findById(boardId).orElseThrow(
+    @Transactional
+    public void reportContent(Long boardId, UserEntity user) {
+        TradeBoardEntity tradeBoard = tradeBoardRepository.findById(boardId).orElseThrow(
                 () -> new CustomException(ResponseCode.NOT_FOUND_BOARD));
+        reportRepository.save(ReportEntity.builder()
+                                          .board(tradeBoard)
+                                          .user(user)
+                                          .build());
     }
 
 }
