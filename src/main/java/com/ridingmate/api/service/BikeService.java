@@ -84,7 +84,6 @@ public class BikeService {
             fileRepository.save(fileEntity);
         }
 
-//        return ResponseEntity.ok(new ApiResponse(ResponseCode.SUCCESS));
     }
 
 
