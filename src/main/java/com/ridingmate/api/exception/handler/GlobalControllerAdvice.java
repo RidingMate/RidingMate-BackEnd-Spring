@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
+//응답을 json으로 내려준다.
 public class GlobalControllerAdvice {
 
     private ResponseEntity<ResponseDto<?>> response(ResponseCode code, Object response) {

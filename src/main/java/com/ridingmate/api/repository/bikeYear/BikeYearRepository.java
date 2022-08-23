@@ -1,4 +1,4 @@
-package com.ridingmate.api.repository;
+package com.ridingmate.api.repository.bikeYear;
 
 import com.ridingmate.api.entity.BikeModelEntity;
 import com.ridingmate.api.entity.BikeYearEntity;
@@ -9,7 +9,7 @@ import java.util.Optional;
 
 
 @Repository
-public interface BikeYearRepository extends JpaRepository<BikeYearEntity, Long> {
+public interface BikeYearRepository extends JpaRepository<BikeYearEntity, Long> , BikeYearCustomRepository{
 
     boolean existsByYearAndBikeModel(int year, BikeModelEntity bikeModelEntity);
 

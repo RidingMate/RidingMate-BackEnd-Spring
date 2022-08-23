@@ -31,6 +31,7 @@ public class AwsS3Config {
     public AmazonS3 amazonS3() {
         return AmazonS3ClientBuilder.standard()
                 .withRegion(region)
+                //자격증명
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentialProvider()))
                 .withClientConfiguration(new ClientConfiguration()
                         .withConnectionTimeout(600 * 1000)

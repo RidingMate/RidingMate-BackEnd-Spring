@@ -15,5 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @AuthenticationPrincipal
+//유저 서비스에서 리턴한 객체를 바로 파라미터로 사용 가능
 public @interface CurrentUser {
 }

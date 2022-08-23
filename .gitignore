@@ -19,6 +19,7 @@ target/
 *.iml
 *.ipr
 application-aws.yml
+application.yml
 
 ### NetBeans ###
 /nbproject/private/
@@ -33,3 +34,5 @@ build/
 ### VS Code ###
 .vscode/
 /bike_db.json
+/src/test/resources/
+/src/main/resources/

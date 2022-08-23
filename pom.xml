@@ -31,6 +31,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+<!--        브라우저 전송되는 내용들에 대한 코드 변경-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -62,6 +63,7 @@
             <version>8.0.27</version>
         </dependency>
 
+<!--        //파일의 메타데이터, 파일 유형을 알 수 있는 라이브러리-->
         <!-- https://mvnrepository.com/artifact/org.apache.tika/tika-core -->
         <dependency>
             <groupId>org.apache.tika</groupId>
