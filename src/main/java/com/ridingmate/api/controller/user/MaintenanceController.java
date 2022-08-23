@@ -1,10 +1,12 @@
 package com.ridingmate.api.controller.user;
 
+import com.ridingmate.api.annotation.CurrentUser;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.MaintenanceDto.Response.MaintenanceCalcByYearResponse;
 import com.ridingmate.api.payload.user.dto.MaintenanceDto.Response.MaintenanceResponse;
 import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceInsertRequest;
 import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceUpdateRequest;
+import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.MaintenanceService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 
 import javax.validation.Valid;
@@ -38,80 +41,71 @@ public class MaintenanceController {
     @GetMapping("/list/{bike_idx}/{year}")
     @ApiOperation(value = "정비기록 리스트 조회 - 연도별")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
             @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "Long", required = true),
             @ApiImplicitParam(name = "year", value = "year", dataType = "int", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto<MaintenanceCalcByYearResponse> maintenanceList(
-            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             @PathVariable("bike_idx") Long bike_idx,
             @PathVariable("year") int year
     ) {
         return ResponseDto.<MaintenanceCalcByYearResponse>builder()
-                .response(maintenanceService.getMaintenanceList(bike_idx, year))
+                .response(maintenanceService.getMaintenanceList(bike_idx, year, user.getUser()))
                 .build();
     }
 
     @GetMapping("/detail/{bike_idx}/{maintenance_idx}")
     @ApiOperation(value = "정비기록 상세 조회")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
             @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "Long", required = true),
             @ApiImplicitParam(name = "maintenance_idx", value = "maintenance_idx", dataType = "Long", required = true),
     })
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto<MaintenanceResponse> getMaintenanceDetail(
-            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             @PathVariable("bike_idx") Long bike_idx,
             @PathVariable("maintenance_idx") Long maintenance_idx
     ) {
         return ResponseDto.<MaintenanceResponse>builder()
-                .response(maintenanceService.getMaintenanceDetail(bike_idx, maintenance_idx))
+                .response(maintenanceService.getMaintenanceDetail(bike_idx, maintenance_idx, user.getUser()))
                 .build();
     }
 
     @PostMapping(value = "/insert", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "정비 기록 등록")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
-    })
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto<?> insertMaintenance(
-            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             @ModelAttribute @Valid MaintenanceInsertRequest request) {
 
-        maintenanceService.insertMaintenance(request);
+        maintenanceService.insertMaintenance(request, user.getUser());
         return ResponseDto.builder().build();
     }
 
     @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "정비 기록 수정")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
-    })
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto<?> updateMaintenance(
-            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             @ModelAttribute @Valid MaintenanceUpdateRequest request) {
 
-        maintenanceService.updateMaintenance(request);
+        maintenanceService.updateMaintenance(request, user.getUser());
         return ResponseDto.builder().build();
     }
 
     @DeleteMapping("/delete/{bike_idx}/{maintenance_idx}")
     @ApiOperation(value = "정비 기록 삭제")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
             @ApiImplicitParam(name = "bike_idx", value = "bike_idx", dataType = "Long", required = true),
             @ApiImplicitParam(name = "maintenance_idx", value = "maintenance_idx", dataType = "Long", required = true),
     })
     public ResponseDto<?> deleteMaintenance(
-            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             @PathVariable("bike_idx") Long bike_idx,
             @PathVariable("maintenance_idx") Long maintenance_idx) {
 
-        maintenanceService.deleteMaintenance(bike_idx, maintenance_idx);
+        maintenanceService.deleteMaintenance(bike_idx, maintenance_idx, user.getUser());
         return ResponseDto.builder().build();
     }
 

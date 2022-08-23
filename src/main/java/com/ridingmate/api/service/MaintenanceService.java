@@ -12,7 +12,7 @@ import com.ridingmate.api.payload.user.dto.MaintenanceDto.Response.MaintenanceCa
 import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceInsertRequest;
 import com.ridingmate.api.payload.user.dto.MaintenanceDto.Request.MaintenanceUpdateRequest;
 import com.ridingmate.api.repository.bike.BikeRepository;
-import com.ridingmate.api.repository.MaintenanceRepository;
+import com.ridingmate.api.repository.maintenance.MaintenanceRepository;
 import com.ridingmate.api.service.common.AuthService;
 import com.ridingmate.api.service.common.FileService;
 import lombok.RequiredArgsConstructor;
@@ -34,51 +34,66 @@ public class MaintenanceService {
     private final FileService fileService;
 
     @Transactional
-    public MaintenanceCalcByYearResponse getMaintenanceList(Long bike_idx, int year) {
-        UserEntity user = authService.getUserEntityByAuthentication();
+    public MaintenanceCalcByYearResponse getMaintenanceList(Long bike_idx, int year, UserEntity user) {
+//        BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx, user).orElseThrow(() ->
+//                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+//
+//        BikeDto.Request.BikeInfo bikeDto = BikeDto.Request.BikeInfo.convertEntityToDto(bike);
+//
+//
+//        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBikeAndDateOfMaintenanceBetween(bike, startDate, endDate);
+//        List<MaintenanceResponse> maintenanceResponseList = maintenanceEntities.stream()
+//                .map(MaintenanceResponse::convertEntityToResponse)
+//                .collect(Collectors.toList());
 
-        BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx, user).orElseThrow(() ->
-                new CustomException(ResponseCode.NOT_FOUND_BIKE));
-
-        BikeDto.Request.BikeInfo bikeDto = BikeDto.Request.BikeInfo.convertEntityToDto(bike);
+//        int totalAmount = maintenanceResponseList.stream()
+//                .mapToInt(MaintenanceResponse::getAmount)
+//                .sum();
+//
+//        return MaintenanceCalcByYearResponse.builder()
+//                .maintenanceResponseList(maintenanceResponseList)
+//                .countMaintenance(maintenanceResponseList.size())
+//                .totalAmount(totalAmount)
+//                .bikeDto(bikeDto)
+//                .build();
 
         LocalDate startDate = LocalDate.of(year, 1, 1);
         LocalDate endDate = LocalDate.of(year, 12, 31);
 
-        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.findByBikeAndDateOfMaintenanceBetween(bike, startDate, endDate);
-        List<MaintenanceResponse> maintenanceResponseList = maintenanceEntities.stream()
-                .map(MaintenanceResponse::convertEntityToResponse)
-                .collect(Collectors.toList());
+        List<MaintenanceEntity> maintenanceEntities = maintenanceRepository.list(bike_idx,user,startDate, endDate);
 
-        int totalAmount = maintenanceResponseList.stream()
-                .mapToInt(MaintenanceResponse::getAmount)
-                .sum();
+        int totalAmount = maintenanceEntities.stream().mapToInt(MaintenanceEntity::getAmount).sum();
+
+        BikeDto.Request.BikeInfo bikeInfo = null;
+        if(maintenanceEntities.size() > 0){
+            bikeInfo = BikeDto.Request.BikeInfo.convertEntityToDto(maintenanceEntities.get(0).getBike());
+        }
+
 
         return MaintenanceCalcByYearResponse.builder()
-                .maintenanceResponseList(maintenanceResponseList)
-                .countMaintenance(maintenanceResponseList.size())
+                .maintenanceResponseList(maintenanceEntities.stream().map(MaintenanceResponse::convertEntityToResponse).collect(Collectors.toList()))
+                .countMaintenance(maintenanceEntities.size())
                 .totalAmount(totalAmount)
-                .bikeDto(bikeDto)
+                .bikeDto(bikeInfo)
                 .build();
     }
 
     @Transactional
-    public MaintenanceResponse getMaintenanceDetail(Long bike_idx, Long maintenance_idx) {
-        UserEntity user = authService.getUserEntityByAuthentication();
+    public MaintenanceResponse getMaintenanceDetail(Long bike_idx, Long maintenance_idx, UserEntity user) {
+//        BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx, user).orElseThrow(() ->
+//                new CustomException(ResponseCode.NOT_FOUND_BIKE));
+//
+//        MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx, bike);
 
-        BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx, user).orElseThrow(() ->
+        MaintenanceEntity maintenanceEntity = maintenanceRepository.maintenanceDetail(bike_idx, maintenance_idx, user).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
-
-        MaintenanceEntity maintenanceEntity = maintenanceRepository.findByIdxAndBike(maintenance_idx, bike);
 
         return MaintenanceResponse.convertEntityToResponse(maintenanceEntity);
     }
 
 
     @Transactional
-    public void insertMaintenance(MaintenanceInsertRequest request) {
-        UserEntity user = authService.getUserEntityByAuthentication();
-
+    public void insertMaintenance(MaintenanceInsertRequest request, UserEntity user) {
         BikeEntity bike = bikeRepository.findByIdxAndUser(request.getBike_idx(), user).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
@@ -94,9 +109,7 @@ public class MaintenanceService {
 
 
     @Transactional
-    public void updateMaintenance(MaintenanceUpdateRequest request) {
-        UserEntity user = authService.getUserEntityByAuthentication();
-
+    public void updateMaintenance(MaintenanceUpdateRequest request, UserEntity user) {
         BikeEntity bike = bikeRepository.findByIdxAndUser(request.getBike_idx(), user).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
 
@@ -124,8 +137,7 @@ public class MaintenanceService {
 
 
     @Transactional
-    public void deleteMaintenance(Long bike_idx, Long maintenance_idx) {
-        UserEntity user = authService.getUserEntityByAuthentication();
+    public void deleteMaintenance(Long bike_idx, Long maintenance_idx, UserEntity user) {
 
         BikeEntity bike = bikeRepository.findByIdxAndUser(bike_idx, user).orElseThrow(() ->
                 new CustomException(ResponseCode.NOT_FOUND_BIKE));
