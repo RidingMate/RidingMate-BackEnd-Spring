@@ -33,7 +33,7 @@ import com.ridingmate.api.payload.user.dto.CommentDto.Request.InsertReply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Request.Reply;
 import com.ridingmate.api.payload.user.dto.CommentDto.Response;
 import com.ridingmate.api.payload.user.dto.CommentDto.Response.Info;
-import com.ridingmate.api.repository.BikeRepository;
+import com.ridingmate.api.repository.bike.BikeRepository;
 import com.ridingmate.api.repository.BoardCustomRepository;
 import com.ridingmate.api.repository.BookmarkRepository;
 import com.ridingmate.api.repository.CommentRepository;

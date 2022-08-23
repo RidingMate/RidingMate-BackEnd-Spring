@@ -6,7 +6,7 @@ import com.ridingmate.api.entity.FuelEntity;
 import com.ridingmate.api.entity.UserEntity;
 import com.ridingmate.api.exception.CustomException;
 import com.ridingmate.api.payload.user.dto.FuelDto;
-import com.ridingmate.api.repository.BikeRepository;
+import com.ridingmate.api.repository.bike.BikeRepository;
 import com.ridingmate.api.repository.FuelRepository;
 import com.ridingmate.api.service.common.AuthService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,7 @@
 package com.ridingmate.api.service;
 
 import com.ridingmate.api.repository.*;
+import com.ridingmate.api.repository.bike.BikeRepository;
 import com.ridingmate.api.repository.bikeCompany.BikeCompanyRepository;
 import com.ridingmate.api.repository.bikeModel.BikeModelRepository;
 import com.ridingmate.api.repository.bikeYear.BikeYearRepository;
