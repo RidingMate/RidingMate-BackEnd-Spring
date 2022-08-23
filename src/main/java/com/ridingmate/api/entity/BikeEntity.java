@@ -90,7 +90,7 @@ public class BikeEntity extends BaseTime{
     private UserEntity user;
 
     //이미지
-    @OneToOne(mappedBy = "bike")
+    @OneToOne(mappedBy = "bike", fetch = FetchType.LAZY)
     private FileEntity fileEntity;
 
 

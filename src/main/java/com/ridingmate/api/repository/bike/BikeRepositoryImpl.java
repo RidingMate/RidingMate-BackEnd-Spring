@@ -10,6 +10,7 @@ import java.util.Optional;
 
 import static com.ridingmate.api.entity.QBikeEntity.bikeEntity;
 import static com.ridingmate.api.entity.QFileEntity.fileEntity;
+import static com.ridingmate.api.entity.QFuelEntity.*;
 import static com.ridingmate.api.entity.QUserEntity.userEntity;
 
 @RequiredArgsConstructor
@@ -37,6 +38,17 @@ public class BikeRepositoryImpl implements BikeCustomRepository{
                 .where(QBikeEntity.bikeEntity.idx.eq(bikeIdx), QBikeEntity.bikeEntity.user().eq(user))
                 .fetchOne();
 
+        return Optional.ofNullable(bikeEntity);
+    }
+
+    @Override
+    public Optional<BikeEntity> fuelList(long bikeIdx, UserEntity user) {
+        BikeEntity bikeEntity = queryFactory
+                .select(QBikeEntity.bikeEntity)
+                .from(QBikeEntity.bikeEntity)
+                .join(QBikeEntity.bikeEntity.fuels, fuelEntity).fetchJoin()
+                .where(QBikeEntity.bikeEntity.idx.eq(bikeIdx), QBikeEntity.bikeEntity.user().eq(user))
+                .fetchOne();
         return Optional.ofNullable(bikeEntity);
     }
 

@@ -1,7 +1,9 @@
 package com.ridingmate.api.controller.user;
 
+import com.ridingmate.api.annotation.CurrentUser;
 import com.ridingmate.api.payload.common.ResponseDto;
 import com.ridingmate.api.payload.user.dto.FuelDto;
+import com.ridingmate.api.security.UserPrincipal;
 import com.ridingmate.api.service.FuelService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -9,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 /*
     연비 관련 컨트롤러 등록 컨트롤러
@@ -31,45 +34,36 @@ public class FuelController {
 
     @GetMapping("/list/{bike_idx}")
     @ApiOperation(value = "내 바이크 연비 리스트")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
-    })
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto<FuelDto.Response.FuelList> myBikeFuelList(
-            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             @PathVariable("bike_idx") Long bike_idx
     ){
         return ResponseDto.<FuelDto.Response.FuelList>builder()
-                .response(fuelService.list(bike_idx))
+                .response(fuelService.list(bike_idx, user.getUser()))
                 .build();
 //        return fuelService.list(bike_idx);
     }
 
     @PutMapping("/add/{bike_idx}")
     @ApiOperation(value = "주유 기록 추가")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
-    })
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto myBikeFuelList(
-            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             @RequestBody FuelDto.Request.AddFuel addFuelRequest
             ){
-        fuelService.addFuel(addFuelRequest);
+        fuelService.addFuel(addFuelRequest, user.getUser());
         return ResponseDto.builder().build();
     }
 
     @GetMapping("/reset/{bike_idx}")
     @ApiOperation(value = "내 바이크 연비 초기화")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Authorization", value = "user 토큰", defaultValue = "null", dataType = "String", required = true),
-    })
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseDto resetFuel(
-            @RequestHeader(value = "Authorization") String token,
+            @ApiIgnore @CurrentUser UserPrincipal user,
             @PathVariable("bike_idx") Long bike_idx
     ){
-        fuelService.reset(bike_idx);
+        fuelService.reset(bike_idx, user.getUser());
         return ResponseDto.builder().build();
     }
 

@@ -1,6 +1,7 @@
 package com.ridingmate.api.repository.bike;
 
 import com.ridingmate.api.entity.BikeEntity;
+import com.ridingmate.api.entity.FuelEntity;
 import com.ridingmate.api.entity.UserEntity;
 
 import java.util.List;
@@ -10,4 +11,6 @@ public interface BikeCustomRepository {
     List<BikeEntity> myBikeList(UserEntity user);
 
     Optional<BikeEntity> myBikeDetail(long bikeIdx, UserEntity user);
+
+    Optional<BikeEntity> fuelList(long bikeIdx, UserEntity user);
 }

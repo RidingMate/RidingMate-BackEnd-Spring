@@ -57,7 +57,10 @@ public class FuelEntity extends BaseTime {
 
     //초기화 여부
     @Column(name = "reset")
-    private char reset;
+    private Character reset;
+
+    @Column(name = "reset_num")
+    private int resetNum;
 
     //연비
     @Column(name = "fuel_efficiency")
@@ -77,7 +80,8 @@ public class FuelEntity extends BaseTime {
         this.recentMileage = addFuelRequest.getMileage();
         this.fuelVolume = addFuelRequest.getFuelVolume();
         this.fuelAmount = addFuelRequest.getAmount();
-        this.reset = 'N';
+//        this.reset = 'N';
+        this.resetNum = 0;
         this.bike = bikeEntity;
         this.date = addFuelRequest.getDate();
         this.fuelEfficiency = (addFuelRequest.getMileage() - bikeEntity.getMileage()) / addFuelRequest.getFuelVolume();
@@ -85,7 +89,8 @@ public class FuelEntity extends BaseTime {
     }
 
     public void reset(){
-        this.reset = 'Y';
+//        this.reset = 'Y';
+        this.resetNum = 1;
     }
 
 
